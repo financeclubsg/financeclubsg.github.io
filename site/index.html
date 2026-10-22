@@ -135,15 +135,15 @@
 
   <div class="tiles">
     <div class="card tile"><div class="label">Club portfolio</div><div class="value" id="t-club">–</div><div class="note" id="t-club-n"></div></div>
-    <div class="card tile"><div class="label">Same dates, in the indices</div><div class="value" id="t-indice">–</div><div class="note" id="t-indice-n"></div></div>
+    <div class="card tile"><div class="label" id="t-indice-l">Benchmark, same dates</div><div class="value" id="t-indice">–</div><div class="note" id="t-indice-n"></div></div>
     <div class="card tile"><div class="label">Winning pitches</div><div class="value" id="t-gagnants">–</div><div class="note" id="t-gagnants-n"></div></div>
     <div class="card tile"><div class="label">Price targets hit</div><div class="value" id="t-cibles">–</div><div class="note">since publication</div></div>
   </div>
 
   <section class="card">
     <h2>The club vs the market</h2>
-    <p class="sub">Cumulative return: 1,000 invested in each pitch on its publication date, compared with the same 1,000 put in its benchmark index.</p>
-    <div class="legend"><span style="--c: var(--club)">Club portfolio</span><span style="--c: var(--indice)">Benchmark indices</span></div>
+    <p class="sub">Cumulative return: 1,000 invested in each pitch on its publication date, compared with the same 1,000 put on the same day in that stock's home market index (DAX for German stocks, S&amp;P 500 for US stocks…).</p>
+    <div class="legend"><span style="--c: var(--club)">Club portfolio</span><span style="--c: var(--indice)" id="leg-indice">Benchmark</span></div>
     <div class="chart-box"><canvas id="c-portefeuille" aria-label="Cumulative return of the club portfolio compared with the indices"></canvas></div>
   </section>
 
@@ -250,12 +250,18 @@ function graphe(id, config) {
   graphes[id] = new Chart($(id), { type: "line", plugins: [viseur], ...config });
 }
 
+// Names the indices the club is compared with, e.g. "Benchmark (DAX + S&P 500)".
+function nomBenchmark() {
+  const noms = [...new Set(data.pitchs.filter(p => p.serie.length).map(p => p.indice))];
+  return noms.length ? `Benchmark (${noms.join(" + ")})` : "Benchmark";
+}
+
 function dessinerPortefeuille() {
   const pts = data.portefeuille;
   graphe("c-portefeuille", {
     data: { labels: pts.map(p => p.d), datasets: [
       ligne("Club portfolio", pts.map(p => p.club), css("--club")),
-      ligne("Benchmark indices", pts.map(p => p.indice), css("--indice"))
+      ligne(nomBenchmark(), pts.map(p => p.indice), css("--indice"))
     ]},
     options: options(fmtPct)
   });
@@ -289,6 +295,8 @@ function afficher() {
   $("maj").textContent = "Last updated: " + new Date(data.mis_a_jour).toLocaleString("en-GB", { dateStyle: "long", timeStyle: "short" });
   $("t-club").textContent = fmtPct(r.perf_club); $("t-club").className = "value " + cls(r.perf_club);
   $("t-club-n").textContent = `${r.nb_pitchs} pitch${r.nb_pitchs === 1 ? "" : "es"} tracked`;
+  $("t-indice-l").textContent = nomBenchmark() + ", same dates";
+  $("leg-indice").textContent = nomBenchmark();
   $("t-indice").textContent = fmtPct(r.perf_indice); $("t-indice").className = "value " + cls(r.perf_indice);
   const ecart = r.perf_club != null ? r.perf_club - r.perf_indice : null;
   $("t-indice-n").textContent = ecart == null ? "" : `the club is ${fmtPct(Math.abs(ecart)).replace(/^[+−]/, "")} ${ecart >= 0 ? "ahead" : "behind"}`;
