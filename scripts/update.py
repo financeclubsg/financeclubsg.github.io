@@ -43,6 +43,7 @@ NOMS_INDICES = {
     "^SSMI": "SMI",
     "^HSI": "Hang Seng",
     "^N225": "Nikkei 225",
+    "^AEX": "AEX",
 }
 
 
