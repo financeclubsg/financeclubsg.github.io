@@ -1,10 +1,10 @@
 {
- "mis_a_jour": "2026-10-22T13:28:17Z",
+ "mis_a_jour": "2026-10-22T13:33:43Z",
  "mise": 1000.0,
  "resume": {
-  "nb_pitchs": 1,
-  "perf_club": -3.32,
-  "perf_indice": 0.87,
+  "nb_pitchs": 2,
+  "perf_club": -1.55,
+  "perf_indice": 0.43,
   "gagnants": 0,
   "battent_indice": 0,
   "cibles_atteintes": 0
@@ -22,8 +22,8 @@
   },
   {
    "d": "2026-10-22",
-   "club": -3.32,
-   "indice": 0.87
+   "club": -1.55,
+   "indice": 0.43
   }
  ],
  "pitchs": [
@@ -39,8 +39,24 @@
    "horizon_mois": 12,
    "indice": "S&P 500",
    "lien": "https://www.linkedin.com/feed/update/urn:li:activity:7518974621271023616/",
-   "statut": "pending",
-   "serie": []
+   "statut": "open",
+   "date_entree": "2026-10-22",
+   "prix_entree": 888.52,
+   "fin_horizon": "2027-10-22",
+   "dernier_jour": "2026-10-22",
+   "dernier_prix": 888.52,
+   "perf": 0.0,
+   "perf_indice": 0.0,
+   "ecart": 0.0,
+   "cible_atteinte_le": null,
+   "serie": [
+    {
+     "d": "2026-10-22",
+     "prix": 888.52,
+     "r": 0.0,
+     "b": 0.0
+    }
+   ]
   },
   {
    "entreprise": "Rheinmetall AG",
@@ -59,10 +75,10 @@
    "prix_entree": 1054.0,
    "fin_horizon": "2027-10-20",
    "dernier_jour": "2026-10-22",
-   "dernier_prix": 1019.0,
-   "perf": -3.32,
+   "dernier_prix": 1021.4,
+   "perf": -3.09,
    "perf_indice": 0.87,
-   "ecart": -4.19,
+   "ecart": -3.96,
    "cible_atteinte_le": null,
    "serie": [
     {
@@ -79,8 +95,8 @@
     },
     {
      "d": "2026-10-22",
-     "prix": 1019.0,
-     "r": -3.32,
+     "prix": 1021.4,
+     "r": -3.09,
      "b": 0.87
     }
    ]
