@@ -59,7 +59,7 @@ def historique(ticker, debut):
     h = yf.Ticker(ticker).history(start=debut, auto_adjust=False, actions=False)
     h = h.dropna(subset=["Close"])
     if h.empty:
-        raise RuntimeError(f"aucun cours trouvé pour {ticker}")
+        raise RuntimeError(f"no price data found for {ticker}")
     return h
 
 
@@ -95,7 +95,7 @@ def analyser(p, maintenant):
     h = historique(p["ticker"], debut)
     entree = premiere_cloture_apres(h, publie_le)
     if entree is None:
-        return {**resultat, "statut": "en attente", "serie": []}
+        return {**resultat, "statut": "pending", "serie": []}
 
     fin_horizon = entree + pd.DateOffset(months=resultat["horizon_mois"])
     h = h[(h.index >= entree) & (h.index <= fin_horizon)]
@@ -114,7 +114,7 @@ def analyser(p, maintenant):
 
     return {
         **resultat,
-        "statut": "terminé" if termine else "en cours",
+        "statut": "closed" if termine else "open",
         "date_entree": jours[0].isoformat(),
         "prix_entree": prix(h["Close"].iloc[0]),
         "fin_horizon": fin_horizon.strftime("%Y-%m-%d"),
@@ -161,11 +161,11 @@ def main():
         try:
             pitches.append(analyser(p, maintenant))
         except Exception as e:  # un ticker en panne ne doit pas bloquer tout le site
-            erreurs.append(f"{p['entreprise']} ({p['ticker']}) : {e}")
-            print("ERREUR", erreurs[-1], file=sys.stderr)
+            erreurs.append(f"{p['entreprise']} ({p['ticker']}): {e}")
+            print("ERROR", erreurs[-1], file=sys.stderr)
 
     if lignes and not pitches:
-        sys.exit("Aucun cours récupéré : data.json n'est pas modifié.")
+        sys.exit("No prices fetched: data.json left unchanged.")
 
     pitches.sort(key=lambda p: p["publie_le"], reverse=True)
     actifs = [p for p in pitches if p["serie"]]
@@ -195,7 +195,7 @@ def main():
         ),
         encoding="utf-8",
     )
-    print(f"{len(actifs)} pitch(s) suivis, {len(erreurs)} erreur(s) -> {SORTIE}")
+    print(f"{len(actifs)} pitch(es) tracked, {len(erreurs)} error(s) -> {SORTIE}")
 
 
 if __name__ == "__main__":

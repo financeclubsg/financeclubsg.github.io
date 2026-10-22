@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Suivi des stock pitchs · Finance Club Singapore</title>
+<title>Stock Pitch Tracker · Finance Club Singapore</title>
 <style>
   :root {
     color-scheme: light;
@@ -124,8 +124,8 @@
 <header>
   <div class="wrap">
     <p class="eyebrow">Finance Club Singapore</p>
-    <h1>Suivi des stock pitchs</h1>
-    <p>Et si on avait suivi chaque recommandation du club le jour de sa publication sur LinkedIn ? Performance hypothétique, mise à jour chaque jour.</p>
+    <h1>Stock Pitch Tracker</h1>
+    <p>What if we had followed every one of the club's calls on the day it was posted on LinkedIn? Hypothetical performance, updated daily.</p>
     <p class="maj" id="maj"></p>
   </div>
 </header>
@@ -134,28 +134,28 @@
   <div id="erreurs"></div>
 
   <div class="tiles">
-    <div class="card tile"><div class="label">Portefeuille du club</div><div class="value" id="t-club">–</div><div class="note" id="t-club-n"></div></div>
-    <div class="card tile"><div class="label">Mêmes dates, dans les indices</div><div class="value" id="t-indice">–</div><div class="note" id="t-indice-n"></div></div>
-    <div class="card tile"><div class="label">Pitchs gagnants</div><div class="value" id="t-gagnants">–</div><div class="note" id="t-gagnants-n"></div></div>
-    <div class="card tile"><div class="label">Prix cibles atteints</div><div class="value" id="t-cibles">–</div><div class="note">depuis la publication</div></div>
+    <div class="card tile"><div class="label">Club portfolio</div><div class="value" id="t-club">–</div><div class="note" id="t-club-n"></div></div>
+    <div class="card tile"><div class="label">Same dates, in the indices</div><div class="value" id="t-indice">–</div><div class="note" id="t-indice-n"></div></div>
+    <div class="card tile"><div class="label">Winning pitches</div><div class="value" id="t-gagnants">–</div><div class="note" id="t-gagnants-n"></div></div>
+    <div class="card tile"><div class="label">Price targets hit</div><div class="value" id="t-cibles">–</div><div class="note">since publication</div></div>
   </div>
 
   <section class="card">
-    <h2>Le club face au marché</h2>
-    <p class="sub">Rendement cumulé : 1 000 investis dans chaque pitch à sa date de publication, comparés aux mêmes 1 000 placés dans l'indice de référence.</p>
-    <div class="legend"><span style="--c: var(--club)">Portefeuille du club</span><span style="--c: var(--indice)">Indices de référence</span></div>
-    <div class="chart-box"><canvas id="c-portefeuille" aria-label="Rendement cumulé du portefeuille du club comparé aux indices"></canvas></div>
+    <h2>The club vs the market</h2>
+    <p class="sub">Cumulative return: 1,000 invested in each pitch on its publication date, compared with the same 1,000 put in its benchmark index.</p>
+    <div class="legend"><span style="--c: var(--club)">Club portfolio</span><span style="--c: var(--indice)">Benchmark indices</span></div>
+    <div class="chart-box"><canvas id="c-portefeuille" aria-label="Cumulative return of the club portfolio compared with the indices"></canvas></div>
   </section>
 
   <section class="card">
-    <h2>Tous les pitchs</h2>
-    <p class="sub">Clique sur une ligne pour voir le détail.</p>
+    <h2>All pitches</h2>
+    <p class="sub">Click a row to see the details.</p>
     <div class="table-scroll">
       <table>
         <thead><tr>
-          <th>Entreprise</th><th>Publié le</th><th>Reco</th>
-          <th class="num">Entrée</th><th class="num">Dernier cours</th>
-          <th class="num">Perf.</th><th class="num">vs indice</th><th class="num">Cible</th><th>Statut</th>
+          <th>Company</th><th>Published</th><th>Call</th>
+          <th class="num">Entry</th><th class="num">Last price</th>
+          <th class="num">Return</th><th class="num">vs index</th><th class="num">Target</th><th>Status</th>
         </tr></thead>
         <tbody id="lignes"></tbody>
       </table>
@@ -165,45 +165,48 @@
   <section class="card" id="detail" hidden>
     <div class="detail-head">
       <div><h2 id="d-titre"></h2><p class="sub" id="d-sous-titre"></p></div>
-      <a id="d-lien" target="_blank" rel="noopener">Voir le pitch sur LinkedIn ↗</a>
+      <a id="d-lien" target="_blank" rel="noopener">View the pitch on LinkedIn ↗</a>
     </div>
     <div class="facts">
-      <div>Prix dans le pitch<b id="d-pitch"></b></div>
-      <div>Prix d'entrée<b id="d-entree"></b></div>
-      <div>Prix cible<b id="d-cible"></b></div>
-      <div>Fin de l'horizon<b id="d-fin"></b></div>
+      <div>Price in the pitch<b id="d-pitch"></b></div>
+      <div>Entry price<b id="d-entree"></b></div>
+      <div>Price target<b id="d-cible"></b></div>
+      <div>Horizon ends<b id="d-fin"></b></div>
     </div>
-    <div class="legend"><span style="--c: var(--club)">Cours</span><span style="--c: var(--muted)">Prix d'entrée et prix cible</span></div>
-    <div class="chart-box"><canvas id="c-detail" aria-label="Cours de l'action depuis le pitch"></canvas></div>
+    <div class="legend"><span style="--c: var(--club)">Share price</span><span style="--c: var(--muted)">Entry price and price target</span></div>
+    <div class="chart-box"><canvas id="c-detail" aria-label="Share price since the pitch"></canvas></div>
   </section>
 
   <section class="card methode">
-    <h2>Méthode</h2>
+    <h2>Methodology</h2>
     <ul>
-      <li>Chaque pitch publié sur la page LinkedIn du club est suivi automatiquement.</li>
-      <li>Prix d'entrée : le cours de clôture de la première séance qui suit la publication du post (le jour même si le post sort avant la clôture).</li>
-      <li>BUY = achat ; SELL = vente à découvert (on gagne si le cours baisse). La position est gardée jusqu'à la fin de l'horizon annoncé, puis figée.</li>
-      <li>Rendements dividendes compris, dans la devise de chaque action (sans effet de change).</li>
-      <li>Chaque pitch est comparé à l'indice de son marché (DAX pour l'Allemagne, STI pour Singapour, S&amp;P 500 pour les États-Unis…).</li>
-      <li>Données de cours : Yahoo Finance.</li>
+      <li>Every pitch posted on the club's LinkedIn page is tracked automatically.</li>
+      <li>Entry price: the closing price of the first trading session after the post is published (the same day if it comes out before the close).</li>
+      <li>BUY = long; SELL = short (gains when the price falls). The position is held until the end of the stated horizon, then frozen.</li>
+      <li>Returns include dividends and are in each stock's own currency (no FX effect).</li>
+      <li>Each pitch is compared with its home market index (DAX for Germany, STI for Singapore, S&amp;P 500 for the US…).</li>
+      <li>Price data: Yahoo Finance.</li>
     </ul>
-    <p><b>Performance hypothétique, à but éducatif uniquement. Ce n'est pas un conseil en investissement.</b></p>
+    <p><b>Hypothetical performance, for educational purposes only. Not investment advice.</b></p>
   </section>
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
-const fmtPct = v => v == null ? "–" : (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toLocaleString("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + " %";
-const fmtPrix = (v, dev) => v == null ? "–" : v.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " " + ({ EUR: "€", USD: "$", SGD: "S$", GBP: "£", CHF: "CHF", HKD: "HK$", JPY: "¥" }[dev] || dev);
-const fmtDate = s => s ? new Date(s + "T12:00:00Z").toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" }) : "–";
+const fmtPct = v => v == null ? "–" : (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + "%";
+const fmtPrix = (v, dev) => v == null ? "–" : ({ EUR: "€", USD: "$", SGD: "S$", GBP: "£", CHF: "CHF ", HKD: "HK$", JPY: "¥" }[dev] ?? dev + " ") + v.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmtDate = s => s ? new Date(s + "T12:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "–";
 const cls = v => v > 0 ? "up" : v < 0 ? "down" : "";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const $ = id => document.getElementById(id);
+// Older data.json files carry French status labels.
+const STATUTS = { open: "Open", closed: "Closed", pending: "Pending", "en cours": "Open", "terminé": "Closed", "en attente": "Pending" };
+const fmtStatut = p => p.statut === "pending" || p.statut === "en attente" ? "Pending (entry at next close)" : STATUTS[p.statut] ?? p.statut;
 
 let data, choisi = 0, graphes = {};
 
-// Ligne verticale qui suit la souris, pour lire une date précise.
+// Vertical line that follows the cursor, to read a specific date.
 const viseur = {
   id: "viseur",
   afterDraw(chart) {
@@ -225,7 +228,7 @@ function options(formatY) {
       tooltip: {
         backgroundColor: css("--surface"), titleColor: css("--ink"), bodyColor: css("--ink-2"),
         borderColor: css("--border"), borderWidth: 1, padding: 10, boxPadding: 4,
-        callbacks: { title: it => fmtDate(it[0].label), label: it => " " + it.dataset.label + " : " + formatY(it.parsed.y) }
+        callbacks: { title: it => fmtDate(it[0].label), label: it => " " + it.dataset.label + ": " + formatY(it.parsed.y) }
       }
     },
     scales: {
@@ -251,8 +254,8 @@ function dessinerPortefeuille() {
   const pts = data.portefeuille;
   graphe("c-portefeuille", {
     data: { labels: pts.map(p => p.d), datasets: [
-      ligne("Portefeuille du club", pts.map(p => p.club), css("--club")),
-      ligne("Indices de référence", pts.map(p => p.indice), css("--indice"))
+      ligne("Club portfolio", pts.map(p => p.club), css("--club")),
+      ligne("Benchmark indices", pts.map(p => p.indice), css("--indice"))
     ]},
     options: options(fmtPct)
   });
@@ -262,8 +265,8 @@ function dessinerDetail() {
   const p = data.pitchs[choisi];
   if (!p || !p.serie.length) { $("detail").hidden = true; return; }
   $("detail").hidden = false;
-  $("d-titre").textContent = `${p.entreprise} · ${p.position === "BUY" ? "Achat" : "Vente à découvert"}`;
-  $("d-sous-titre").textContent = `${p.ticker} sur ${p.bourse} · publié le ${fmtDate(p.publie_le)} · comparé au ${p.indice}`;
+  $("d-titre").textContent = `${p.entreprise} · ${p.position === "BUY" ? "Buy" : "Short"}`;
+  $("d-sous-titre").textContent = `${p.ticker} on ${p.bourse} · published ${fmtDate(p.publie_le)} · benchmarked against the ${p.indice}`;
   $("d-lien").href = p.lien;
   $("d-pitch").textContent = fmtPrix(p.prix_pitch, p.devise);
   $("d-entree").textContent = fmtPrix(p.prix_entree, p.devise);
@@ -273,9 +276,9 @@ function dessinerDetail() {
   const repere = { borderWidth: 1, borderDash: [4, 4], pointRadius: 0, pointHoverRadius: 0 };
   graphe("c-detail", {
     data: { labels, datasets: [
-      ligne("Cours", p.serie.map(s => s.prix), css("--club")),
-      ligne("Prix d'entrée", Array(n).fill(p.prix_entree), css("--muted"), repere),
-      ligne("Prix cible", Array(n).fill(p.prix_cible), css("--muted"), repere)
+      ligne("Share price", p.serie.map(s => s.prix), css("--club")),
+      ligne("Entry price", Array(n).fill(p.prix_entree), css("--muted"), repere),
+      ligne("Price target", Array(n).fill(p.prix_cible), css("--muted"), repere)
     ]},
     options: options(v => fmtPrix(v, p.devise))
   });
@@ -283,23 +286,23 @@ function dessinerDetail() {
 
 function afficher() {
   const r = data.resume;
-  $("maj").textContent = "Dernière mise à jour : " + new Date(data.mis_a_jour).toLocaleString("fr-FR", { dateStyle: "long", timeStyle: "short" });
+  $("maj").textContent = "Last updated: " + new Date(data.mis_a_jour).toLocaleString("en-GB", { dateStyle: "long", timeStyle: "short" });
   $("t-club").textContent = fmtPct(r.perf_club); $("t-club").className = "value " + cls(r.perf_club);
-  $("t-club-n").textContent = `${r.nb_pitchs} pitch${r.nb_pitchs > 1 ? "s" : ""} suivi${r.nb_pitchs > 1 ? "s" : ""}`;
+  $("t-club-n").textContent = `${r.nb_pitchs} pitch${r.nb_pitchs === 1 ? "" : "es"} tracked`;
   $("t-indice").textContent = fmtPct(r.perf_indice); $("t-indice").className = "value " + cls(r.perf_indice);
   const ecart = r.perf_club != null ? r.perf_club - r.perf_indice : null;
-  $("t-indice-n").textContent = ecart == null ? "" : `le club fait ${fmtPct(ecart)} ${ecart >= 0 ? "de mieux" : "de moins"}`;
+  $("t-indice-n").textContent = ecart == null ? "" : `the club is ${fmtPct(Math.abs(ecart)).replace(/^[+−]/, "")} ${ecart >= 0 ? "ahead" : "behind"}`;
   $("t-gagnants").textContent = `${r.gagnants} / ${r.nb_pitchs}`;
-  $("t-gagnants-n").textContent = `${r.battent_indice} / ${r.nb_pitchs} battent leur indice`;
+  $("t-gagnants-n").textContent = `${r.battent_indice} / ${r.nb_pitchs} beat their index`;
   $("t-cibles").textContent = `${r.cibles_atteintes} / ${r.nb_pitchs}`;
 
   if (data.erreurs.length) {
-    $("erreurs").innerHTML = `<div class="card alerte">Cours indisponibles aujourd'hui pour : ${data.erreurs.map(esc).join(" · ")}</div>`;
+    $("erreurs").innerHTML = `<div class="card alerte">Prices unavailable today for: ${data.erreurs.map(esc).join(" · ")}</div>`;
   }
 
   $("lignes").innerHTML = data.pitchs.length ? data.pitchs.map((p, i) => {
     const reste = p.dernier_prix ? (p.prix_cible / p.dernier_prix - 1) * 100 : null;
-    const cible = p.cible_atteinte_le ? `<span class="up">✓ atteinte le ${fmtDate(p.cible_atteinte_le)}</span>`
+    const cible = p.cible_atteinte_le ? `<span class="up">✓ hit on ${fmtDate(p.cible_atteinte_le)}</span>`
                                       : `${fmtPrix(p.prix_cible, p.devise)}${reste != null ? ` <span class="tick">(${fmtPct(reste)})</span>` : ""}`;
     return `<tr data-i="${i}" class="${i === choisi ? "sel" : ""}">
       <td><div class="nom">${esc(p.entreprise)}</div><div class="tick">${esc(p.ticker)}</div></td>
@@ -310,9 +313,9 @@ function afficher() {
       <td class="num ${cls(p.perf)}">${fmtPct(p.perf)}</td>
       <td class="num ${cls(p.ecart)}">${fmtPct(p.ecart)}</td>
       <td class="num">${cible}</td>
-      <td>${esc(p.statut)}</td>
+      <td>${esc(fmtStatut(p))}</td>
     </tr>`;
-  }).join("") : `<tr><td colspan="9" class="vide">Aucun pitch pour l'instant.</td></tr>`;
+  }).join("") : `<tr><td colspan="9" class="vide">No pitches yet.</td></tr>`;
 
   dessinerPortefeuille();
   dessinerDetail();
@@ -327,13 +330,13 @@ $("lignes").addEventListener("click", e => {
   $("detail").scrollIntoView({ behavior: "smooth", block: "nearest" });
 });
 
-// Les couleurs des graphiques suivent le mode clair / sombre.
+// Chart colours follow light / dark mode.
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => data && afficher());
 
 fetch("data.json", { cache: "no-store" })
   .then(r => r.json())
-  .then(d => { data = d; afficher(); })
-  .catch(() => { $("lignes").innerHTML = `<tr><td colspan="9" class="vide">Impossible de charger les données.</td></tr>`; });
+  .then(d => { data = d; choisi = Math.max(0, d.pitchs.findIndex(p => p.serie.length)); afficher(); })
+  .catch(() => { $("lignes").innerHTML = `<tr><td colspan="9" class="vide">Could not load the data.</td></tr>`; });
 </script>
 </body>
 </html>

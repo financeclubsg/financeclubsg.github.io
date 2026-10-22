@@ -1,8 +1,8 @@
-name: Mise à jour quotidienne
+name: Daily update
 
 on:
   schedule:
-    - cron: "30 22 * * 1-5"  # 22h30 UTC du lundi au vendredi, après la clôture de Wall Street
+    - cron: "30 22 * * 1-5"  # 22:30 UTC Monday to Friday, after the Wall Street close
   push:
     branches: [main]
   workflow_dispatch:
@@ -30,13 +30,13 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt
       - run: python scripts/update.py
-      - name: Sauvegarder les nouveaux cours
+      - name: Save new prices
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898782+github-actions[bot]@users.noreply.github.com"
           git add site/data.json
           if ! git diff --cached --quiet; then
-            git commit -m "Mise à jour des cours"
+            git commit -m "Update prices"
             git push
           fi
       - uses: actions/configure-pages@v5
