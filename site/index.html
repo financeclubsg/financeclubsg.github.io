@@ -102,6 +102,9 @@
   .down { color: var(--down); }
 
   .detail-head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: baseline; }
+  .liens { display: flex; gap: 16px; flex-wrap: wrap; }
+  .tick a { color: inherit; text-decoration: none; }
+  .tick a:hover { color: var(--club); text-decoration: underline; }
   .facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 16px 0; }
   .facts div { font-size: 13px; color: var(--ink-2); }
   .facts b { display: block; color: var(--ink); font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
@@ -165,7 +168,10 @@
   <section class="card" id="detail" hidden>
     <div class="detail-head">
       <div><h2 id="d-titre"></h2><p class="sub" id="d-sous-titre"></p></div>
-      <a id="d-lien" target="_blank" rel="noopener">View the pitch on LinkedIn ↗</a>
+      <div class="liens">
+        <a id="d-lien" target="_blank" rel="noopener">View the pitch on LinkedIn ↗</a>
+        <a id="d-yahoo" target="_blank" rel="noopener">View on Yahoo Finance ↗</a>
+      </div>
     </div>
     <div class="facts">
       <div>Price in the pitch<b id="d-pitch"></b></div>
@@ -200,9 +206,10 @@ const cls = v => v > 0 ? "up" : v < 0 ? "down" : "";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const $ = id => document.getElementById(id);
+const yahoo = ticker => "https://finance.yahoo.com/quote/" + encodeURIComponent(ticker) + "/";
 // Older data.json files carry French status labels.
 const STATUTS = { open: "Open", closed: "Closed", pending: "Pending", "en cours": "Open", "terminé": "Closed", "en attente": "Pending" };
-const fmtStatut = p => p.statut === "pending" || p.statut === "en attente" ? "Pending (entry at next close)" : STATUTS[p.statut] ?? p.statut;
+const fmtStatut = p => p.statut === "pending" || p.statut === "en attente" ? "Pending" : STATUTS[p.statut] ?? p.statut;
 
 let data, choisi = 0, graphes = {};
 
@@ -274,6 +281,7 @@ function dessinerDetail() {
   $("d-titre").textContent = `${p.entreprise} · ${p.position === "BUY" ? "Buy" : "Short"}`;
   $("d-sous-titre").textContent = `${p.ticker} on ${p.bourse} · published ${fmtDate(p.publie_le)} · benchmarked against the ${p.indice}`;
   $("d-lien").href = p.lien;
+  $("d-yahoo").href = yahoo(p.ticker);
   $("d-pitch").textContent = fmtPrix(p.prix_pitch, p.devise);
   $("d-entree").textContent = fmtPrix(p.prix_entree, p.devise);
   $("d-cible").textContent = fmtPrix(p.prix_cible, p.devise);
@@ -313,7 +321,7 @@ function afficher() {
     const cible = p.cible_atteinte_le ? `<span class="up">✓ hit on ${fmtDate(p.cible_atteinte_le)}</span>`
                                       : `${fmtPrix(p.prix_cible, p.devise)}${reste != null ? ` <span class="tick">(${fmtPct(reste)})</span>` : ""}`;
     return `<tr data-i="${i}" class="${i === choisi ? "sel" : ""}">
-      <td><div class="nom">${esc(p.entreprise)}</div><div class="tick">${esc(p.ticker)}</div></td>
+      <td><div class="nom">${esc(p.entreprise)}</div><div class="tick"><a href="${esc(yahoo(p.ticker))}" target="_blank" rel="noopener" title="Open ${esc(p.ticker)} on Yahoo Finance">${esc(p.ticker)} ↗</a></div></td>
       <td>${fmtDate(p.publie_le)}</td>
       <td><span class="pill">${p.position === "BUY" ? "▲ BUY" : "▼ SELL"}</span></td>
       <td class="num">${fmtPrix(p.prix_entree, p.devise)}</td>
@@ -321,7 +329,7 @@ function afficher() {
       <td class="num ${cls(p.perf)}">${fmtPct(p.perf)}</td>
       <td class="num ${cls(p.ecart)}">${fmtPct(p.ecart)}</td>
       <td class="num">${cible}</td>
-      <td>${esc(fmtStatut(p))}</td>
+      <td${p.serie.length ? "" : ' title="Entry price set at the next market close"'}>${esc(fmtStatut(p))}</td>
     </tr>`;
   }).join("") : `<tr><td colspan="9" class="vide">No pitches yet.</td></tr>`;
 
@@ -330,6 +338,7 @@ function afficher() {
 }
 
 $("lignes").addEventListener("click", e => {
+  if (e.target.closest("a")) return;  // the Yahoo link opens on its own, without selecting the row
   const tr = e.target.closest("tr[data-i]");
   if (!tr) return;
   choisi = +tr.dataset.i;
