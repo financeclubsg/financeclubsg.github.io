@@ -1,10 +1,10 @@
 {
- "mis_a_jour": "2026-10-22T10:10:47Z",
+ "mis_a_jour": "2026-10-22T12:38:29Z",
  "mise": 1000.0,
  "resume": {
   "nb_pitchs": 1,
-  "perf_club": -2.6,
-  "perf_indice": 0.1,
+  "perf_club": -3.09,
+  "perf_indice": 0.69,
   "gagnants": 0,
   "battent_indice": 0,
   "cibles_atteintes": 0
@@ -22,11 +22,26 @@
   },
   {
    "d": "2026-10-22",
-   "club": -2.6,
-   "indice": 0.1
+   "club": -3.09,
+   "indice": 0.69
   }
  ],
  "pitchs": [
+  {
+   "entreprise": "Micron Technology",
+   "ticker": "MU",
+   "bourse": "Nasdaq",
+   "position": "BUY",
+   "publie_le": "2026-10-22",
+   "prix_pitch": 913.67,
+   "prix_cible": 1600.0,
+   "devise": "USD",
+   "horizon_mois": 12,
+   "indice": "S&P 500",
+   "lien": "https://www.linkedin.com/feed/update/urn:li:activity:7518974621271023616/",
+   "statut": "en attente",
+   "serie": []
+  },
   {
    "entreprise": "Rheinmetall AG",
    "ticker": "RHM.DE",
@@ -44,10 +59,10 @@
    "prix_entree": 1054.0,
    "fin_horizon": "2027-10-20",
    "dernier_jour": "2026-10-22",
-   "dernier_prix": 1026.6,
-   "perf": -2.6,
-   "perf_indice": 0.1,
-   "ecart": -2.7,
+   "dernier_prix": 1021.4,
+   "perf": -3.09,
+   "perf_indice": 0.69,
+   "ecart": -3.79,
    "cible_atteinte_le": null,
    "serie": [
     {
@@ -64,9 +79,9 @@
     },
     {
      "d": "2026-10-22",
-     "prix": 1026.6,
-     "r": -2.6,
-     "b": 0.1
+     "prix": 1021.4,
+     "r": -3.09,
+     "b": 0.69
     }
    ]
   }
