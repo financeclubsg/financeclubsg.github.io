@@ -1,10 +1,10 @@
 {
- "mis_a_jour": "2026-10-22T12:46:07Z",
+ "mis_a_jour": "2026-10-22T12:46:47Z",
  "mise": 1000.0,
  "resume": {
   "nb_pitchs": 1,
-  "perf_club": -3.11,
-  "perf_indice": 0.69,
+  "perf_club": -3.13,
+  "perf_indice": 0.68,
   "gagnants": 0,
   "battent_indice": 0,
   "cibles_atteintes": 0
@@ -18,12 +18,12 @@
   {
    "d": "2026-10-21",
    "club": -3.23,
-   "indice": 0.0
+   "indice": 1.35
   },
   {
    "d": "2026-10-22",
-   "club": -3.11,
-   "indice": 0.69
+   "club": -3.13,
+   "indice": 0.68
   }
  ],
  "pitchs": [
@@ -59,9 +59,9 @@
    "prix_entree": 1054.0,
    "fin_horizon": "2027-10-20",
    "dernier_jour": "2026-10-22",
-   "dernier_prix": 1021.2,
-   "perf": -3.11,
-   "perf_indice": 0.69,
+   "dernier_prix": 1021.0,
+   "perf": -3.13,
+   "perf_indice": 0.68,
    "ecart": -3.81,
    "cible_atteinte_le": null,
    "serie": [
@@ -75,13 +75,13 @@
      "d": "2026-10-21",
      "prix": 1020.0,
      "r": -3.23,
-     "b": 0.0
+     "b": 1.35
     },
     {
      "d": "2026-10-22",
-     "prix": 1021.2,
-     "r": -3.11,
-     "b": 0.69
+     "prix": 1021.0,
+     "r": -3.13,
+     "b": 0.68
     }
    ]
   }
