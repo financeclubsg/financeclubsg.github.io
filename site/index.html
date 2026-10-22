@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Suivi des stock pitchs · Finance Club Singapore</title>
+<style>
+  :root {
+    color-scheme: light;
+    --page: #f6f5f1;
+    --surface: #fcfcfb;
+    --ink: #0b0b0b;
+    --ink-2: #52514e;
+    --muted: #898781;
+    --grid: #e1e0d9;
+    --axis: #c3c2b7;
+    --border: rgba(11, 11, 11, 0.10);
+    --brand: #2c4a33;
+    --brand-ink: #f3f1e8;
+    --club: #2a78d6;
+    --indice: #eb6834;
+    --up: #006300;
+    --down: #d03b3b;
+    --hover: rgba(11, 11, 11, 0.04);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --page: #0d0d0d;
+      --surface: #1a1a19;
+      --ink: #f0efec;
+      --ink-2: #c3c2b7;
+      --grid: #2c2c2a;
+      --axis: #383835;
+      --border: rgba(255, 255, 255, 0.10);
+      --brand: #1f3524;
+      --club: #3987e5;
+      --indice: #d95926;
+      --up: #0ca30c;
+      --down: #e66767;
+      --hover: rgba(255, 255, 255, 0.05);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface: #1a1a19;
+    --ink: #f0efec;
+    --ink-2: #c3c2b7;
+    --grid: #2c2c2a;
+    --axis: #383835;
+    --border: rgba(255, 255, 255, 0.10);
+    --brand: #1f3524;
+    --club: #3987e5;
+    --indice: #d95926;
+    --up: #0ca30c;
+    --down: #e66767;
+    --hover: rgba(255, 255, 255, 0.05);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  header { background: var(--brand); color: var(--brand-ink); padding: 32px 16px 28px; }
+  .wrap { max-width: 1040px; margin: 0 auto; }
+  main.wrap { padding: 24px 16px 48px; }
+  .eyebrow { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.75; margin: 0 0 6px; }
+  h1 { font-size: 28px; line-height: 1.2; margin: 0 0 8px; font-weight: 700; }
+  header p { margin: 0; max-width: 640px; opacity: 0.85; }
+  .maj { margin-top: 14px; font-size: 13px; opacity: 0.7; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  h2 { font-size: 17px; margin: 0 0 4px; }
+  .sub { color: var(--ink-2); font-size: 13px; margin: 0 0 16px; }
+
+  .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+  .tile .label { color: var(--ink-2); font-size: 13px; }
+  .tile .value { font-size: 30px; font-weight: 650; margin-top: 4px; line-height: 1.1; }
+  .tile .note { color: var(--muted); font-size: 12px; margin-top: 4px; }
+
+  .chart-box { position: relative; height: 300px; }
+  .legend { display: flex; gap: 18px; font-size: 13px; color: var(--ink-2); margin-bottom: 10px; flex-wrap: wrap; }
+  .legend span::before { content: ""; display: inline-block; width: 14px; height: 2px; vertical-align: middle; margin-right: 6px; background: var(--c); border-radius: 2px; }
+  section { margin-bottom: 16px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; font-weight: 500; color: var(--muted); font-size: 12px; padding: 0 10px 8px; border-bottom: 1px solid var(--axis); white-space: nowrap; }
+  td { padding: 12px 10px; border-bottom: 1px solid var(--grid); white-space: nowrap; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tbody tr { cursor: pointer; }
+  tbody tr:hover, tbody tr.sel { background: var(--hover); }
+  .table-scroll { overflow-x: auto; margin: 0 -10px; }
+  .nom { font-weight: 600; }
+  .tick { color: var(--muted); font-size: 12px; }
+  .pill { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); }
+  .up { color: var(--up); }
+  .down { color: var(--down); }
+
+  .detail-head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: baseline; }
+  .facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 16px 0; }
+  .facts div { font-size: 13px; color: var(--ink-2); }
+  .facts b { display: block; color: var(--ink); font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  a { color: var(--club); }
+
+  .methode { color: var(--ink-2); font-size: 13px; }
+  .methode ul { padding-left: 18px; margin: 8px 0 0; }
+  .alerte { border-color: var(--down); color: var(--down); font-size: 13px; margin-bottom: 16px; }
+  .vide { color: var(--ink-2); text-align: center; padding: 32px 0; }
+
+  @media (max-width: 720px) {
+    .tiles, .facts { grid-template-columns: repeat(2, 1fr); }
+    h1 { font-size: 23px; }
+    .tile .value { font-size: 24px; }
+    .chart-box { height: 240px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <p class="eyebrow">Finance Club Singapore</p>
+    <h1>Suivi des stock pitchs</h1>
+    <p>Et si on avait suivi chaque recommandation du club le jour de sa publication sur LinkedIn ? Performance hypothétique, mise à jour chaque jour.</p>
+    <p class="maj" id="maj"></p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="erreurs"></div>
+
+  <div class="tiles">
+    <div class="card tile"><div class="label">Portefeuille du club</div><div class="value" id="t-club">–</div><div class="note" id="t-club-n"></div></div>
+    <div class="card tile"><div class="label">Mêmes dates, dans les indices</div><div class="value" id="t-indice">–</div><div class="note" id="t-indice-n"></div></div>
+    <div class="card tile"><div class="label">Pitchs gagnants</div><div class="value" id="t-gagnants">–</div><div class="note" id="t-gagnants-n"></div></div>
+    <div class="card tile"><div class="label">Prix cibles atteints</div><div class="value" id="t-cibles">–</div><div class="note">depuis la publication</div></div>
+  </div>
+
+  <section class="card">
+    <h2>Le club face au marché</h2>
+    <p class="sub">Rendement cumulé : 1 000 investis dans chaque pitch à sa date de publication, comparés aux mêmes 1 000 placés dans l'indice de référence.</p>
+    <div class="legend"><span style="--c: var(--club)">Portefeuille du club</span><span style="--c: var(--indice)">Indices de référence</span></div>
+    <div class="chart-box"><canvas id="c-portefeuille" aria-label="Rendement cumulé du portefeuille du club comparé aux indices"></canvas></div>
+  </section>
+
+  <section class="card">
+    <h2>Tous les pitchs</h2>
+    <p class="sub">Clique sur une ligne pour voir le détail.</p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr>
+          <th>Entreprise</th><th>Publié le</th><th>Reco</th>
+          <th class="num">Entrée</th><th class="num">Dernier cours</th>
+          <th class="num">Perf.</th><th class="num">vs indice</th><th class="num">Cible</th><th>Statut</th>
+        </tr></thead>
+        <tbody id="lignes"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card" id="detail" hidden>
+    <div class="detail-head">
+      <div><h2 id="d-titre"></h2><p class="sub" id="d-sous-titre"></p></div>
+      <a id="d-lien" target="_blank" rel="noopener">Voir le pitch sur LinkedIn ↗</a>
+    </div>
+    <div class="facts">
+      <div>Prix dans le pitch<b id="d-pitch"></b></div>
+      <div>Prix d'entrée<b id="d-entree"></b></div>
+      <div>Prix cible<b id="d-cible"></b></div>
+      <div>Fin de l'horizon<b id="d-fin"></b></div>
+    </div>
+    <div class="legend"><span style="--c: var(--club)">Cours</span><span style="--c: var(--muted)">Prix d'entrée et prix cible</span></div>
+    <div class="chart-box"><canvas id="c-detail" aria-label="Cours de l'action depuis le pitch"></canvas></div>
+  </section>
+
+  <section class="card methode">
+    <h2>Méthode</h2>
+    <ul>
+      <li>Chaque pitch publié sur la page LinkedIn du club est suivi automatiquement.</li>
+      <li>Prix d'entrée : le cours de clôture de la première séance qui suit la publication du post (le jour même si le post sort avant la clôture).</li>
+      <li>BUY = achat ; SELL = vente à découvert (on gagne si le cours baisse). La position est gardée jusqu'à la fin de l'horizon annoncé, puis figée.</li>
+      <li>Rendements dividendes compris, dans la devise de chaque action (sans effet de change).</li>
+      <li>Chaque pitch est comparé à l'indice de son marché (DAX pour l'Allemagne, STI pour Singapour, S&amp;P 500 pour les États-Unis…).</li>
+      <li>Données de cours : Yahoo Finance.</li>
+    </ul>
+    <p><b>Performance hypothétique, à but éducatif uniquement. Ce n'est pas un conseil en investissement.</b></p>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+const fmtPct = v => v == null ? "–" : (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toLocaleString("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + " %";
+const fmtPrix = (v, dev) => v == null ? "–" : v.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " " + ({ EUR: "€", USD: "$", SGD: "S$", GBP: "£", CHF: "CHF", HKD: "HK$", JPY: "¥" }[dev] || dev);
+const fmtDate = s => s ? new Date(s + "T12:00:00Z").toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" }) : "–";
+const cls = v => v > 0 ? "up" : v < 0 ? "down" : "";
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const $ = id => document.getElementById(id);
+
+let data, choisi = 0, graphes = {};
+
+// Ligne verticale qui suit la souris, pour lire une date précise.
+const viseur = {
+  id: "viseur",
+  afterDraw(chart) {
+    const a = chart.tooltip?.getActiveElements?.();
+    if (!a || !a.length) return;
+    const x = a[0].element.x, { top, bottom } = chart.chartArea, ctx = chart.ctx;
+    ctx.save(); ctx.strokeStyle = css("--axis"); ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, bottom); ctx.stroke(); ctx.restore();
+  }
+};
+
+function options(formatY) {
+  return {
+    maintainAspectRatio: false,
+    animation: false,
+    interaction: { mode: "index", intersect: false },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: css("--surface"), titleColor: css("--ink"), bodyColor: css("--ink-2"),
+        borderColor: css("--border"), borderWidth: 1, padding: 10, boxPadding: 4,
+        callbacks: { title: it => fmtDate(it[0].label), label: it => " " + it.dataset.label + " : " + formatY(it.parsed.y) }
+      }
+    },
+    scales: {
+      x: { grid: { display: false }, border: { color: css("--axis") },
+           ticks: { color: css("--muted"), maxTicksLimit: 6, maxRotation: 0, callback(v) { return fmtDate(this.getLabelForValue(v)); } } },
+      y: { grid: { color: css("--grid") }, border: { display: false },
+           ticks: { color: css("--muted"), callback: formatY, maxTicksLimit: 6 } }
+    }
+  };
+}
+
+const ligne = (label, values, couleur, extra = {}) => ({
+  label, data: values, borderColor: couleur, backgroundColor: couleur,
+  borderWidth: 2, pointRadius: values.length < 15 ? 4 : 0, pointHoverRadius: 5, tension: 0, ...extra
+});
+
+function graphe(id, config) {
+  graphes[id]?.destroy();
+  graphes[id] = new Chart($(id), { type: "line", plugins: [viseur], ...config });
+}
+
+function dessinerPortefeuille() {
+  const pts = data.portefeuille;
+  graphe("c-portefeuille", {
+    data: { labels: pts.map(p => p.d), datasets: [
+      ligne("Portefeuille du club", pts.map(p => p.club), css("--club")),
+      ligne("Indices de référence", pts.map(p => p.indice), css("--indice"))
+    ]},
+    options: options(fmtPct)
+  });
+}
+
+function dessinerDetail() {
+  const p = data.pitchs[choisi];
+  if (!p || !p.serie.length) { $("detail").hidden = true; return; }
+  $("detail").hidden = false;
+  $("d-titre").textContent = `${p.entreprise} · ${p.position === "BUY" ? "Achat" : "Vente à découvert"}`;
+  $("d-sous-titre").textContent = `${p.ticker} sur ${p.bourse} · publié le ${fmtDate(p.publie_le)} · comparé au ${p.indice}`;
+  $("d-lien").href = p.lien;
+  $("d-pitch").textContent = fmtPrix(p.prix_pitch, p.devise);
+  $("d-entree").textContent = fmtPrix(p.prix_entree, p.devise);
+  $("d-cible").textContent = fmtPrix(p.prix_cible, p.devise);
+  $("d-fin").textContent = fmtDate(p.fin_horizon);
+  const labels = p.serie.map(s => s.d), n = labels.length;
+  const repere = { borderWidth: 1, borderDash: [4, 4], pointRadius: 0, pointHoverRadius: 0 };
+  graphe("c-detail", {
+    data: { labels, datasets: [
+      ligne("Cours", p.serie.map(s => s.prix), css("--club")),
+      ligne("Prix d'entrée", Array(n).fill(p.prix_entree), css("--muted"), repere),
+      ligne("Prix cible", Array(n).fill(p.prix_cible), css("--muted"), repere)
+    ]},
+    options: options(v => fmtPrix(v, p.devise))
+  });
+}
+
+function afficher() {
+  const r = data.resume;
+  $("maj").textContent = "Dernière mise à jour : " + new Date(data.mis_a_jour).toLocaleString("fr-FR", { dateStyle: "long", timeStyle: "short" });
+  $("t-club").textContent = fmtPct(r.perf_club); $("t-club").className = "value " + cls(r.perf_club);
+  $("t-club-n").textContent = `${r.nb_pitchs} pitch${r.nb_pitchs > 1 ? "s" : ""} suivi${r.nb_pitchs > 1 ? "s" : ""}`;
+  $("t-indice").textContent = fmtPct(r.perf_indice); $("t-indice").className = "value " + cls(r.perf_indice);
+  const ecart = r.perf_club != null ? r.perf_club - r.perf_indice : null;
+  $("t-indice-n").textContent = ecart == null ? "" : `le club fait ${fmtPct(ecart)} ${ecart >= 0 ? "de mieux" : "de moins"}`;
+  $("t-gagnants").textContent = `${r.gagnants} / ${r.nb_pitchs}`;
+  $("t-gagnants-n").textContent = `${r.battent_indice} / ${r.nb_pitchs} battent leur indice`;
+  $("t-cibles").textContent = `${r.cibles_atteintes} / ${r.nb_pitchs}`;
+
+  if (data.erreurs.length) {
+    $("erreurs").innerHTML = `<div class="card alerte">Cours indisponibles aujourd'hui pour : ${data.erreurs.map(esc).join(" · ")}</div>`;
+  }
+
+  $("lignes").innerHTML = data.pitchs.length ? data.pitchs.map((p, i) => {
+    const reste = p.dernier_prix ? (p.prix_cible / p.dernier_prix - 1) * 100 : null;
+    const cible = p.cible_atteinte_le ? `<span class="up">✓ atteinte le ${fmtDate(p.cible_atteinte_le)}</span>`
+                                      : `${fmtPrix(p.prix_cible, p.devise)}${reste != null ? ` <span class="tick">(${fmtPct(reste)})</span>` : ""}`;
+    return `<tr data-i="${i}" class="${i === choisi ? "sel" : ""}">
+      <td><div class="nom">${esc(p.entreprise)}</div><div class="tick">${esc(p.ticker)}</div></td>
+      <td>${fmtDate(p.publie_le)}</td>
+      <td><span class="pill">${p.position === "BUY" ? "▲ BUY" : "▼ SELL"}</span></td>
+      <td class="num">${fmtPrix(p.prix_entree, p.devise)}</td>
+      <td class="num">${fmtPrix(p.dernier_prix, p.devise)}</td>
+      <td class="num ${cls(p.perf)}">${fmtPct(p.perf)}</td>
+      <td class="num ${cls(p.ecart)}">${fmtPct(p.ecart)}</td>
+      <td class="num">${cible}</td>
+      <td>${esc(p.statut)}</td>
+    </tr>`;
+  }).join("") : `<tr><td colspan="9" class="vide">Aucun pitch pour l'instant.</td></tr>`;
+
+  dessinerPortefeuille();
+  dessinerDetail();
+}
+
+$("lignes").addEventListener("click", e => {
+  const tr = e.target.closest("tr[data-i]");
+  if (!tr) return;
+  choisi = +tr.dataset.i;
+  document.querySelectorAll("#lignes tr").forEach(t => t.classList.toggle("sel", t === tr));
+  dessinerDetail();
+  $("detail").scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+
+// Les couleurs des graphiques suivent le mode clair / sombre.
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => data && afficher());
+
+fetch("data.json", { cache: "no-store" })
+  .then(r => r.json())
+  .then(d => { data = d; afficher(); })
+  .catch(() => { $("lignes").innerHTML = `<tr><td colspan="9" class="vide">Impossible de charger les données.</td></tr>`; });
+</script>
+</body>
+</html>

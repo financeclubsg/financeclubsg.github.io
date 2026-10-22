@@ -1,0 +1,75 @@
+{
+ "mis_a_jour": "2026-10-22T09:58:12Z",
+ "mise": 1000.0,
+ "resume": {
+  "nb_pitchs": 1,
+  "perf_club": -2.64,
+  "perf_indice": 0.14,
+  "gagnants": 0,
+  "battent_indice": 0,
+  "cibles_atteintes": 0
+ },
+ "portefeuille": [
+  {
+   "d": "2026-10-20",
+   "club": 0.0,
+   "indice": 0.0
+  },
+  {
+   "d": "2026-10-21",
+   "club": -3.23,
+   "indice": 0.0
+  },
+  {
+   "d": "2026-10-22",
+   "club": -2.64,
+   "indice": 0.14
+  }
+ ],
+ "pitchs": [
+  {
+   "entreprise": "Rheinmetall AG",
+   "ticker": "RHM.DE",
+   "bourse": "Xetra",
+   "position": "BUY",
+   "publie_le": "2026-10-20",
+   "prix_pitch": 1059.8,
+   "prix_cible": 1570.8,
+   "devise": "EUR",
+   "horizon_mois": 12,
+   "indice": "DAX",
+   "lien": "https://www.linkedin.com/feed/update/urn:li:activity:7518249938477006849/",
+   "statut": "en cours",
+   "date_entree": "2026-10-20",
+   "prix_entree": 1054.0,
+   "fin_horizon": "2027-10-20",
+   "dernier_jour": "2026-10-22",
+   "dernier_prix": 1026.2,
+   "perf": -2.64,
+   "perf_indice": 0.14,
+   "ecart": -2.77,
+   "cible_atteinte_le": null,
+   "serie": [
+    {
+     "d": "2026-10-20",
+     "prix": 1054.0,
+     "r": 0.0,
+     "b": 0.0
+    },
+    {
+     "d": "2026-10-21",
+     "prix": 1020.0,
+     "r": -3.23,
+     "b": 0.0
+    },
+    {
+     "d": "2026-10-22",
+     "prix": 1026.2,
+     "r": -2.64,
+     "b": 0.14
+    }
+   ]
+  }
+ ],
+ "erreurs": []
+}
