@@ -2,7 +2,12 @@ name: Daily update
 
 on:
   schedule:
-    - cron: "30 22 * * 1-5"  # 22:30 UTC Monday to Friday, after the Wall Street close
+    # Several runs a day: right after each market closes, plus a catch-up run
+    # because Yahoo sometimes publishes a closing price a few hours late.
+    - cron: "30 9 * * 1-5"   # after the Singapore close
+    - cron: "0 16 * * 1-5"   # after the European closes
+    - cron: "30 22 * * 1-5"  # after the Wall Street close
+    - cron: "0 4 * * 2-6"    # catch-up for late US prices
   push:
     branches: [main]
   workflow_dispatch:
