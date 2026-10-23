@@ -1,9 +1,10 @@
 """Calcule la performance hypothétique des stock pitchs du club et écrit site/data.json.
 
-Hypothèse : à chaque pitch, on investit MISE à la première clôture qui suit la
-publication du post, dans le sens recommandé (BUY = achat, SELL = vente à découvert),
-et on garde la position jusqu'à la fin de l'horizon annoncé. Même chose en parallèle
-dans l'indice de référence du pitch, pour comparer.
+Hypothèse : à chaque pitch, on investit MISE au prix annoncé dans le pitch (« share price »),
+dans le sens recommandé (BUY = achat, SELL = vente à découvert), et on garde la position
+jusqu'à la fin de l'horizon annoncé. Le jour de référence est la dernière clôture avant le
+post : c'est à partir de ce jour qu'on suit le cours, et l'indice de référence du pitch,
+pour comparer.
 """
 import csv
 import json
@@ -63,14 +64,16 @@ def historique(ticker, debut):
     return h
 
 
-def premiere_cloture_apres(h, publie_le):
-    """Première séance dont la clôture tombe après la publication du post."""
+def derniere_cloture_avant(h, publie_le):
+    """Dernière séance clôturée avant la publication du post : le jour de référence du pitch."""
     heure = CLOTURES.get(str(h.index.tz), time(16, 0))
+    reference = None
     for ts in h.index:
         cloture = ts.normalize().replace(hour=heure.hour, minute=heure.minute)
         if cloture >= publie_le:
-            return ts
-    return None
+            break
+        reference = ts
+    return reference
 
 
 def analyser(p, maintenant):
@@ -93,12 +96,12 @@ def analyser(p, maintenant):
 
     debut = (publie_le - pd.Timedelta(days=10)).strftime("%Y-%m-%d")
     h = historique(p["ticker"], debut)
-    entree = premiere_cloture_apres(h, publie_le)
-    if entree is None:
-        return {**resultat, "statut": "pending", "serie": []}
+    reference = derniere_cloture_avant(h, publie_le)
+    if reference is None:
+        raise RuntimeError(f"no close found before the post for {p['ticker']}")
 
-    fin_horizon = entree + pd.DateOffset(months=resultat["horizon_mois"])
-    h = h[(h.index >= entree) & (h.index <= fin_horizon)]
+    fin_horizon = publie_le.tz_convert(h.index.tz) + pd.DateOffset(months=resultat["horizon_mois"])
+    h = h[(h.index >= reference) & (h.index <= fin_horizon)]
 
     # L'indice peut avoir des jours fériés différents : on l'aligne jour par jour sur l'action.
     idx = historique(p["indice"], debut)["Adj Close"]
@@ -106,17 +109,20 @@ def analyser(p, maintenant):
     jours = [ts.date() for ts in h.index]
     idx = idx.reindex(sorted(set(idx.index) | set(jours))).ffill().reindex(jours)
 
-    r = sens * (h["Adj Close"].values / h["Adj Close"].iloc[0] - 1)
+    # On part du prix du pitch, puis on suit le cours ajusté (dividendes compris).
+    valeur = h["Close"].iloc[0] / resultat["prix_pitch"] * h["Adj Close"].values / h["Adj Close"].iloc[0]
+    r = sens * (valeur - 1)
     b = idx.values / idx.iloc[0] - 1
 
-    atteinte = h[h["High"] >= cible] if sens == 1 else h[h["Low"] <= cible]
+    apres = h.iloc[1:]  # les séances qui suivent le post
+    atteinte = apres[apres["High"] >= cible] if sens == 1 else apres[apres["Low"] <= cible]
     termine = maintenant >= fin_horizon
 
     return {
         **resultat,
         "statut": "closed" if termine else "open",
         "date_entree": jours[0].isoformat(),
-        "prix_entree": prix(h["Close"].iloc[0]),
+        "prix_entree": resultat["prix_pitch"],
         "fin_horizon": fin_horizon.strftime("%Y-%m-%d"),
         "dernier_jour": jours[-1].isoformat(),
         "dernier_prix": prix(h["Close"].iloc[-1]),

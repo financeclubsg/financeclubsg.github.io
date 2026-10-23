@@ -145,7 +145,7 @@
 
   <section class="card">
     <h2>The club vs the market</h2>
-    <p class="sub">Cumulative return: 1,000 invested in each pitch on its publication date, compared with the same 1,000 put on the same day in that stock's home market index (DAX for German stocks, S&amp;P 500 for US stocks…).</p>
+    <p class="sub">Cumulative return: 1,000 invested in each pitch at the price stated in the pitch, compared with the same 1,000 put on the same day in that stock's home market index (DAX for German stocks, S&amp;P 500 for US stocks…).</p>
     <div class="legend"><span style="--c: var(--club)">Club portfolio</span><span style="--c: var(--indice)" id="leg-indice">Benchmark</span></div>
     <div class="chart-box"><canvas id="c-portefeuille" aria-label="Cumulative return of the club portfolio compared with the indices"></canvas></div>
   </section>
@@ -174,8 +174,8 @@
       </div>
     </div>
     <div class="facts">
-      <div>Price in the pitch<b id="d-pitch"></b></div>
-      <div>Entry price<b id="d-entree"></b></div>
+      <div>Entry price (from the pitch)<b id="d-pitch"></b></div>
+      <div>Last price<b id="d-entree"></b></div>
       <div>Price target<b id="d-cible"></b></div>
       <div>Horizon ends<b id="d-fin"></b></div>
     </div>
@@ -187,7 +187,7 @@
     <h2>Methodology</h2>
     <ul>
       <li>Every pitch posted on the club's LinkedIn page is tracked automatically.</li>
-      <li>Entry price: the closing price of the first trading session after the post is published (the same day if it comes out before the close).</li>
+      <li>Entry price: the share price stated in the pitch itself. Each pitch is tracked from the last market close before the post, and its benchmark index from that same close.</li>
       <li>BUY = long; SELL = short (gains when the price falls). The position is held until the end of the stated horizon, then frozen.</li>
       <li>Returns include dividends and are in each stock's own currency (no FX effect).</li>
       <li>Each pitch is compared with its home market index (DAX for Germany, STI for Singapore, S&amp;P 500 for the US…).</li>
@@ -283,7 +283,7 @@ function dessinerDetail() {
   $("d-lien").href = p.lien;
   $("d-yahoo").href = yahoo(p.ticker);
   $("d-pitch").textContent = fmtPrix(p.prix_pitch, p.devise);
-  $("d-entree").textContent = fmtPrix(p.prix_entree, p.devise);
+  $("d-entree").textContent = fmtPrix(p.dernier_prix, p.devise);
   $("d-cible").textContent = fmtPrix(p.prix_cible, p.devise);
   $("d-fin").textContent = fmtDate(p.fin_horizon);
   const labels = p.serie.map(s => s.d), n = labels.length;
