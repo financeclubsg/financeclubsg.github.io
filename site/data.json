@@ -1,12 +1,12 @@
 {
- "mis_a_jour": "2026-10-27T09:37:53Z",
+ "mis_a_jour": "2026-10-27T15:27:58Z",
  "mise": 1000.0,
  "resume": {
   "nb_pitchs": 2,
-  "perf_club": -2.4,
-  "perf_indice": -0.61,
-  "gagnants": 0,
-  "battent_indice": 0,
+  "perf_club": -1.09,
+  "perf_indice": -0.04,
+  "gagnants": 1,
+  "battent_indice": 1,
   "cibles_atteintes": 0
  },
  "portefeuille": [
@@ -42,8 +42,8 @@
   },
   {
    "d": "2026-10-27",
-   "club": -2.4,
-   "indice": -0.61
+   "club": -1.09,
+   "indice": -0.04
   }
  ],
  "pitchs": [
@@ -63,11 +63,11 @@
    "date_entree": "2026-10-21",
    "prix_entree": 913.67,
    "fin_horizon": "2027-10-22",
-   "dernier_jour": "2026-10-26",
-   "dernier_prix": 903.7,
-   "perf": -1.09,
-   "perf_indice": -1.04,
-   "ecart": -0.05,
+   "dernier_jour": "2026-10-27",
+   "dernier_prix": 925.0,
+   "perf": 1.24,
+   "perf_indice": -0.47,
+   "ecart": 1.71,
    "perf_indice_local": null,
    "ecart_local": null,
    "cible_atteinte_le": null,
@@ -95,6 +95,12 @@
      "prix": 903.7,
      "r": -1.09,
      "b": -1.04
+    },
+    {
+     "d": "2026-10-27",
+     "prix": 925.0,
+     "r": 1.24,
+     "b": -0.47
     }
    ]
   },
@@ -115,12 +121,12 @@
    "prix_entree": 1059.8,
    "fin_horizon": "2027-10-20",
    "dernier_jour": "2026-10-27",
-   "dernier_prix": 1020.4,
-   "perf": -3.72,
-   "perf_indice": -0.18,
-   "ecart": -3.54,
-   "perf_indice_local": 0.31,
-   "ecart_local": -4.03,
+   "dernier_prix": 1023.6,
+   "perf": -3.42,
+   "perf_indice": 0.39,
+   "ecart": -3.8,
+   "perf_indice_local": 1.07,
+   "ecart_local": -4.48,
    "cible_atteinte_le": null,
    "serie": [
     {
@@ -161,9 +167,9 @@
     },
     {
      "d": "2026-10-27",
-     "prix": 1020.4,
-     "r": -3.72,
-     "b": -0.18
+     "prix": 1023.6,
+     "r": -3.42,
+     "b": 0.39
     }
    ]
   }
