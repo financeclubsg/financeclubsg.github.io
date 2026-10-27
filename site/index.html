@@ -138,15 +138,15 @@
 
   <div class="tiles">
     <div class="card tile"><div class="label">Club portfolio</div><div class="value" id="t-club">–</div><div class="note" id="t-club-n"></div></div>
-    <div class="card tile"><div class="label" id="t-indice-l">Benchmark, same dates</div><div class="value" id="t-indice">–</div><div class="note" id="t-indice-n"></div></div>
+    <div class="card tile"><div class="label">S&amp;P 500, same dates</div><div class="value" id="t-indice">–</div><div class="note" id="t-indice-n"></div></div>
     <div class="card tile"><div class="label">Winning pitches</div><div class="value" id="t-gagnants">–</div><div class="note" id="t-gagnants-n"></div></div>
     <div class="card tile"><div class="label">Price targets hit</div><div class="value" id="t-cibles">–</div><div class="note">since publication</div></div>
   </div>
 
   <section class="card">
     <h2>The club vs the market</h2>
-    <p class="sub">Cumulative return: 1,000 invested in each pitch at the price stated in the pitch, compared with the same 1,000 put on the same day in that stock's home market index (DAX for German stocks, S&amp;P 500 for US stocks…).</p>
-    <div class="legend"><span style="--c: var(--club)">Club portfolio</span><span style="--c: var(--indice)" id="leg-indice">Benchmark</span></div>
+    <p class="sub">Cumulative return: 1,000 invested in each pitch at the price stated in the pitch, compared with the same 1,000 put in the S&amp;P 500 on the same day.</p>
+    <div class="legend"><span style="--c: var(--club)">Club portfolio</span><span style="--c: var(--indice)">S&amp;P 500</span></div>
     <div class="chart-box"><canvas id="c-portefeuille" aria-label="Cumulative return of the club portfolio compared with the indices"></canvas></div>
   </section>
 
@@ -158,7 +158,7 @@
         <thead><tr>
           <th>Company</th><th>Published</th><th>Call</th>
           <th class="num">Entry</th><th class="num">Last price</th>
-          <th class="num">Return</th><th class="num">vs index</th><th class="num">Target</th><th>Status</th>
+          <th class="num">Return</th><th class="num">vs S&amp;P 500</th><th class="num">Target</th><th>Status</th>
         </tr></thead>
         <tbody id="lignes"></tbody>
       </table>
@@ -189,8 +189,8 @@
       <li>Every pitch posted on the club's LinkedIn page is tracked automatically.</li>
       <li>Entry price: the share price stated in the pitch itself. Each pitch is tracked from the last market close before the post, and its benchmark index from that same close.</li>
       <li>BUY = long; SELL = short (gains when the price falls). The position is held until the end of the stated horizon, then frozen.</li>
-      <li>Returns include dividends and are in each stock's own currency (no FX effect).</li>
-      <li>Each pitch is compared with its home market index (DAX for Germany, STI for Singapore, S&amp;P 500 for the US…).</li>
+      <li>Returns include dividends and are in each stock's own currency: a euro stock is compared with the S&amp;P 500 without converting euros to dollars (no FX effect).</li>
+      <li>Benchmark: the S&amp;P 500, for every pitch. Each pitch's detail also shows how it did against its home market index (DAX for Germany, STI for Singapore…).</li>
       <li>Price data: Yahoo Finance.</li>
     </ul>
     <p><b>Hypothetical performance, for educational purposes only. Not investment advice.</b></p>
@@ -257,18 +257,12 @@ function graphe(id, config) {
   graphes[id] = new Chart($(id), { type: "line", plugins: [viseur], ...config });
 }
 
-// Names the indices the club is compared with, e.g. "Benchmark (DAX + S&P 500)".
-function nomBenchmark() {
-  const noms = [...new Set(data.pitchs.filter(p => p.serie.length).map(p => p.indice))];
-  return noms.length ? `Benchmark (${noms.join(" + ")})` : "Benchmark";
-}
-
 function dessinerPortefeuille() {
   const pts = data.portefeuille;
   graphe("c-portefeuille", {
     data: { labels: pts.map(p => p.d), datasets: [
       ligne("Club portfolio", pts.map(p => p.club), css("--club")),
-      ligne(nomBenchmark(), pts.map(p => p.indice), css("--indice"))
+      ligne("S&P 500", pts.map(p => p.indice), css("--indice"))
     ]},
     options: options(fmtPct)
   });
@@ -279,7 +273,8 @@ function dessinerDetail() {
   if (!p || !p.serie.length) { $("detail").hidden = true; return; }
   $("detail").hidden = false;
   $("d-titre").textContent = `${p.entreprise} · ${p.position === "BUY" ? "Buy" : "Short"}`;
-  $("d-sous-titre").textContent = `${p.ticker} on ${p.bourse} · published ${fmtDate(p.publie_le)} · benchmarked against the ${p.indice}`;
+  $("d-sous-titre").textContent = `${p.ticker} on ${p.bourse} · published ${fmtDate(p.publie_le)} · vs S&P 500: ${fmtPct(p.ecart)}`
+    + (p.ecart_local != null ? ` · vs ${p.indice} (home market): ${fmtPct(p.ecart_local)}` : "");
   $("d-lien").href = p.lien;
   $("d-yahoo").href = yahoo(p.ticker);
   $("d-pitch").textContent = fmtPrix(p.prix_pitch, p.devise);
@@ -303,8 +298,6 @@ function afficher() {
   $("maj").textContent = "Last updated: " + new Date(data.mis_a_jour).toLocaleString("en-GB", { dateStyle: "long", timeStyle: "short" });
   $("t-club").textContent = fmtPct(r.perf_club); $("t-club").className = "value " + cls(r.perf_club);
   $("t-club-n").textContent = `${r.nb_pitchs} pitch${r.nb_pitchs === 1 ? "" : "es"} tracked`;
-  $("t-indice-l").textContent = nomBenchmark() + ", same dates";
-  $("leg-indice").textContent = nomBenchmark();
   $("t-indice").textContent = fmtPct(r.perf_indice); $("t-indice").className = "value " + cls(r.perf_indice);
   const ecart = r.perf_club != null ? r.perf_club - r.perf_indice : null;
   $("t-indice-n").textContent = ecart == null ? "" : `the club is ${fmtPct(Math.abs(ecart)).replace(/^[+−]/, "")} ${ecart >= 0 ? "ahead" : "behind"}`;

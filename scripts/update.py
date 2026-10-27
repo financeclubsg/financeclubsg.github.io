@@ -10,6 +10,7 @@ import csv
 import json
 import math
 import sys
+import time as time_mod
 from datetime import datetime, time, timezone
 from pathlib import Path
 
@@ -20,6 +21,8 @@ ROOT = Path(__file__).resolve().parent.parent
 PITCHES = ROOT / "data" / "pitches.csv"
 SORTIE = ROOT / "site" / "data.json"
 MISE = 1000.0
+# Un seul indice de référence pour tout le club ; l'indice du marché local reste affiché en complément.
+BENCHMARK = "^GSPC"
 
 # Heure de clôture locale de chaque bourse, pour savoir si un post est sorti avant ou après la clôture.
 CLOTURES = {
@@ -56,12 +59,19 @@ def prix(x):
     return None if x is None or not math.isfinite(x) else round(float(x), 2)
 
 
-def historique(ticker, debut):
-    h = yf.Ticker(ticker).history(start=debut, auto_adjust=False, actions=False)
-    h = h.dropna(subset=["Close"])
-    if h.empty:
-        raise RuntimeError(f"no price data found for {ticker}")
-    return h
+def historique(ticker, debut, essais=4):
+    # Yahoo renvoie parfois une réponse vide ou une erreur passagère : on réessaie avant d'abandonner.
+    for essai in range(essais):
+        try:
+            h = yf.Ticker(ticker).history(start=debut, auto_adjust=False, actions=False)
+            h = h.dropna(subset=["Close"])
+            if not h.empty:
+                return h
+        except Exception:
+            if essai == essais - 1:
+                raise
+        time_mod.sleep(5 * (essai + 1))
+    raise RuntimeError(f"no price data found for {ticker}")
 
 
 def derniere_cloture_avant(h, publie_le):
@@ -74,6 +84,14 @@ def derniere_cloture_avant(h, publie_le):
             break
         reference = ts
     return reference
+
+
+def rendement_indice(ticker, debut, jours):
+    """Rendement d'un indice depuis le premier jour, aligné jour par jour sur l'action (jours fériés différents)."""
+    idx = historique(ticker, debut)["Adj Close"]
+    idx.index = idx.index.date
+    idx = idx.reindex(sorted(set(idx.index) | set(jours))).ffill().reindex(jours)
+    return idx.values / idx.iloc[0] - 1
 
 
 def analyser(p, maintenant):
@@ -103,16 +121,13 @@ def analyser(p, maintenant):
     fin_horizon = publie_le.tz_convert(h.index.tz) + pd.DateOffset(months=resultat["horizon_mois"])
     h = h[(h.index >= reference) & (h.index <= fin_horizon)]
 
-    # L'indice peut avoir des jours fériés différents : on l'aligne jour par jour sur l'action.
-    idx = historique(p["indice"], debut)["Adj Close"]
-    idx.index = idx.index.date
     jours = [ts.date() for ts in h.index]
-    idx = idx.reindex(sorted(set(idx.index) | set(jours))).ffill().reindex(jours)
 
     # On part du prix du pitch, puis on suit le cours ajusté (dividendes compris).
     valeur = h["Close"].iloc[0] / resultat["prix_pitch"] * h["Adj Close"].values / h["Adj Close"].iloc[0]
     r = sens * (valeur - 1)
-    b = idx.values / idx.iloc[0] - 1
+    b = rendement_indice(BENCHMARK, debut, jours)
+    local = rendement_indice(p["indice"], debut, jours) if p["indice"] != BENCHMARK else None
 
     apres = h.iloc[1:]  # les séances qui suivent le post
     atteinte = apres[apres["High"] >= cible] if sens == 1 else apres[apres["Low"] <= cible]
@@ -129,6 +144,8 @@ def analyser(p, maintenant):
         "perf": pct(r[-1]),
         "perf_indice": pct(b[-1]),
         "ecart": pct(r[-1] - sens * b[-1]),
+        "perf_indice_local": pct(local[-1]) if local is not None else None,
+        "ecart_local": pct(r[-1] - sens * local[-1]) if local is not None else None,
         "cible_atteinte_le": atteinte.index[0].strftime("%Y-%m-%d") if len(atteinte) else None,
         "serie": [
             {"d": j.isoformat(), "prix": prix(c), "r": pct(ri), "b": pct(bi)}
