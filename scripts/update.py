@@ -283,6 +283,32 @@ def portefeuille(pitches):
     return points
 
 
+def portefeuille_hors_seance(pitches, courbe):
+    """Estimation du portefeuille aux cours avant- ou après-bourse.
+
+    Les positions ouvertes au dernier point de la courbe bougent de leur variation hors séance,
+    les autres (actions sans cotation hors séance) restent à leur clôture ; la moyenne équipondérée
+    s'applique au dernier rendement du club, comme un jour de plus. L'indice n'a pas de cours hors séance.
+    """
+    if not courbe:
+        return None
+    d = courbe[-1]["d"]
+    ouvertes = [p for p in pitches if p["serie"] and p["date_entree"] < d <= p["fin_horizon"]]
+    avec = [p for p in ouvertes if p.get("hors_seance")]
+    if not avec:
+        return None
+    # Variation de la valeur de chaque position entre la clôture et le cours hors séance.
+    variations = [(1 + p["hors_seance"]["perf"] / 100) / (1 + p["perf"] / 100) - 1 for p in avec]
+    moyenne = sum(variations) / len(ouvertes)
+    return {
+        "club": pct((1 + courbe[-1]["club"] / 100) * (1 + moyenne) - 1),
+        "variation": pct(moyenne),
+        "positions": len(avec),
+        "ouvertes": len(ouvertes),
+        "heure": max(p["hors_seance"]["heure"] for p in avec),
+    }
+
+
 def charger_precedent():
     """Dernière version publiée de data.json, pour garder un pitch quand Yahoo ne répond pas pour lui."""
     try:
@@ -329,6 +355,7 @@ def main():
         "gagnants": sum(1 for p in actifs if p["perf"] > 0),
         "battent_indice": sum(1 for p in actifs if p["ecart"] > 0),
         "cibles_atteintes": sum(1 for p in actifs if p["cible_atteinte_le"]),
+        "hors_seance": portefeuille_hors_seance(pitches, courbe),
     }
 
     SORTIE.parent.mkdir(exist_ok=True)

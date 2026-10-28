@@ -171,6 +171,7 @@
   .resume b { display: block; font: 500 18px var(--mono); color: var(--ink); margin-top: 2px; }
   .resume b.up { color: var(--up); }
   .resume b.down { color: var(--down); }
+  .resume small, .g-pied small { display: block; font: 400 11px var(--mono); color: var(--ah); text-transform: none; letter-spacing: 0; margin-top: 2px; }
   .pnl { list-style: none; margin: 8px 0 0; padding: 0 16px 16px; }
   .pnl .entete { display: flex; justify-content: space-between; color: var(--ink-2); font-size: 13px; padding: 8px 0; }
   .pnl button { all: unset; box-sizing: border-box; cursor: pointer; width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 16px; align-items: center; padding: 8px 10px; border-radius: 8px; }
@@ -359,7 +360,7 @@
       <li>Club portfolio: equal weight in every open pitch, rebalanced daily, with daily returns compounded (time-weighted). Adding a new pitch therefore doesn't move the curve. A pitch leaves the portfolio when its horizon ends.</li>
       <li>P&amp;L figures assume 1,000 invested in each pitch, in the stock's own currency.</li>
       <li>Prices are refreshed during the day, so the latest price can be an intraday one until the market closes. An orange dot marks a stock with no new price for a trading day or more (market holiday or data delay).</li>
-      <li>US stocks also show their latest pre-market or after-hours price (in blue, marked PRE or AH), with the return the pitch would have at that price. It is for information only: all returns, the portfolio and the comparisons use official closing prices. Yahoo Finance prices can be delayed by up to 15 minutes.</li>
+      <li>US stocks also show their latest pre-market or after-hours price (in blue, marked PRE or AH), with the return the pitch would have at that price. The club portfolio gets an after-hours estimate too: positions with an after-hours price move by it, the others stay at their close, equally weighted. The S&amp;P 500 has no after-hours price, so the comparison stays at the close. It is for information only: all returns, the portfolio and the comparisons use official closing prices. Yahoo Finance prices can be delayed by up to 15 minutes.</li>
       <li>Annualised returns are only shown once a pitch has been held for 3 months: over a few days they are meaningless.</li>
       <li>Price data: Yahoo Finance.</li>
     </ul>
@@ -536,7 +537,10 @@ function majPeriodes(points) {
     b.setAttribute("aria-pressed", j === periode);
   });
 }
-const pied = cases => cases.map(([label, valeur, c = ""]) => `<div>${label}<b class="${c}">${valeur}</b></div>`).join("");
+const pied = cases => cases.map(([label, valeur, c = "", plus = ""]) => `<div>${label}<b class="${c}">${valeur}</b>${plus}</div>`).join("");
+// Club return at the latest pre-market / after-hours prices (estimate: the S&P 500 has none).
+const clubHS = () => data.resume.hors_seance;
+const petitHS = () => clubHS() ? `<small>AH ${fmtPct(clubHS().club)}</small>` : "";
 
 function dessinerClub() {
   const r = data.resume, tous = data.portefeuille;
@@ -554,16 +558,18 @@ function dessinerClub() {
   $("g-legende").textContent = "Club Portfolio · " + (periode ? `since ${fmtDate(base.d)}` : "since inception");
   $("g-chg").innerHTML = `<span class="${cls(dernier)}">${fmtPct(dernier)}</span> <span style="color: var(--ink-2)">vs S&amp;P ${fmtPct(indice.at(-1))}</span>`;
   $("g-note").textContent = "";
-  $("g-ah").textContent = "";
+  const hs = clubHS(), hsRebase = hs ? rebase(hs.club, base.club) : null;
+  $("g-ah").innerHTML = hs ? `After hours ${fmtPct(hsRebase)} (${fmtPct(hs.variation)} since close) · ${hs.positions} of ${hs.ouvertes} positions trade after hours · ${heureHS(hs)}` : "";
   dessiner({
     data: { labels: pts.map(p => p.d), datasets: [aire("Club", club, couleur), ligne("S&P 500 TR", indice, css("--bench"), { borderDash: [5, 4], borderWidth: 1.4 })] },
     options: options(v => fmtPct(v, 1), [
       { valeur: indice.at(-1), couleur: css("--bench"), texte: fmtPct(indice.at(-1)) },
-      { valeur: dernier, couleur, texte: fmtPct(dernier), ligne: true }
-    ])
+      { valeur: dernier, couleur, texte: fmtPct(dernier), ligne: true },
+      hs && { valeur: hsRebase, couleur: css("--ah"), texte: fmtPct(hsRebase), ligne: true, etiquette: "AH" }
+    ].filter(Boolean))
   });
   $("g-pied").innerHTML = pied([
-    ["Club return", fmtPct(r.perf_club), cls(r.perf_club)], ["S&amp;P 500 TR", fmtPct(r.perf_indice), cls(r.perf_indice)],
+    ["Club return", fmtPct(r.perf_club), cls(r.perf_club), petitHS()], ["S&amp;P 500 TR", fmtPct(r.perf_indice), cls(r.perf_indice)],
     ["Avg pitch", fmtPct(r.perf_moyenne), cls(r.perf_moyenne)], ["Avg vs S&amp;P", fmtPct(r.ecart_moyen), cls(r.ecart_moyen)],
     ["Win rate", `${r.gagnants}/${r.nb_pitchs}`], ["Targets hit", `${r.cibles_atteintes}/${r.nb_pitchs}`]
   ]);
@@ -665,7 +671,7 @@ function dessinerListe() {
   const club = `<li class="section">Portfolio</li>
     <li><button type="button" class="rang" data-choix="club" aria-current="${choix === "club"}">
       <span class="actif">${logo("CLUB", "club", { point: "ok" })}<span class="noms"><b>CLUB</b><small>Equal-weight portfolio</small></span></span>
-      <span class="num">–</span><span class="num ${cls(r.perf_club)}">${fmtPct(r.perf_club)}</span></button></li>
+      <span class="num">–${r.hors_seance ? `<small title="Club return at the latest after-hours prices">AH ${fmtPct(r.hors_seance.club)}</small>` : ""}</span><span class="num ${cls(r.perf_club)}">${fmtPct(r.perf_club)}</span></button></li>
     <li><button type="button" class="rang" data-choix="club" aria-current="false">
       <span class="actif">${logo("SPX", "spx-tr", { point: "ok" })}<span class="noms"><b>SPX500 TR</b><small>Same dates as the club</small></span></span>
       <span class="num">–</span><span class="num ${cls(r.perf_indice)}">${fmtPct(r.perf_indice)}</span></button></li>
@@ -700,7 +706,7 @@ function dessinerHeat() {
 function dessinerPortefeuille() {
   const r = data.resume;
   $("resume").innerHTML = pied([
-    ["Club return", fmtPct(r.perf_club), cls(r.perf_club)], ["vs S&amp;P 500", fmtPct(r.perf_club - r.perf_indice), cls(r.perf_club - r.perf_indice)],
+    ["Club return", fmtPct(r.perf_club), cls(r.perf_club), petitHS()], ["vs S&amp;P 500", fmtPct(r.perf_club - r.perf_indice), cls(r.perf_club - r.perf_indice)],
     ["Avg pitch", fmtPct(r.perf_moyenne), cls(r.perf_moyenne)], ["Win rate", `${r.gagnants}/${r.nb_pitchs}`],
     ["Beat S&amp;P", `${r.battent_indice}/${r.nb_pitchs}`], ["Targets hit", `${r.cibles_atteintes}/${r.nb_pitchs}`]
   ]);
@@ -708,7 +714,7 @@ function dessinerPortefeuille() {
   $("pnl").innerHTML = `<li class="entete"><span>Open P&amp;L · ${nombre(data.mise, 0)} per pitch</span><span>${ouverts.length} open</span></li>` +
     ouverts.map(([p, i]) => `<li><button type="button" data-choix="${i}" aria-current="${choix === i}">
       <span class="actif">${logoPitch(p)}<span class="noms"><b>${esc(code(p))}</b><small>${esc(tempsRestant(p))}</small></span></span>
-      <span class="num ${cls(p.perf)}">${fmtMontant(data.mise * p.perf / 100, p.devise)}</span>
+      <span class="num ${cls(p.perf)}">${fmtMontant(data.mise * p.perf / 100, p.devise)}${p.hors_seance ? `<small style="display: block; font-size: 11px; color: var(--ah)">AH ${fmtMontant(data.mise * p.hors_seance.perf / 100, p.devise)}</small>` : ""}</span>
       <span class="num pct ${cls(p.perf)}">${fmtPct(p.perf)}</span></button></li>`).join("");
 }
 
@@ -737,7 +743,7 @@ function dessinerAnalystes() {
 
 function dessinerBande() {
   const r = data.resume;
-  const items = [`<span><i>CLUB</i><b class="${cls(r.perf_club)}">${fmtPct(r.perf_club)}</b></span>`, `<span><i>SPX TR</i><b class="${cls(r.perf_indice)}">${fmtPct(r.perf_indice)}</b></span>`]
+  const items = [`<span><i>CLUB</i><b class="${cls(r.perf_club)}">${fmtPct(r.perf_club)}</b>${r.hors_seance ? ` <b style="color: var(--ah)">AH ${fmtPct(r.hors_seance.club)}</b>` : ""}</span>`, `<span><i>SPX TR</i><b class="${cls(r.perf_indice)}">${fmtPct(r.perf_indice)}</b></span>`]
     .concat(data.pitchs.filter(p => p.serie.length).map(p => `<span><i>${esc(p.ticker)}</i>${nombre(p.dernier_prix)} <b class="${cls(p.perf)}">${fmtPct(p.perf)}</b></span>`));
   // Repeated so the loop is seamless whatever the screen width.
   const tour = items.join("").repeat(Math.max(2, Math.ceil(12 / items.length)));

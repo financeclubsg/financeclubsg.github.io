@@ -177,5 +177,31 @@ class Cotation(unittest.TestCase):
         self.assertEqual(update.hors_seance(cote, 1, 0.0, 100.0)["type"], "pre")
 
 
+class PortefeuilleHorsSeance(unittest.TestCase):
+    COURBE = [{"d": "2026-01-01", "club": 0, "indice": 0}, {"d": "2026-01-02", "club": 10, "indice": 0}]
+    SERIE = [("2026-01-01", 0, 0), ("2026-01-02", 0, 0)]
+
+    def test_moyenne_sur_toutes_les_positions_ouvertes(self):
+        a = pitch("2026-01-01", self.SERIE, perf=10, hors_seance={"perf": 21, "heure": "2026-01-02T23:00:00Z"})  # +10 % hors séance
+        b = pitch("2026-01-01", self.SERIE, perf=0)  # pas de cours hors séance : reste à sa clôture
+        hs = update.portefeuille_hors_seance([a, b], self.COURBE)
+        self.assertEqual((hs["variation"], hs["club"], hs["positions"], hs["ouvertes"]), (5, 15.5, 1, 2))
+
+    def test_vente_a_decouvert(self):
+        p = pitch("2026-01-01", self.SERIE, position="SELL", perf=10, hors_seance={"perf": -1, "heure": "x"})
+        self.assertEqual(update.portefeuille_hors_seance([p], self.COURBE)["variation"], -10)
+
+    def test_positions_closes_ou_trop_recentes_ignorees(self):
+        close = pitch("2025-01-01", [], fin="2025-12-31", perf=0, hors_seance={"perf": 50, "heure": "x"})
+        nouvelle = pitch("2026-01-02", [], perf=0, hors_seance={"perf": 50, "heure": "x"})  # entrée à la dernière clôture
+        for p in (close, nouvelle):
+            p["serie"] = [{"d": "2026-01-01", "r": 0, "b": 0}]
+        self.assertIsNone(update.portefeuille_hors_seance([close, nouvelle], self.COURBE))
+
+    def test_sans_cours_hors_seance(self):
+        self.assertIsNone(update.portefeuille_hors_seance([pitch("2026-01-01", self.SERIE, perf=0)], self.COURBE))
+        self.assertIsNone(update.portefeuille_hors_seance([], []))
+
+
 if __name__ == "__main__":
     unittest.main()
