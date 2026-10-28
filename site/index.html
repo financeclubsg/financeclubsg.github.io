@@ -7,390 +7,389 @@
 <title>Stock Pitch Tracker · Finance Club Singapore</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    color-scheme: light;
-    --page: #f2f4f7;
-    --surface: #ffffff;
-    --surface-2: #f6f7f9;
-    --ink: #0e1621;
-    --ink-2: #4a5565;
-    --muted: #8b95a3;
-    --line: #e5e8ed;
-    --brand: #1d3a28;
-    --brand-2: #2c5a3d;
-    --accent: #13a856;
-    --up: #0f9d58;
-    --down: #e0464c;
-    --warn: #d9822b;
-    --bench: #8b95a3;
-    --shadow: 0 1px 2px rgba(14, 22, 33, 0.04), 0 4px 16px rgba(14, 22, 33, 0.05);
-    --hover: rgba(14, 22, 33, 0.035);
-    --backdrop: rgba(14, 22, 33, 0.35);
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      color-scheme: dark;
-      --page: #0a0e13;
-      --surface: #121821;
-      --surface-2: #19212c;
-      --ink: #e9eef3;
-      --ink-2: #aab4c0;
-      --muted: #6f7b89;
-      --line: #222b37;
-      --brand: #10241a;
-      --brand-2: #1a3a28;
-      --accent: #2bd47a;
-      --up: #2bd47a;
-      --down: #ff6b70;
-      --warn: #f0a050;
-      --bench: #6f7b89;
-      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.25);
-      --hover: rgba(255, 255, 255, 0.04);
-      --backdrop: rgba(0, 0, 0, 0.6);
-    }
-  }
-  :root[data-theme="dark"] {
     color-scheme: dark;
-    --page: #0a0e13;
-    --surface: #121821;
-    --surface-2: #19212c;
-    --ink: #e9eef3;
-    --ink-2: #aab4c0;
-    --muted: #6f7b89;
-    --line: #222b37;
-    --brand: #10241a;
-    --brand-2: #1a3a28;
-    --accent: #2bd47a;
-    --up: #2bd47a;
-    --down: #ff6b70;
-    --warn: #f0a050;
-    --bench: #6f7b89;
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.25);
-    --hover: rgba(255, 255, 255, 0.04);
-    --backdrop: rgba(0, 0, 0, 0.6);
+    --page: #0d0e10;
+    --panel: #1a1c1f;
+    --panel-2: #222529;
+    --panel-3: #2b2e33;
+    --ink: #eceef0;
+    --ink-2: #a3a8af;
+    --muted: #6c727a;
+    --line: #2a2d32;
+    --up: #5fe08b;
+    --up-fill: #1d6b3d;
+    --down: #ff6464;
+    --down-fill: #8f2f35;
+    --warn: #f2b14c;
+    --bench: #8a9099;
+    --target: #5fe08b;
+    --mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans: Roboto, system-ui, -apple-system, "Segoe UI", sans-serif;
   }
-
   * { box-sizing: border-box; }
   body {
     margin: 0;
     background: var(--page);
     color: var(--ink);
-    font: 15px/1.5 Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
-    font-feature-settings: "tnum" 1, "cv11" 1;
+    font: 14px/1.45 var(--sans);
     -webkit-font-smoothing: antialiased;
+    padding-bottom: 40px;  /* room for the ticker tape */
   }
   button { font: inherit; color: inherit; }
-  a { color: var(--accent); }
-  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+  a { color: var(--up); }
+  .num { font-family: var(--mono); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
   .up { color: var(--up); }
   .down { color: var(--down); }
+  .pastille { display: inline-block; width: 18px; height: 8px; border-radius: 99px; background: var(--up); flex: none; }
 
   /* Top bar */
-  .topbar { background: linear-gradient(120deg, var(--brand), var(--brand-2)); color: #f2f5f1; }
-  .topbar .wrap { display: flex; align-items: center; gap: 12px; padding-top: 14px; padding-bottom: 14px; }
-  .logo { width: 36px; height: 36px; border-radius: 10px; background: rgba(255, 255, 255, 0.14); display: grid; place-items: center; font-weight: 800; font-size: 12px; letter-spacing: 0.02em; flex: none; }
-  .marque { line-height: 1.2; min-width: 0; }
-  .marque b { display: block; font-size: 16px; font-weight: 700; }
-  .marque span { font-size: 12px; opacity: 0.7; }
-  .topbar .droite { margin-left: auto; display: flex; align-items: center; gap: 10px; font-size: 12px; }
-  .live { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; opacity: 0.85; }
-  .live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #4ee08f; box-shadow: 0 0 0 3px rgba(78, 224, 143, 0.25); }
-  .icone { all: unset; cursor: pointer; width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: rgba(255, 255, 255, 0.12); color: #f2f5f1; }
-  .icone:hover { background: rgba(255, 255, 255, 0.2); }
-  .icone:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+  .barre { display: flex; align-items: center; gap: 14px; padding: 10px 16px; border-bottom: 1px solid var(--line); }
+  .barre .titre { font-weight: 500; font-size: 15px; display: flex; align-items: center; gap: 10px; white-space: nowrap; }
+  .barre .titre span { color: var(--muted); font-weight: 400; }
+  .barre .droite { margin-left: auto; display: flex; align-items: center; gap: 8px; color: var(--ink-2); font-size: 12px; }
+  .statut { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+  .statut::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--up); }
+  .statut.alerte::before { background: var(--warn); }
+  .bouton-icone { all: unset; cursor: pointer; height: 30px; padding: 0 10px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; background: var(--panel-2); color: var(--ink-2); font-size: 12px; }
+  .bouton-icone:hover { color: var(--ink); background: var(--panel-3); }
+  .bouton-icone:focus-visible, button:focus-visible, select:focus-visible { outline: 2px solid var(--up); outline-offset: 1px; }
 
-  main.wrap { padding-top: 20px; padding-bottom: 48px; }
-  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); }
+  .avis { margin: 10px 16px 0; padding: 8px 12px; border-radius: 10px; background: rgba(242, 177, 76, 0.08); border: 1px solid rgba(242, 177, 76, 0.25); color: var(--ink-2); font-size: 12px; }
+  .avis b { color: var(--warn); font-weight: 500; }
+  .avis.erreur { background: rgba(255, 100, 100, 0.08); border-color: rgba(255, 100, 100, 0.25); }
+  .avis.erreur b { color: var(--down); }
 
-  .alerte { padding: 12px 16px; font-size: 13px; margin-bottom: 12px; border-left: 4px solid var(--down); color: var(--ink-2); }
-  .alerte.avis { border-left-color: var(--warn); }
-
-  /* Hero */
-  .hero { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 16px; margin-bottom: 16px; }
-  .perf { padding: 22px 22px 16px; min-width: 0; }
-  .perf-tete { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
-  .etiquette { color: var(--ink-2); font-size: 13px; font-weight: 500; }
-  .gros { font-size: 44px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; margin: 6px 0 4px; }
-  .compare { font-size: 13px; color: var(--ink-2); display: flex; gap: 14px; flex-wrap: wrap; }
-  .compare i { display: inline-block; width: 12px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 6px; background: var(--c); }
-  .compare .tiret { background: repeating-linear-gradient(90deg, var(--c) 0 4px, transparent 4px 7px); }
-  .chips { display: inline-flex; gap: 4px; background: var(--surface-2); border-radius: 10px; padding: 3px; }
-  .chips button { all: unset; cursor: pointer; font-size: 12px; font-weight: 600; color: var(--ink-2); padding: 5px 10px; border-radius: 8px; }
-  .chips button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
-  .chips button:disabled { opacity: 0.35; cursor: default; }
-  .chips button:focus-visible { outline: 2px solid var(--accent); }
-  .chart-box { position: relative; height: 260px; margin-top: 14px; }
-
-  .stats { display: grid; gap: 12px; }
-  .stat { padding: 16px 18px; display: flex; flex-direction: column; justify-content: center; }
-  .stat .valeur { font-size: 26px; font-weight: 750; letter-spacing: -0.02em; line-height: 1.15; margin-top: 2px; }
-  .stat .note { color: var(--muted); font-size: 12px; }
-  .jauge { height: 6px; background: var(--surface-2); border-radius: 99px; overflow: hidden; margin-top: 8px; }
-  .jauge span { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
-
-  /* Tabs and list */
-  .onglets { display: flex; gap: 22px; border-bottom: 1px solid var(--line); padding: 0 20px; overflow-x: auto; }
-  .onglets button { all: unset; cursor: pointer; padding: 16px 0 13px; font-weight: 600; font-size: 14px; color: var(--muted); border-bottom: 3px solid transparent; white-space: nowrap; }
-  .onglets button[hidden] { display: none; }
-  .onglets button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
-  .onglets button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  .onglets .nb { display: inline-block; min-width: 20px; padding: 0 6px; margin-left: 6px; border-radius: 99px; background: var(--surface-2); color: var(--ink-2); font-size: 11px; text-align: center; line-height: 18px; }
-
-  .outils { display: flex; gap: 10px; padding: 14px 20px; flex-wrap: wrap; align-items: center; }
-  .outils[hidden] { display: none; }
-  .recherche { flex: 1 1 200px; position: relative; }
-  .recherche input { width: 100%; font: inherit; font-size: 14px; color: var(--ink); background: var(--surface-2); border: 1px solid transparent; border-radius: 10px; padding: 8px 12px 8px 34px; }
-  .recherche input:focus { outline: none; border-color: var(--accent); background: var(--surface); }
-  .recherche svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--muted); }
-  select { font: inherit; font-size: 13px; font-weight: 500; color: var(--ink); background: var(--surface-2); border: 1px solid transparent; border-radius: 10px; padding: 8px 10px; }
-  select:focus { outline: none; border-color: var(--accent); }
-
-  .entete-liste { display: grid; grid-template-columns: minmax(0, 2.2fr) 110px minmax(0, 1fr) minmax(0, 1fr) 120px; gap: 12px; padding: 4px 20px 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
-  .entete-liste[hidden] { display: none; }
-  .entete-liste span:not(:first-child) { text-align: right; }
-  .liste { list-style: none; margin: 0; padding: 0 8px 8px; }
-  .ligne { all: unset; display: grid; grid-template-columns: minmax(0, 2.2fr) 110px minmax(0, 1fr) minmax(0, 1fr) 120px; gap: 12px; align-items: center; box-sizing: border-box; width: 100%; padding: 12px; border-radius: 14px; cursor: pointer; }
-  .ligne:hover { background: var(--hover); }
-  .ligne:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-  .liste li + li { border-top: 1px solid var(--line); }
-  .titre-ligne { display: flex; gap: 12px; align-items: center; min-width: 0; }
-  .avatar { flex: none; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 12px; letter-spacing: -0.02em;
-    background: hsl(var(--h) 55% 92%); color: hsl(var(--h) 55% 30%); }
-  :root[data-theme="dark"] .avatar { background: hsl(var(--h) 35% 22%); color: hsl(var(--h) 70% 78%); }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .avatar { background: hsl(var(--h) 35% 22%); color: hsl(var(--h) 70% 78%); } }
-  .nom { font-weight: 650; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .sous { color: var(--muted); font-size: 12px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
-  .sens { font-size: 10px; font-weight: 700; letter-spacing: 0.05em; padding: 1px 6px; border-radius: 5px; }
-  .sens.achat { background: color-mix(in srgb, var(--up) 14%, transparent); color: var(--up); }
-  .sens.vente { background: color-mix(in srgb, var(--down) 14%, transparent); color: var(--down); }
-  .drapeau { color: var(--warn); font-weight: 600; }
-  .spark { width: 110px; height: 36px; display: block; }
-  .droite-num { text-align: right; min-width: 0; }
-  .droite-num b { display: block; font-weight: 650; }
-  .droite-num small { color: var(--muted); font-size: 12px; }
-  .badge { display: inline-block; min-width: 76px; text-align: center; padding: 6px 10px; border-radius: 10px; font-weight: 700; font-size: 14px; }
-  .badge.up { background: color-mix(in srgb, var(--up) 13%, transparent); }
-  .badge.down { background: color-mix(in srgb, var(--down) 13%, transparent); }
-  .badge.plat { background: var(--surface-2); color: var(--ink-2); }
-  .vide { color: var(--ink-2); text-align: center; padding: 40px 16px; }
-  .vide b { display: block; color: var(--ink); font-size: 16px; margin-bottom: 4px; }
-
-  .bilan { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 0 20px 12px; }
-  .bilan div, .faits div { background: var(--surface-2); border-radius: 12px; padding: 12px 14px; font-size: 12px; color: var(--ink-2); }
-  .bilan b, .faits b { display: block; color: var(--ink); font-size: 17px; font-weight: 700; margin-top: 2px; }
-  .bilan b.up, .faits b.up { color: var(--up); }
-  .bilan b.down, .faits b.down { color: var(--down); }
-
-  .methode { margin-top: 16px; padding: 4px 20px; color: var(--ink-2); font-size: 13px; }
-  .methode summary { cursor: pointer; font-weight: 600; color: var(--ink); padding: 14px 0; font-size: 14px; }
-  .methode ul { padding-left: 18px; margin: 0 0 10px; }
-  .methode p { margin: 0 0 16px; }
-
-  /* Detail panel: slides in from the right, or up from the bottom on phones */
-  dialog#fiche { border: 0; padding: 0; margin: 0 0 0 auto; height: 100%; max-height: 100%; width: min(520px, 100%); max-width: 100%; background: var(--surface); color: var(--ink); box-shadow: -8px 0 40px rgba(0, 0, 0, 0.2); overscroll-behavior: contain; }
-  dialog#fiche[open] { animation: glisse 0.22s ease-out; }
-  dialog#fiche::backdrop { background: var(--backdrop); }
-  @keyframes glisse { from { transform: translateX(40px); opacity: 0; } }
-  .fiche-tete { position: sticky; top: 0; background: var(--surface); display: flex; gap: 12px; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--line); z-index: 1; }
-  .fiche-tete .nom { font-size: 17px; }
-  .fermer { all: unset; cursor: pointer; margin-left: auto; width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: var(--surface-2); color: var(--ink-2); flex: none; }
-  .fermer:hover { color: var(--ink); }
-  .fermer:focus-visible { outline: 2px solid var(--accent); }
-  .fiche-corps { padding: 18px 20px 28px; }
-  .prix-fiche { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .prix-fiche .gros { font-size: 36px; margin: 0; }
-  .note-fiche { font-size: 12px; color: var(--warn); margin: 8px 0 0; }
-  .barre-outils { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; gap: 8px; flex-wrap: wrap; }
-  .fiche-corps .chart-box { height: 230px; }
-  .progres { margin-top: 18px; }
-  .progres .ligne-progres { display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-2); margin-bottom: 6px; gap: 8px; }
-  .progres .ligne-progres b { color: var(--ink); font-weight: 600; }
-  .progres + .progres { margin-top: 14px; }
-  .faits { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 18px; }
-  .boutons { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
-  .bouton { flex: 1 1 180px; text-align: center; text-decoration: none; font-weight: 600; font-size: 14px; padding: 11px 14px; border-radius: 12px; background: var(--accent); color: #fff; }
-  :root[data-theme="dark"] .bouton { color: #06130b; }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .bouton { color: #06130b; } }
-  .bouton.second { background: var(--surface-2); color: var(--ink); }
-
-  @media (max-width: 900px) {
-    .hero { grid-template-columns: 1fr; }
-    .stats { grid-template-columns: repeat(2, 1fr); }
+  /* Dashboard grid */
+  .grille {
+    display: grid; gap: 10px; padding: 10px 16px 16px;
+    grid-template-columns: 340px minmax(0, 1fr) 320px;
+    grid-template-areas:
+      "liste heat  heat"
+      "liste graph graph"
+      "porte porte fil"
+      "anal  anal  anal";
   }
-  @media (max-width: 720px) {
-    .entete-liste { display: none; }
-    .ligne { grid-template-columns: minmax(0, 1fr) auto; row-gap: 4px; }
-    .ligne .spark, .ligne .col-prix { display: none; }
-    .ligne .col-ecart { grid-column: 1; grid-row: 2; text-align: left; padding-left: 54px; display: flex; gap: 6px; align-items: baseline; }
-    .ligne .col-perf { grid-column: 2; grid-row: 1 / span 2; }
-    .badge { min-width: 70px; }
-    .gros { font-size: 36px; }
-    .bilan { grid-template-columns: repeat(2, 1fr); }
-    .chart-box { height: 220px; }
-    .topbar .maj { display: none; }
-    dialog#fiche { margin: auto 0 0; width: 100%; height: 92%; border-radius: 20px 20px 0 0; }
-    @keyframes glisse { from { transform: translateY(60px); opacity: 0; } }
+  .panneau { background: var(--panel); border-radius: 14px; min-width: 0; }
+  .p-liste { grid-area: liste; display: flex; flex-direction: column; }
+  .p-heat { grid-area: heat; }
+  .p-graph { grid-area: graph; }
+  .p-porte { grid-area: porte; }
+  .p-fil { grid-area: fil; }
+  .p-anal { grid-area: anal; }
+  .tete { display: flex; align-items: center; gap: 10px; padding: 14px 16px 10px; min-width: 0; }
+  .tete h2 { margin: 0; font-size: 17px; font-weight: 500; white-space: nowrap; }
+  .tete .actions { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+  select { font: inherit; font-size: 13px; color: var(--ink); background: var(--panel-2); border: 0; border-radius: 8px; padding: 6px 8px; cursor: pointer; }
+  .seg { display: inline-flex; background: var(--panel-2); border-radius: 8px; padding: 2px; }
+  .seg[hidden], .sep[hidden] { display: none; }
+  .seg button { all: unset; cursor: pointer; font-size: 12px; font-family: var(--mono); color: var(--ink-2); padding: 4px 9px; border-radius: 6px; }
+  .seg button[aria-pressed="true"] { background: var(--panel-3); color: var(--ink); }
+  .seg button:disabled { opacity: 0.3; cursor: default; }
+  .seg button:focus-visible { outline: 2px solid var(--up); }
+
+  /* Watchlist */
+  .recherche { margin: 0 16px 8px; display: flex; gap: 6px; }
+  .recherche[hidden] { display: none; }
+  .recherche input { flex: 1; min-width: 0; font: inherit; font-size: 13px; color: var(--ink); background: var(--panel-2); border: 1px solid transparent; border-radius: 8px; padding: 6px 10px; }
+  .recherche input:focus { outline: none; border-color: var(--up); }
+  .cols { display: grid; grid-template-columns: minmax(0, 1fr) 96px 78px; gap: 8px; padding: 4px 16px 6px; color: var(--muted); font-size: 13px; }
+  .cols button { all: unset; cursor: pointer; display: inline-flex; gap: 4px; align-items: center; }
+  .cols button:nth-child(n+2) { justify-content: flex-end; }
+  .cols button::after { content: "⇅"; font-size: 10px; opacity: 0.6; }
+  .cols button[data-sens="1"]::after { content: "▲"; opacity: 1; }
+  .cols button[data-sens="-1"]::after { content: "▼"; opacity: 1; }
+  .cols button:hover { color: var(--ink-2); }
+  .watch { list-style: none; margin: 0; padding: 0 0 8px; overflow-y: auto; flex: 1; }
+  .section { padding: 10px 16px 4px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .rang { all: unset; box-sizing: border-box; cursor: pointer; width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) 96px 78px; gap: 8px; align-items: center; padding: 10px 16px 10px 13px; border-left: 3px solid transparent; }
+  .watch li + li .rang { box-shadow: inset 0 1px 0 var(--line); }
+  .rang:hover { background: rgba(255, 255, 255, 0.03); }
+  .rang[aria-current="true"] { background: var(--panel-3); border-left-color: var(--ink); box-shadow: none; }
+  .rang:focus-visible { outline: 2px solid var(--up); outline-offset: -2px; }
+  .actif { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .actif .noms { min-width: 0; }
+  .actif b { display: block; font-weight: 500; font-size: 15px; }
+  .actif small { display: block; color: var(--muted); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rang .num { text-align: right; font-size: 15px; }
+  .vide { padding: 24px 16px; color: var(--muted); font-size: 13px; text-align: center; }
+
+  .logo { position: relative; flex: none; width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; font: 700 10px/1 var(--mono); letter-spacing: -0.04em;
+    background: hsl(var(--h) 30% 88%); color: hsl(var(--h) 60% 28%); }
+  .logo.grand { width: 44px; height: 44px; border-radius: 10px; font-size: 12px; }
+  .logo .point { position: absolute; right: -3px; bottom: -3px; width: 10px; height: 10px; border-radius: 50%; background: var(--up); border: 2px solid var(--panel); }
+  .logo .point.vieux { background: var(--warn); }
+  .logo .point.clos { background: var(--muted); }
+
+  /* Heatmap */
+  .heat { display: flex; gap: 10px; padding: 0 16px 16px; overflow-x: auto; }
+  .groupe { flex: var(--n) 1 0; min-width: 120px; }
+  .groupe h3 { margin: 0 0 6px; font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tuiles { display: flex; flex-wrap: wrap; gap: 3px; height: 150px; }
+  .tuile { all: unset; cursor: pointer; flex: 1 1 110px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; min-width: 0; border-radius: 4px; background: var(--fond); padding: 6px; }
+  .tuile:hover { filter: brightness(1.15); }
+  .tuile:focus-visible { outline: 2px solid var(--ink); }
+  .tuile b { font-size: 17px; font-weight: 500; }
+  .tuile span { font-family: var(--mono); font-size: 13px; opacity: 0.85; }
+  .tuile small { font-size: 11px; opacity: 0.6; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* Chart panel */
+  .g-tete { display: flex; align-items: center; gap: 12px; padding: 16px 16px 12px; flex-wrap: wrap; }
+  .g-tete .ident { display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1 1 220px; }
+  .g-tete .ident b { font-size: 20px; font-weight: 500; display: block; line-height: 1.2; }
+  .g-tete .ident small { color: var(--ink-2); font-size: 13px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .boites { display: flex; gap: 10px; flex-wrap: wrap; }
+  .boite { display: inline-flex; align-items: center; border-radius: 99px; border: 1.5px solid var(--c); height: 44px; font-family: var(--mono); font-weight: 500; font-size: 17px; color: var(--c); }
+  .boite span { padding: 0 14px; height: 100%; display: grid; place-items: center; font-family: var(--sans); font-size: 13px; border-right: 1.5px solid var(--c); }
+  .boite b { padding: 0 16px; font-weight: 500; }
+  .outils { display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  .outils .sep { width: 1px; height: 22px; background: var(--line); }
+  .zone { position: relative; padding: 10px 0 0 16px; }
+  .zone .legende { position: absolute; left: 24px; top: 14px; z-index: 1; pointer-events: none; }
+  .zone .legende .nom { font-size: 18px; color: var(--ink-2); }
+  .zone .legende .chg { font-family: var(--mono); font-size: 17px; margin-top: 2px; }
+  .zone .legende .note { font-size: 11px; color: var(--warn); margin-top: 4px; }
+  .chart-box { position: relative; height: 380px; }
+  .g-pied { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); border-top: 1px solid var(--line); }
+  .g-pied div { padding: 10px 16px; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; min-width: 0; }
+  .g-pied div + div { border-left: 1px solid var(--line); }
+  .g-pied b { display: block; font: 500 15px var(--mono); color: var(--ink); text-transform: none; letter-spacing: 0; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .g-pied b.up { color: var(--up); }
+  .g-pied b.down { color: var(--down); }
+  .g-liens { display: flex; gap: 16px; padding: 10px 16px 14px; font-size: 13px; flex-wrap: wrap; }
+  .g-liens a { text-decoration: none; }
+  .g-liens a:hover { text-decoration: underline; }
+
+  /* Portfolio */
+  .resume { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1px; background: var(--line); margin: 0 16px; border-radius: 10px; overflow: hidden; }
+  .resume div { background: var(--panel-2); padding: 10px 12px; font-size: 12px; color: var(--ink-2); min-width: 0; }
+  .resume b { display: block; font: 500 18px var(--mono); color: var(--ink); margin-top: 2px; }
+  .resume b.up { color: var(--up); }
+  .resume b.down { color: var(--down); }
+  .pnl { list-style: none; margin: 8px 0 0; padding: 0 16px 16px; }
+  .pnl .entete { display: flex; justify-content: space-between; color: var(--ink-2); font-size: 13px; padding: 8px 0; }
+  .pnl button { all: unset; box-sizing: border-box; cursor: pointer; width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 16px; align-items: center; padding: 8px 10px; border-radius: 8px; }
+  .pnl button:hover { background: rgba(255, 255, 255, 0.03); }
+  .pnl button[aria-current="true"] { background: var(--panel-3); }
+  .pnl button:focus-visible { outline: 2px solid var(--up); }
+  .pnl .num { font-size: 15px; text-align: right; }
+  .pnl .pct { color: var(--ink-2); font-size: 13px; min-width: 64px; }
+
+  /* Activity feed */
+  .fil { list-style: none; margin: 0; padding: 0 12px 14px; max-height: 360px; overflow-y: auto; }
+  .fil li { padding: 8px 10px; border-radius: 8px; }
+  .fil li + li { margin-top: 4px; }
+  .fil li:first-child { background: var(--panel-2); }
+  .fil time { color: var(--muted); font-size: 12px; display: block; }
+  .fil p { margin: 2px 0 0; font-size: 14px; }
+  .fil a { color: var(--ink); text-decoration: none; }
+  .fil a:hover { text-decoration: underline; }
+
+  /* Analysts */
+  .classement { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .classement th { text-align: left; font-weight: 400; color: var(--muted); font-size: 12px; padding: 0 16px 8px; }
+  .classement td { padding: 9px 16px; border-top: 1px solid var(--line); white-space: nowrap; }
+  .classement .num, .classement th.num { text-align: right; }
+
+  /* Ticker tape */
+  .bande { position: fixed; left: 0; right: 0; bottom: 0; height: 36px; background: #121315; border-top: 1px solid var(--line); overflow: hidden; display: flex; align-items: center; z-index: 5; }
+  .bande .piste { display: flex; gap: 0; white-space: nowrap; animation: defile 60s linear infinite; }
+  .bande:hover .piste { animation-play-state: paused; }
+  .bande span { padding: 0 18px; font: 500 13px var(--mono); border-right: 1px solid var(--line); }
+  .bande span i { font-style: normal; color: var(--ink-2); margin-right: 8px; font-family: var(--sans); }
+  @keyframes defile { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .bande .piste { animation: none; } .bande { overflow-x: auto; } }
+
+  dialog { border: 1px solid var(--line); border-radius: 14px; background: var(--panel); color: var(--ink); max-width: 640px; width: calc(100% - 32px); padding: 0; }
+  dialog::backdrop { background: rgba(0, 0, 0, 0.6); }
+  dialog .tete { border-bottom: 1px solid var(--line); padding-bottom: 14px; }
+  dialog .corps { padding: 6px 20px 18px; color: var(--ink-2); font-size: 13px; }
+  dialog ul { padding-left: 18px; }
+  dialog li + li { margin-top: 6px; }
+
+  @media (max-width: 1180px) {
+    .grille { grid-template-columns: 320px minmax(0, 1fr); grid-template-areas: "liste heat" "liste graph" "porte porte" "fil fil" "anal anal"; }
+    .g-pied, .resume { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .g-pied div:nth-child(4) { border-left: 0; }
+    .g-pied div:nth-child(n+4) { border-top: 1px solid var(--line); }
+  }
+  @media (max-width: 820px) {
+    .grille { grid-template-columns: minmax(0, 1fr); grid-template-areas: "liste" "graph" "heat" "porte" "fil" "anal"; padding: 10px 10px 16px; }
+    .watch { max-height: none; }
+    .chart-box { height: 300px; }
+    .zone .legende .nom { font-size: 15px; }
+    .boite { height: 38px; font-size: 15px; }
+    .boite span { padding: 0 10px; }
+    .boite b { padding: 0 12px; }
+    .barre .titre span, .barre .maj { display: none; }
+    .g-pied, .resume { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .g-pied div:nth-child(n) { border-left: 0; border-top: 1px solid var(--line); }
+    .g-pied div:nth-child(2n) { border-left: 1px solid var(--line); }
+    .g-pied div:nth-child(-n+2) { border-top: 0; }
+    .tuiles { height: auto; }
+    .tuile { min-height: 76px; }
+    .avis { margin: 10px 10px 0; }
   }
 </style>
 </head>
 <body>
-<header class="topbar">
-  <div class="wrap">
-    <div class="logo" aria-hidden="true">FCS</div>
-    <div class="marque"><b>Stock Pitch Tracker</b><span>Finance Club Singapore</span></div>
-    <div class="droite">
-      <span class="live maj" id="maj"></span>
-      <button class="icone" id="theme" type="button" aria-label="Switch light / dark mode">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-      </button>
-    </div>
+<header class="barre">
+  <div class="titre"><span class="pastille" aria-hidden="true"></span>Stock Pitch Tracker<span>· Finance Club Singapore</span></div>
+  <div class="droite">
+    <span class="statut maj" id="statut"></span>
+    <button class="bouton-icone" type="button" id="b-methode">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>Methodology
+    </button>
   </div>
 </header>
+<div id="avis"></div>
 
-<main class="wrap">
-  <div id="erreurs"></div>
-
-  <div class="hero">
-    <section class="card perf">
-      <div class="perf-tete">
-        <div>
-          <div class="etiquette">Club portfolio · <span id="h-periode">since the first pitch</span></div>
-          <div class="gros" id="h-club">–</div>
-          <div class="compare">
-            <span><i id="h-pastille" style="--c: var(--up)"></i>Club <b id="h-club-2"></b></span>
-            <span><i class="tiret" style="--c: var(--bench)"></i>S&amp;P 500 <b id="h-indice"></b></span>
-          </div>
-        </div>
-        <div class="chips" id="periodes" role="group" aria-label="Period">
-          <button type="button" data-j="7">1W</button><button type="button" data-j="31">1M</button><button type="button" data-j="92">3M</button><button type="button" data-j="366">1Y</button><button type="button" data-j="0" aria-pressed="true">All</button>
-        </div>
+<main class="grille">
+  <!-- Watchlist -->
+  <section class="panneau p-liste" aria-labelledby="h-liste">
+    <div class="tete">
+      <span class="pastille" aria-hidden="true"></span>
+      <h2 id="h-liste" style="position: absolute; left: -9999px">Pitches</h2>
+      <select id="statut-liste" aria-label="Pitches to show">
+        <option value="ouverts">Open</option>
+        <option value="clos">Closed</option>
+        <option value="tous">All</option>
+      </select>
+      <div class="actions">
+        <button class="bouton-icone" type="button" id="b-recherche" aria-label="Search and filter" aria-expanded="false" aria-controls="recherche">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+        </button>
       </div>
-      <div class="chart-box"><canvas id="c-portefeuille" aria-label="Cumulative return of the club portfolio compared with the S&amp;P 500"></canvas></div>
-    </section>
-
-    <div class="stats">
-      <div class="card stat"><div class="etiquette">Winning pitches</div><div class="valeur" id="s-gagnants">–</div><div class="jauge"><span id="s-gagnants-j"></span></div></div>
-      <div class="card stat"><div class="etiquette">Beat the S&amp;P 500</div><div class="valeur" id="s-battent">–</div><div class="jauge"><span id="s-battent-j"></span></div></div>
-      <div class="card stat"><div class="etiquette">Average pitch</div><div class="valeur" id="s-moyenne">–</div><div class="note" id="s-moyenne-n"></div></div>
-      <div class="card stat"><div class="etiquette">Price targets hit</div><div class="valeur" id="s-cibles">–</div><div class="note">since publication</div></div>
     </div>
-  </div>
-
-  <section class="card">
-    <div class="onglets" role="tablist" aria-label="Pitches">
-      <button type="button" role="tab" id="o-ouverts" data-onglet="ouverts" aria-selected="true" aria-controls="panneau">Open positions<span class="nb" id="nb-ouverts">0</span></button>
-      <button type="button" role="tab" id="o-clos" data-onglet="clos" aria-selected="false" aria-controls="panneau">Closed<span class="nb" id="nb-clos">0</span></button>
-      <button type="button" role="tab" id="o-analystes" data-onglet="analystes" aria-selected="false" aria-controls="panneau" hidden>Analysts<span class="nb" id="nb-analystes">0</span></button>
-    </div>
-    <div id="panneau" role="tabpanel">
-      <div class="outils" id="outils">
-        <label class="recherche">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-          <input type="search" id="recherche" placeholder="Search a company or ticker" aria-label="Search a company or ticker" autocomplete="off">
-        </label>
-        <div class="chips" id="filtres" role="group" aria-label="Call">
-          <button type="button" data-f="tous" aria-pressed="true">All</button><button type="button" data-f="BUY">Buy</button><button type="button" data-f="SELL">Sell</button>
-        </div>
-        <select id="tri" aria-label="Sort by">
-          <option value="recent">Newest first</option>
-          <option value="perf-">Best return</option>
-          <option value="perf+">Worst return</option>
-          <option value="ecart-">Best vs S&amp;P 500</option>
-          <option value="cible">Closest to target</option>
-          <option value="fin">Ending soonest</option>
-          <option value="nom">Name A–Z</option>
-        </select>
+    <div class="recherche" id="recherche" hidden>
+      <input type="search" id="q" placeholder="Search company or ticker" aria-label="Search company or ticker" autocomplete="off">
+      <div class="seg" id="filtres" role="group" aria-label="Call">
+        <button type="button" data-f="tous" aria-pressed="true">All</button><button type="button" data-f="BUY">Buy</button><button type="button" data-f="SELL">Sell</button>
       </div>
-      <div id="bilan"></div>
-      <div class="entete-liste" id="entete-liste" aria-hidden="true"><span>Company</span><span>Since pitch</span><span>Last price</span><span>vs S&amp;P 500</span><span>Return</span></div>
-      <ul class="liste" id="liste"></ul>
     </div>
+    <div class="cols" id="cols">
+      <button type="button" data-cle="nom">Asset <span class="num" id="nb-actifs"></span></button>
+      <button type="button" data-cle="prix">Price</button>
+      <button type="button" data-cle="perf" data-sens="-1">Return</button>
+    </div>
+    <ul class="watch" id="watch"></ul>
   </section>
 
-  <details class="card methode">
-    <summary>How the tracker works</summary>
+  <!-- Heatmap -->
+  <section class="panneau p-heat" aria-labelledby="h-heat">
+    <div class="tete">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--ink-2)" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="10" height="10" rx="1"/><rect x="15" y="3" width="6" height="6" rx="1"/><rect x="15" y="11" width="6" height="10" rx="1"/><rect x="3" y="15" width="10" height="6" rx="1"/></svg>
+      <h2 id="h-heat">Pitch Heatmap</h2>
+      <div class="actions">
+        <div class="seg" id="heat-mode" role="group" aria-label="Heatmap colour">
+          <button type="button" data-m="perf" aria-pressed="true">Return</button><button type="button" data-m="ecart">vs S&amp;P</button><button type="button" data-m="jour">Today</button>
+        </div>
+      </div>
+    </div>
+    <div class="heat" id="heat"></div>
+  </section>
+
+  <!-- Chart -->
+  <section class="panneau p-graph" aria-labelledby="g-nom">
+    <div class="g-tete">
+      <div class="ident">
+        <span id="g-logo"></span>
+        <div style="min-width: 0"><b id="g-nom"></b><small id="g-sous"></small></div>
+      </div>
+      <div class="boites" id="g-boites"></div>
+    </div>
+    <div class="outils">
+      <div class="seg" id="periodes" role="group" aria-label="Period">
+        <button type="button" data-j="7">1W</button><button type="button" data-j="31">1M</button><button type="button" data-j="92">3M</button><button type="button" data-j="366">1Y</button><button type="button" data-j="0" aria-pressed="true">ALL</button>
+      </div>
+      <span class="sep" id="sep-vues" aria-hidden="true"></span>
+      <div class="seg" id="vues" role="group" aria-label="Chart">
+        <button type="button" data-vue="prix" aria-pressed="true">Price</button><button type="button" data-vue="indice">vs S&amp;P 500</button>
+      </div>
+    </div>
+    <div class="zone">
+      <div class="legende"><div class="nom" id="g-legende"></div><div class="chg" id="g-chg"></div><div class="note" id="g-note"></div></div>
+      <div class="chart-box"><canvas id="c-graph" aria-label="Chart of the selected pitch or of the club portfolio"></canvas></div>
+    </div>
+    <div class="g-pied" id="g-pied"></div>
+    <div class="g-liens" id="g-liens"></div>
+  </section>
+
+  <!-- Portfolio -->
+  <section class="panneau p-porte" aria-labelledby="h-porte">
+    <div class="tete"><span class="pastille" aria-hidden="true"></span><h2 id="h-porte">Club Portfolio</h2></div>
+    <div class="resume" id="resume"></div>
+    <ul class="pnl" id="pnl"></ul>
+  </section>
+
+  <!-- Activity -->
+  <section class="panneau p-fil" aria-labelledby="h-fil">
+    <div class="tete"><span class="pastille" aria-hidden="true"></span><h2 id="h-fil">Activity</h2></div>
+    <ol class="fil" id="fil"></ol>
+  </section>
+
+  <!-- Analysts -->
+  <section class="panneau p-anal" id="p-anal" aria-labelledby="h-anal" hidden>
+    <div class="tete"><span class="pastille" aria-hidden="true"></span><h2 id="h-anal">Analysts</h2></div>
+    <div style="overflow-x: auto; padding-bottom: 8px"><table class="classement">
+      <thead><tr><th>Analyst</th><th class="num">Pitches</th><th class="num">Winners</th><th class="num">Avg return</th><th class="num">Avg vs S&amp;P 500</th></tr></thead>
+      <tbody id="anal"></tbody>
+    </table></div>
+  </section>
+</main>
+
+<div class="bande" aria-hidden="true"><div class="piste" id="bande"></div></div>
+
+<dialog id="methode" aria-labelledby="h-methode">
+  <div class="tete"><h2 id="h-methode">Methodology</h2>
+    <div class="actions"><button class="bouton-icone" type="button" id="f-methode" aria-label="Close">✕</button></div>
+  </div>
+  <div class="corps">
     <ul>
       <li>Every pitch posted on the club's LinkedIn page is added to the tracker, and its prices are then updated automatically several times a day.</li>
       <li>Entry price: the share price stated in the pitch itself. Each pitch is tracked from the last market close before the post, and its benchmark index from that same close.</li>
       <li>BUY = long; SELL = short (gains when the price falls). The position is held until the end of the stated horizon, then frozen.</li>
       <li>Returns include dividends and are in each stock's own currency: a euro stock is compared with the S&amp;P 500 without converting euros to dollars (no FX effect).</li>
-      <li>Benchmark: the S&amp;P 500 Total Return index (dividends reinvested, like the stocks), for every pitch. Each pitch's detail also shows how it did against its home market index (DAX for Germany, STI for Singapore…); except for the DAX, those home indices leave dividends out.</li>
+      <li>Benchmark: the S&amp;P 500 Total Return index (dividends reinvested, like the stocks), for every pitch. Each pitch also shows how it did against its home market index (DAX for Germany, STI for Singapore…); except for the DAX, those home indices leave dividends out.</li>
       <li>Club portfolio: equal weight in every open pitch, rebalanced daily, with daily returns compounded (time-weighted). Adding a new pitch therefore doesn't move the curve. A pitch leaves the portfolio when its horizon ends.</li>
-      <li>Prices are refreshed during the day, so the latest price can be an intraday one (marked “intraday”) until the market closes. A ⚠ marks a stock with no new price for a trading day or more (market holiday or data delay).</li>
+      <li>P&amp;L figures assume 1,000 invested in each pitch, in the stock's own currency.</li>
+      <li>Prices are refreshed during the day, so the latest price can be an intraday one until the market closes. An orange dot marks a stock with no new price for a trading day or more (market holiday or data delay).</li>
       <li>Annualised returns are only shown once a pitch has been held for 3 months: over a few days they are meaningless.</li>
       <li>Price data: Yahoo Finance.</li>
     </ul>
     <p><b>Hypothetical performance, for educational purposes only. Not investment advice.</b></p>
-  </details>
-</main>
-
-<dialog id="fiche" aria-labelledby="f-nom">
-  <div class="fiche-tete">
-    <span id="f-avatar"></span>
-    <div style="min-width: 0">
-      <div class="nom" id="f-nom"></div>
-      <div class="sous" id="f-sous"></div>
-    </div>
-    <button class="fermer" type="button" id="f-fermer" aria-label="Close">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
-    </button>
-  </div>
-  <div class="fiche-corps">
-    <div class="etiquette">Last price</div>
-    <div class="prix-fiche"><div class="gros" id="f-prix"></div><span id="f-jour"></span></div>
-    <p class="note-fiche" id="f-note" hidden></p>
-
-    <div class="barre-outils">
-      <div class="chips" id="f-vues" role="group" aria-label="Chart view">
-        <button type="button" data-vue="prix" aria-pressed="true">Price</button><button type="button" data-vue="indice" aria-pressed="false">vs S&amp;P 500</button>
-      </div>
-      <div class="compare" id="f-legende"></div>
-    </div>
-    <div class="chart-box"><canvas id="c-detail" aria-label="Chart of the pitch since publication"></canvas></div>
-
-    <div class="progres">
-      <div class="ligne-progres"><span>Price target <b id="f-cible"></b></span><span id="f-cible-n"></span></div>
-      <div class="jauge"><span id="f-cible-j"></span></div>
-    </div>
-    <div class="progres">
-      <div class="ligne-progres"><span>Horizon <b id="f-horizon"></b></span><span id="f-horizon-n"></span></div>
-      <div class="jauge"><span id="f-horizon-j" style="background: var(--bench)"></span></div>
-    </div>
-
-    <div class="faits" id="f-faits"></div>
-
-    <div class="boutons">
-      <a class="bouton" id="f-lien" target="_blank" rel="noopener">Read the pitch on LinkedIn ↗</a>
-      <a class="bouton second" id="f-yahoo" target="_blank" rel="noopener">Yahoo Finance ↗</a>
-    </div>
   </div>
 </dialog>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
-const fmtPct = v => v == null ? "–" : (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + "%";
-const fmtPrix = (v, dev) => v == null ? "–" : ({ EUR: "€", USD: "$", SGD: "S$", GBP: "£", CHF: "CHF ", HKD: "HK$", JPY: "¥" }[dev] ?? dev + " ") + v.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const MONO = '"Roboto Mono", ui-monospace, Menlo, monospace';
+const SYMBOLES = { EUR: "€", USD: "$", SGD: "S$", GBP: "£", CHF: "CHF ", HKD: "HK$", JPY: "¥" };
+const nombre = (v, d = 2) => v.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+const signe = v => v > 0 ? "+" : v < 0 ? "−" : "";
+const fmtPct = (v, d = 2) => v == null ? "–" : signe(v) + nombre(Math.abs(v), d) + "%";
+const fmtPrix = (v, dev) => v == null ? "–" : (dev ? SYMBOLES[dev] ?? dev + " " : "") + nombre(v);
+const fmtMontant = (v, dev) => v == null ? "–" : signe(v) + (SYMBOLES[dev] ?? dev + " ") + nombre(Math.abs(v));
 const fmtDate = s => s ? new Date(s + "T12:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "–";
-const fmtDateCourte = s => new Date(s + "T12:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 const cls = v => v > 0 ? "up" : v < 0 ? "down" : "";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const $ = id => document.getElementById(id);
 const yahoo = ticker => "https://finance.yahoo.com/quote/" + encodeURIComponent(ticker) + "/";
 const JOUR = 864e5;
-const POLICE = "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif";
 const jours = (a, b) => Math.round((new Date(b + "T12:00:00Z") - new Date(a + "T12:00:00Z")) / JOUR);
 const moyenne = xs => xs.length ? xs.reduce((s, x) => s + x, 0) / xs.length : null;
 const aujourdhui = () => data.mis_a_jour.slice(0, 10);
 const court = p => p.position !== "BUY";
+const code = p => p.ticker.split(".")[0].replace(/[^A-Za-z0-9]/g, "").slice(0, 4);
 // Distance left to the price target, from the last price.
 const resteCible = p => p.dernier_prix ? (p.prix_cible / p.dernier_prix - 1) * 100 : null;
 function tempsRestant(p) {
   if (p.statut === "closed") return "Closed";
   const j = jours(aujourdhui(), p.fin_horizon);
-  return j <= 0 ? "Ends today" : j < 45 ? `${j} days left` : `${Math.round(j / 30.44)} mo left`;
+  return j <= 0 ? "Ends today" : j < 45 ? `${j}d left` : `${Math.round(j / 30.44)}mo left`;
 }
 function annualise(p) {
   const j = jours(p.date_entree, p.dernier_jour);
@@ -401,352 +400,398 @@ function variationJour(p) {
   const s = p.serie;
   return s.length > 1 && s.at(-2).prix ? (s.at(-1).prix / s.at(-2).prix - 1) * 100 : null;
 }
+function depuis(d) {
+  const j = jours(d, aujourdhui());
+  return j <= 0 ? "Today" : j === 1 ? "1 day ago" : j < 31 ? `${j} days ago` : fmtDate(d);
+}
 function alpha(couleur, a) {
   const h = couleur.replace("#", "");
   const [r, g, b] = [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16));
   return `rgba(${r}, ${g}, ${b}, ${a})`;
 }
-// Coloured initials instead of logos: no external image service to depend on.
-function avatar(code, graine, taille = 42) {
+// Coloured ticker blocks instead of logos: no external image service to depend on.
+function logo(texte, graine, { grand = false, point = "" } = {}) {
   let h = 0;
   for (const c of graine) h = (h * 31 + c.charCodeAt(0)) % 360;
-  const police = (code.length > 3 ? 10 : code.length > 2 ? 12 : 14) * taille / 42;
-  return `<span class="avatar" style="--h: ${h}; width: ${taille}px; height: ${taille}px; font-size: ${police}px" aria-hidden="true">${esc(code)}</span>`;
+  return `<span class="logo${grand ? " grand" : ""}" style="--h: ${h}" aria-hidden="true">${esc(texte)}${point ? `<span class="point ${point}"></span>` : ""}</span>`;
 }
-const avatarPitch = (p, taille) => avatar(p.ticker.split(".")[0].replace(/[^A-Za-z0-9]/g, "").slice(0, 4), p.ticker, taille);
-function sparkline(p) {
-  const v = p.serie.map(s => s.r ?? 0), n = v.length;
-  const L = 110, H = 36, min = Math.min(0, ...v), max = Math.max(0, ...v), e = max - min || 1;
-  const x = i => n > 1 ? i / (n - 1) * (L - 4) + 2 : L / 2, y = r => H - 3 - (r - min) / e * (H - 6);
-  const pts = n > 1 ? v.map((r, i) => `${x(i).toFixed(1)},${y(r).toFixed(1)}`).join(" ") : `2,${y(v[0] ?? 0)} ${L - 2},${y(v[0] ?? 0)}`;
-  const c = (v.at(-1) ?? 0) >= 0 ? "var(--up)" : "var(--down)";
-  return `<svg class="spark" viewBox="0 0 ${L} ${H}" preserveAspectRatio="none" aria-hidden="true">
-    <line x1="0" x2="${L}" y1="${y(0)}" y2="${y(0)}" stroke="var(--line)" stroke-dasharray="3 3"/>
-    <polyline points="${pts}" fill="none" stroke="${c}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>`;
-}
+const pointPitch = p => p.statut === "closed" ? "clos" : p.donnees_anciennes || p.jours_sans_prix > 0 ? "vieux" : "ok";
+const logoPitch = (p, grand) => logo(code(p), p.ticker, { grand, point: pointPitch(p) });
 
-let data, graphes = {};
-let onglet = "ouverts", filtre = "tous", recherche = "", tri = "recent", periode = 0, vue = "prix", choisi = null;
+let data, graphe;
+let choix = "club", vue = "prix", periode = 0, statutListe = "ouverts", filtre = "tous", q = "", tri = { cle: "perf", sens: -1 }, modeHeat = "perf";
 
-// Vertical line that follows the cursor, to read a specific date.
-const viseur = {
-  id: "viseur",
-  afterDraw(chart) {
+// Price tags on the right axis and a crosshair, drawn over the chart.
+const etiquettes = {
+  id: "etiquettes",
+  afterDraw(chart, args, opts) {
+    const ctx = chart.ctx, { left, right, top, bottom } = chart.chartArea, y = chart.scales.y;
     const a = chart.tooltip?.getActiveElements?.();
-    if (!a || !a.length) return;
-    const x = a[0].element.x, { top, bottom } = chart.chartArea, ctx = chart.ctx;
-    ctx.save(); ctx.strokeStyle = css("--muted"); ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
-    ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, bottom); ctx.stroke(); ctx.restore();
+    if (a && a.length) {
+      ctx.save(); ctx.strokeStyle = css("--muted"); ctx.setLineDash([3, 3]); ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(a[0].element.x, top); ctx.lineTo(a[0].element.x, bottom); ctx.stroke(); ctx.restore();
+    }
+    const h = 22;
+    const tags = (opts.items || []).filter(t => t.valeur != null)
+      .map(t => ({ ...t, py: y.getPixelForValue(t.valeur) }))
+      .filter(t => t.py >= top - 1 && t.py <= bottom + 1)
+      .sort((a, b) => a.py - b.py);
+    // Labels whose prices are close would overlap: push them apart, keeping them inside the chart.
+    tags.forEach((t, i) => { t.ty = i ? Math.max(t.py, tags[i - 1].ty + h + 2) : t.py; });
+    for (let i = tags.length - 1, plafond = bottom + h / 2; i >= 0; i--) {
+      tags[i].ty = Math.min(tags[i].ty, plafond);
+      plafond = tags[i].ty - h - 2;
+    }
+    for (const t of tags) {
+      ctx.save();
+      if (t.ligne) {
+        ctx.strokeStyle = t.couleur; ctx.setLineDash([2, 3]); ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(left, t.py); ctx.lineTo(right, t.py); ctx.stroke(); ctx.setLineDash([]);
+      }
+      ctx.font = `500 13px ${MONO}`;
+      const w = Math.max(ctx.measureText(t.texte).width + 14, chart.width - right - 4);
+      ctx.fillStyle = t.couleur;
+      ctx.fillRect(right + 2, t.ty - h / 2, w, h);
+      ctx.fillStyle = t.encre || "#0d0e10"; ctx.textBaseline = "middle";
+      ctx.fillText(t.texte, right + 9, t.ty + 1);
+      if (t.etiquette) {
+        ctx.font = `500 12px ${MONO}`;
+        const lw = ctx.measureText(t.etiquette).width + 16;
+        ctx.fillStyle = t.couleur; ctx.fillRect(right - lw - 4, t.ty - h / 2, lw, h);
+        ctx.fillStyle = t.encre || "#0d0e10"; ctx.fillText(t.etiquette, right - lw + 4, t.ty + 1);
+      }
+      ctx.restore();
+    }
   }
 };
 
-function options(formatY) {
+function options(formatY, items) {
   return {
     maintainAspectRatio: false,
-    animation: { duration: 350 },
+    animation: false,
+    layout: { padding: { right: 4, top: 70 } },
     interaction: { mode: "index", intersect: false },
     plugins: {
       legend: { display: false },
+      etiquettes: { items },
       tooltip: {
-        backgroundColor: css("--surface"), titleColor: css("--ink"), bodyColor: css("--ink-2"),
-        borderColor: css("--line"), borderWidth: 1, padding: 10, boxPadding: 4, cornerRadius: 10,
-        titleFont: { family: POLICE, weight: "600" }, bodyFont: { family: POLICE },
+        backgroundColor: css("--panel-3"), titleColor: css("--ink"), bodyColor: css("--ink-2"),
+        borderColor: css("--line"), borderWidth: 1, padding: 10, boxPadding: 4, cornerRadius: 8,
+        titleFont: { family: MONO, weight: "500" }, bodyFont: { family: MONO },
         callbacks: { title: it => fmtDate(it[0].label), label: it => " " + it.dataset.label + ": " + formatY(it.parsed.y) }
       }
     },
     scales: {
-      x: { grid: { display: false }, border: { display: false },
-           ticks: { color: css("--muted"), font: { family: POLICE, size: 11 }, maxTicksLimit: 5, maxRotation: 0, callback(v) { return fmtDateCourte(this.getLabelForValue(v)); } } },
-      y: { position: "right", grid: { color: css("--line") }, border: { display: false },
-           ticks: { color: css("--muted"), font: { family: POLICE, size: 11 }, callback: formatY, maxTicksLimit: 5 } }
+      x: { grid: { color: "rgba(255,255,255,0.035)", drawTicks: false }, border: { display: false },
+           ticks: { color: css("--ink-2"), font: { family: MONO, size: 14 }, padding: 10, maxTicksLimit: 6, maxRotation: 0,
+                    callback(v) { return new Date(this.getLabelForValue(v) + "T12:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short" }); } } },
+      y: { position: "right", grid: { color: "rgba(255,255,255,0.035)", drawTicks: false }, border: { display: false }, grace: "8%",
+           afterFit(s) { s.width = 96; },
+           ticks: { color: css("--ink-2"), font: { family: MONO, size: 14 }, padding: 10, callback: formatY, maxTicksLimit: 7 } }
     }
   };
 }
 
-// Main line with a soft gradient fill underneath, like trading apps.
-const principale = (label, values, couleur, fill = "origin") => ({
-  label, data: values, borderColor: couleur, borderWidth: 2.5, tension: 0.25,
-  pointRadius: values.length < 3 ? 3 : 0, pointBackgroundColor: couleur,
-  pointHoverRadius: 5, pointHoverBackgroundColor: couleur, pointHoverBorderColor: css("--surface"), pointHoverBorderWidth: 2,
+const ligne = (label, values, couleur, extra = {}) => ({
+  label, data: values, borderColor: couleur, backgroundColor: couleur, borderWidth: 1.8, tension: 0,
+  pointRadius: values.length < 3 ? 3 : 0, pointHoverRadius: 4, pointHoverBorderWidth: 0, fill: false, ...extra
+});
+const aire = (label, values, couleur, fill = "origin") => ligne(label, values, couleur, {
   fill, backgroundColor: ctx => {
     const a = ctx.chart.chartArea;
     if (!a) return "transparent";
     const g = ctx.chart.ctx.createLinearGradient(0, a.top, 0, a.bottom);
-    g.addColorStop(0, alpha(couleur, 0.22)); g.addColorStop(1, alpha(couleur, 0));
+    g.addColorStop(0, alpha(couleur, 0.18)); g.addColorStop(1, alpha(couleur, 0));
     return g;
   }
 });
-const secondaire = (label, values, couleur, extra = {}) => ({
-  label, data: values, borderColor: couleur, backgroundColor: couleur, borderWidth: 1.5, borderDash: [5, 4],
-  tension: 0.25, pointRadius: 0, pointHoverRadius: 4, fill: false, ...extra
-});
 
-function graphe(id, config) {
-  graphes[id]?.destroy();
-  graphes[id] = new Chart($(id), { type: "line", plugins: [viseur], ...config });
+function dessiner(config) {
+  graphe?.destroy();
+  graphe = new Chart($("c-graph"), { type: "line", plugins: [etiquettes], ...config });
 }
 
-function dessinerPortefeuille() {
-  const tous = data.portefeuille;
-  if (!tous.length) return;
-  const etendue = jours(tous[0].d, tous.at(-1).d);
+// The period is measured from the last point before its first day.
+function couper(points) {
+  if (!periode || !points.length) return points;
+  const debut = new Date(new Date(points.at(-1).d + "T12:00:00Z") - periode * JOUR).toISOString().slice(0, 10);
+  const i = points.findIndex(p => p.d >= debut);
+  return points.slice(Math.max(0, i - 1));
+}
+const rebase = (v, b) => v == null || b == null ? null : ((1 + v / 100) / (1 + b / 100) - 1) * 100;
+
+function majPeriodes(points) {
+  const etendue = points.length ? jours(points[0].d, points.at(-1).d) : 0;
   document.querySelectorAll("#periodes button").forEach(b => {
     const j = +b.dataset.j;
-    // A period longer than the history would show the same thing as "All".
+    // A period longer than the history would show the same thing as "ALL".
     b.disabled = j > 7 && j > etendue + 7;
     b.setAttribute("aria-pressed", j === periode);
   });
-  // The period is measured from the last point before its first day.
-  const debut = periode ? new Date(new Date(tous.at(-1).d + "T12:00:00Z") - periode * JOUR).toISOString().slice(0, 10) : tous[0].d;
-  const i0 = Math.max(0, tous.findIndex(p => p.d >= debut) - (periode ? 1 : 0));
-  const pts = tous.slice(i0), base = pts[0];
-  const rebase = (v, b) => v == null || b == null ? null : ((1 + v / 100) / (1 + b / 100) - 1) * 100;
+}
+const pied = cases => cases.map(([label, valeur, c = ""]) => `<div>${label}<b class="${c}">${valeur}</b></div>`).join("");
+
+function dessinerClub() {
+  const r = data.resume, tous = data.portefeuille;
+  majPeriodes(tous);
+  $("g-logo").innerHTML = logo("CLUB", "club", { grand: true, point: "ok" });
+  $("g-nom").textContent = "Club Portfolio";
+  $("g-sous").textContent = `${r.nb_pitchs} pitches · equal weight · vs S&P 500 TR`;
+  $("g-boites").innerHTML =
+    `<div class="boite" style="--c: var(--${(r.perf_club ?? 0) < 0 ? "down" : "up"})"><span>Club</span><b>${fmtPct(r.perf_club)}</b></div>` +
+    `<div class="boite" style="--c: var(--bench)"><span>S&amp;P</span><b>${fmtPct(r.perf_indice)}</b></div>`;
+  $("vues").hidden = true; $("sep-vues").hidden = true;
+  const pts = couper(tous), base = pts[0] ?? {};
   const club = pts.map(p => rebase(p.club, base.club)), indice = pts.map(p => rebase(p.indice, base.indice));
   const dernier = club.at(-1), couleur = css(dernier < 0 ? "--down" : "--up");
-  $("h-club").textContent = fmtPct(dernier); $("h-club").className = "gros " + cls(dernier);
-  $("h-club-2").textContent = fmtPct(dernier);
-  $("h-indice").textContent = fmtPct(indice.at(-1));
-  $("h-pastille").style.setProperty("--c", couleur);
-  $("h-periode").textContent = periode ? `since ${fmtDate(base.d)}` : "since the first pitch";
-  graphe("c-portefeuille", {
-    data: { labels: pts.map(p => p.d), datasets: [
-      principale("Club portfolio", club, couleur),
-      secondaire("S&P 500", indice, css("--bench"))
-    ]},
-    options: options(fmtPct)
+  $("g-legende").textContent = "Club Portfolio · " + (periode ? `since ${fmtDate(base.d)}` : "since inception");
+  $("g-chg").innerHTML = `<span class="${cls(dernier)}">${fmtPct(dernier)}</span> <span style="color: var(--ink-2)">vs S&amp;P ${fmtPct(indice.at(-1))}</span>`;
+  $("g-note").textContent = "";
+  dessiner({
+    data: { labels: pts.map(p => p.d), datasets: [aire("Club", club, couleur), ligne("S&P 500 TR", indice, css("--bench"), { borderDash: [5, 4], borderWidth: 1.4 })] },
+    options: options(v => fmtPct(v, 1), [
+      { valeur: indice.at(-1), couleur: css("--bench"), texte: fmtPct(indice.at(-1)) },
+      { valeur: dernier, couleur, texte: fmtPct(dernier), ligne: true }
+    ])
   });
+  $("g-pied").innerHTML = pied([
+    ["Club return", fmtPct(r.perf_club), cls(r.perf_club)], ["S&amp;P 500 TR", fmtPct(r.perf_indice), cls(r.perf_indice)],
+    ["Avg pitch", fmtPct(r.perf_moyenne), cls(r.perf_moyenne)], ["Avg vs S&amp;P", fmtPct(r.ecart_moyen), cls(r.ecart_moyen)],
+    ["Win rate", `${r.gagnants}/${r.nb_pitchs}`], ["Targets hit", `${r.cibles_atteintes}/${r.nb_pitchs}`]
+  ]);
+  $("g-liens").innerHTML = "";
 }
 
-function dessinerStats() {
-  const r = data.resume, n = r.nb_pitchs || 0;
-  $("s-gagnants").textContent = `${r.gagnants} / ${n}`;
-  $("s-gagnants-j").style.width = n ? `${r.gagnants / n * 100}%` : "0";
-  $("s-battent").textContent = `${r.battent_indice} / ${n}`;
-  $("s-battent-j").style.width = n ? `${r.battent_indice / n * 100}%` : "0";
-  $("s-moyenne").textContent = fmtPct(r.perf_moyenne); $("s-moyenne").className = "valeur " + cls(r.perf_moyenne);
-  $("s-moyenne-n").textContent = r.ecart_moyen == null ? "" : `${fmtPct(r.ecart_moyen)} vs the S&P 500`;
-  $("s-cibles").textContent = `${r.cibles_atteintes} / ${n}`;
+function dessinerPitch(p) {
+  majPeriodes(p.serie);
+  const sens = court(p) ? -1 : 1;
+  $("g-logo").innerHTML = logoPitch(p, true);
+  $("g-nom").innerHTML = `${esc(p.ticker)} <span style="font-size: 13px; color: var(--${court(p) ? "down" : "up"}); font-family: var(--mono)">${court(p) ? "SELL" : "BUY"}</span>`;
+  $("g-sous").textContent = `${p.entreprise} · ${p.bourse}${p.intraday ? " · intraday" : ""}${p.analyste ? " · " + p.analyste : ""}`;
+  $("g-boites").innerHTML =
+    `<div class="boite" style="--c: var(--bench)"><span>Entry</span><b>${nombre(p.prix_entree)}</b></div>` +
+    `<div class="boite" style="--c: var(--target)"><span>Target</span><b>${nombre(p.prix_cible)}</b></div>`;
+  $("vues").hidden = false; $("sep-vues").hidden = false;
+  document.querySelectorAll("#vues button").forEach(b => b.setAttribute("aria-pressed", b.dataset.vue === vue));
+
+  const serie = couper(p.serie), base = serie[0];
+  const labels = serie.map(s => s.d), couleur = css((p.perf ?? 0) < 0 ? "--down" : "--up");
+  const variation = p.dernier_prix - p.prix_entree;
+  $("g-legende").textContent = `${p.entreprise} · since ${periode ? fmtDate(base.d) : "pitch"}`;
+  $("g-chg").innerHTML = periode
+    ? `<span class="${cls(rebase(serie.at(-1).r, base.r))}">${fmtPct(rebase(serie.at(-1).r, base.r))}</span>`
+    : `<span class="${cls(sens * variation)}">${signe(variation)}${nombre(Math.abs(variation))} (${fmtPct(p.perf)})</span>`;
+  const notes = [];
+  if (p.donnees_anciennes) notes.push("⚠ Prices could not be refreshed today: last figures available.");
+  else if (p.jours_sans_prix > 0) notes.push(`⚠ No new price since ${fmtDate(p.dernier_jour)} (market holiday or data delay).`);
+  if (p.ecart_prix_pitch != null && Math.abs(p.ecart_prix_pitch) > 1)
+    notes.push(`Pitch price ${fmtPct(p.ecart_prix_pitch, 1)} from the prior close (${fmtPrix(p.cloture_reference, p.devise)}).`);
+  $("g-note").textContent = notes.join(" ");
+
+  if (vue === "prix") {
+    dessiner({
+      data: { labels, datasets: [
+        aire("Price", serie.map(s => s.prix), couleur, "start"),
+        // Invisible lines that keep the entry price and the target inside the vertical scale.
+        ligne("Entry", labels.map(() => p.prix_entree), "transparent", { pointHoverRadius: 0 }),
+        ligne("Target", labels.map(() => p.prix_cible), "transparent", { pointHoverRadius: 0 })
+      ]},
+      options: {
+        ...options(v => nombre(v), [
+          { valeur: p.prix_entree, couleur: css("--bench"), texte: nombre(p.prix_entree), ligne: true, etiquette: "ENTRY" },
+          { valeur: p.prix_cible, couleur: css("--target"), texte: nombre(p.prix_cible), ligne: true,
+            etiquette: p.cible_atteinte_le ? "TARGET ✓" : `TARGET ${fmtPct(resteCible(p), 1)}` },
+          { valeur: p.dernier_prix, couleur, texte: nombre(p.dernier_prix), ligne: true }
+        ]),
+      }
+    });
+    graphe.options.plugins.tooltip.filter = it => it.datasetIndex === 0;
+    graphe.update();
+  } else {
+    const r = serie.map(s => rebase(s.r, base.r)), b = serie.map(s => s.b == null ? null : rebase(sens * s.b, sens * base.b));
+    dessiner({
+      data: { labels, datasets: [aire(p.ticker, r, couleur), ligne(court(p) ? "Short S&P 500" : "S&P 500 TR", b, css("--bench"), { borderDash: [5, 4], borderWidth: 1.4 })] },
+      options: options(v => fmtPct(v, 1), [
+        { valeur: b.at(-1), couleur: css("--bench"), texte: fmtPct(b.at(-1)) },
+        { valeur: r.at(-1), couleur, texte: fmtPct(r.at(-1)), ligne: true }
+      ])
+    });
+  }
+
+  const an = annualise(p), jour = variationJour(p);
+  $("g-pied").innerHTML = pied([
+    ["Last", fmtPrix(p.dernier_prix, p.devise)], ["Today", fmtPct(jour), cls(jour)],
+    ["Return", fmtPct(p.perf), cls(p.perf)], ["vs S&amp;P", fmtPct(p.ecart), cls(p.ecart)],
+    p.ecart_local != null ? [`vs ${esc(p.indice)}`, fmtPct(p.ecart_local), cls(p.ecart_local)] : ["Annualised", an == null ? "after 3mo" : fmtPct(an), cls(an)],
+    ["Horizon", p.statut === "closed" ? "Closed" : tempsRestant(p)]
+  ]);
+  $("g-liens").innerHTML = `<span style="color: var(--muted)">Published ${fmtDate(p.publie_le)} · ends ${fmtDate(p.fin_horizon)}</span>
+    <a href="${esc(p.lien)}" target="_blank" rel="noopener">Read the pitch on LinkedIn ↗</a>
+    <a href="${esc(yahoo(p.ticker))}" target="_blank" rel="noopener">Yahoo Finance ↗</a>`;
 }
 
-function dessinerAlertes() {
-  const vieux = data.pitchs.filter(p => !p.donnees_anciennes && p.jours_sans_prix > 0);
-  $("erreurs").innerHTML = (data.erreurs.length
-    ? `<div class="card alerte">Prices unavailable today for: ${data.erreurs.map(esc).join(" · ")}</div>` : "")
-    + (vieux.length ? `<div class="card alerte avis">⚠ No new price yet for ${vieux.map(p =>
-      `${esc(p.entreprise)} (last: ${fmtDate(p.dernier_jour)})`).join(" · ")}, a market holiday or a delay at Yahoo Finance. Its last known price is used meanwhile.</div>` : "");
+function dessinerGraphe() {
+  const p = choix === "club" ? null : data.pitchs[choix];
+  p ? dessinerPitch(p) : dessinerClub();
 }
 
-const CLES = {
-  recent: [p => p.publie_le, -1], "perf-": [p => p.perf, -1], "perf+": [p => p.perf, 1], "ecart-": [p => p.ecart, -1],
-  cible: [p => p.cible_atteinte_le ? -Infinity : Math.abs(resteCible(p) ?? Infinity), 1],
-  fin: [p => p.fin_horizon, 1], nom: [p => p.entreprise.toLowerCase(), 1]
-};
-
-function ligneHTML(p, i) {
-  const drapeau = p.donnees_anciennes ? `<span class="drapeau" title="Prices could not be refreshed today">⚠ not updated</span>`
-    : p.jours_sans_prix > 0 ? `<span class="drapeau" title="No new price since ${esc(fmtDate(p.dernier_jour))} (market holiday or data delay)">⚠ ${esc(fmtDateCourte(p.dernier_jour))}</span>`
-    : p.intraday ? `<span title="The market has not closed yet">· intraday</span>` : "";
-  const jour = variationJour(p);
-  const sous = p.statut === "closed"
-    ? (p.cible_atteinte_le ? `<span class="up">✓ target hit</span>` : `<span>target missed</span>`)
-    : `<span>${tempsRestant(p)}</span>`;
-  return `<li><button type="button" class="ligne" data-i="${i}" aria-label="${esc(p.entreprise)}, ${court(p) ? "sell" : "buy"}, return ${fmtPct(p.perf)}">
-    <span class="titre-ligne">${avatarPitch(p)}<span style="min-width: 0">
-      <span class="nom" style="display: block">${esc(p.entreprise)}</span>
-      <span class="sous"><span class="sens ${court(p) ? "vente" : "achat"}">${court(p) ? "SELL" : "BUY"}</span>${esc(p.ticker)} · ${fmtDateCourte(p.publie_le)} ${drapeau}</span>
-    </span></span>
-    ${sparkline(p)}
-    <span class="droite-num col-prix"><b>${fmtPrix(p.dernier_prix, p.devise)}</b><small class="${cls(jour)}">${jour == null ? "" : fmtPct(jour) + " today"}</small></span>
-    <span class="droite-num col-ecart"><b class="${cls(p.ecart)}">${fmtPct(p.ecart)}</b><small>${sous}</small></span>
-    <span class="droite-num col-perf"><span class="badge ${cls(p.perf) || "plat"}">${fmtPct(p.perf)}</span></span>
-  </button></li>`;
-}
+const CLES = { nom: p => p.ticker, prix: p => p.dernier_prix, perf: p => p.perf };
 
 function dessinerListe() {
-  const ouverts = data.pitchs.filter(p => p.statut !== "closed"), clos = data.pitchs.filter(p => p.statut === "closed");
-  const analystes = new Set(data.pitchs.map(p => p.analyste).filter(Boolean));
-  $("nb-ouverts").textContent = ouverts.length; $("nb-clos").textContent = clos.length; $("nb-analystes").textContent = analystes.size;
-  $("o-analystes").hidden = !analystes.size;
-  if (onglet === "analystes" && !analystes.size) onglet = "ouverts";
-  document.querySelectorAll(".onglets button").forEach(b => {
-    b.setAttribute("aria-selected", b.dataset.onglet === onglet);
-    b.tabIndex = b.dataset.onglet === onglet ? 0 : -1;
-  });
-  $("panneau").setAttribute("aria-labelledby", "o-" + onglet);
-
-  const enAnalystes = onglet === "analystes";
-  $("outils").hidden = enAnalystes;
-  if (enAnalystes) { $("entete-liste").hidden = true; dessinerAnalystes(); return; }
-
-  const q = recherche.trim().toLowerCase();
-  const [cle, sens] = CLES[tri];
+  const recherche = q.trim().toLowerCase();
   const lignes = data.pitchs.map((p, i) => [p, i])
-    .filter(([p]) => (onglet === "clos") === (p.statut === "closed"))
+    .filter(([p]) => statutListe === "tous" || (statutListe === "clos") === (p.statut === "closed"))
     .filter(([p]) => filtre === "tous" || p.position === filtre)
-    .filter(([p]) => !q || (p.entreprise + " " + p.ticker + " " + (p.analyste ?? "")).toLowerCase().includes(q))
+    .filter(([p]) => !recherche || (p.entreprise + " " + p.ticker + " " + (p.analyste ?? "")).toLowerCase().includes(recherche))
     .sort(([a], [b]) => {
-      const x = cle(a), y = cle(b);
+      const x = CLES[tri.cle](a), y = CLES[tri.cle](b);
       if (x == null || y == null) return x == null ? 1 : -1;  // missing values always last
-      return (x < y ? -1 : x > y ? 1 : 0) * sens;
+      return (x < y ? -1 : x > y ? 1 : 0) * tri.sens;
     });
-
-  dessinerBilan(onglet === "clos" ? clos : []);
-  $("entete-liste").hidden = !lignes.length;
-  $("liste").innerHTML = lignes.length ? lignes.map(([p, i]) => ligneHTML(p, i)).join("")
-    : onglet === "clos" && !clos.length
-      ? `<li class="vide"><b>No closed pitches yet</b>${ouverts.length ? `The first horizon ends on ${fmtDate(ouverts.map(p => p.fin_horizon).sort()[0])}.` : ""}</li>`
-      : `<li class="vide"><b>Nothing found</b>Try another search or filter.</li>`;
+  $("nb-actifs").textContent = `(${lignes.length})`;
+  document.querySelectorAll("#cols button").forEach(b => b.dataset.cle === tri.cle ? b.dataset.sens = tri.sens : delete b.dataset.sens);
+  const r = data.resume;
+  const club = `<li class="section">Portfolio</li>
+    <li><button type="button" class="rang" data-choix="club" aria-current="${choix === "club"}">
+      <span class="actif">${logo("CLUB", "club", { point: "ok" })}<span class="noms"><b>CLUB</b><small>Equal-weight portfolio</small></span></span>
+      <span class="num">–</span><span class="num ${cls(r.perf_club)}">${fmtPct(r.perf_club)}</span></button></li>
+    <li><button type="button" class="rang" data-choix="club" aria-current="false">
+      <span class="actif">${logo("SPX", "spx-tr", { point: "ok" })}<span class="noms"><b>SPX500 TR</b><small>Same dates as the club</small></span></span>
+      <span class="num">–</span><span class="num ${cls(r.perf_indice)}">${fmtPct(r.perf_indice)}</span></button></li>
+    <li class="section">Pitches</li>`;
+  $("watch").innerHTML = club + (lignes.length ? lignes.map(([p, i]) => `<li><button type="button" class="rang" data-choix="${i}" aria-current="${choix === i}"
+      title="${esc(p.entreprise)} · ${court(p) ? "SELL" : "BUY"} · ${esc(tempsRestant(p))}${p.jours_sans_prix > 0 ? " · no new price since " + esc(fmtDate(p.dernier_jour)) : ""}">
+      <span class="actif">${logoPitch(p)}<span class="noms"><b>${esc(code(p))} <span style="font: 500 10px var(--mono); color: var(--${court(p) ? "down" : "up"})">${court(p) ? "S" : "B"}</span></b><small>${esc(p.entreprise)}</small></span></span>
+      <span class="num">${nombre(p.dernier_prix)}</span><span class="num ${cls(p.perf)}">${fmtPct(p.perf)}</span></button></li>`).join("")
+    : `<li class="vide">${statutListe === "clos" && !data.pitchs.some(p => p.statut === "closed") ? "No closed pitches yet." : "No pitch matches."}</li>`);
 }
 
-function dessinerBilan(finis) {
-  finis = finis.filter(p => p.serie.length);
-  if (!finis.length) { $("bilan").innerHTML = ""; return; }
-  const tries = [...finis].sort((a, b) => b.perf - a.perf);
-  const moy = moyenne(finis.map(p => p.perf)), moyEcart = moyenne(finis.map(p => p.ecart));
-  $("bilan").innerHTML = `<div class="bilan">
-    <div>Targets hit<b>${finis.filter(p => p.cible_atteinte_le).length} / ${finis.length}</b></div>
-    <div>Average return<b class="${cls(moy)}">${fmtPct(moy)}</b></div>
-    <div>Average vs S&amp;P 500<b class="${cls(moyEcart)}">${fmtPct(moyEcart)}</b></div>
-    <div>Best · worst<b>${esc(tries[0].ticker)} <span class="${cls(tries[0].perf)}">${fmtPct(tries[0].perf)}</span> · ${esc(tries.at(-1).ticker)} <span class="${cls(tries.at(-1).perf)}">${fmtPct(tries.at(-1).perf)}</span></b></div>
-  </div>`;
+function couleurHeat(v) {
+  // Clamp at ±10 % (±3 % for a single day) so one big mover doesn't wash out the others.
+  const max = modeHeat === "jour" ? 3 : 10, t = Math.min(1, Math.abs(v ?? 0) / max);
+  const base = [42, 45, 50], fin = v >= 0 ? [29, 107, 61] : [143, 47, 53];
+  return `rgb(${base.map((c, i) => Math.round(c + (fin[i] - c) * (0.25 + 0.75 * t))).join(",")})`;
+}
+
+function dessinerHeat() {
+  const ouverts = data.pitchs.map((p, i) => [p, i]).filter(([p]) => p.statut !== "closed" && p.serie.length);
+  const groupes = {};
+  ouverts.forEach(([p, i]) => (groupes[p.bourse] ??= []).push([p, i]));
+  const valeur = p => modeHeat === "perf" ? p.perf : modeHeat === "ecart" ? p.ecart : variationJour(p);
+  document.querySelectorAll("#heat-mode button").forEach(b => b.setAttribute("aria-pressed", b.dataset.m === modeHeat));
+  $("heat").innerHTML = Object.entries(groupes).sort((a, b) => b[1].length - a[1].length).map(([bourse, ps]) => `
+    <div class="groupe" style="--n: ${ps.length}"><h3>${esc(bourse)}</h3><div class="tuiles">
+      ${ps.sort((a, b) => (valeur(b[0]) ?? 0) - (valeur(a[0]) ?? 0)).map(([p, i]) => `<button type="button" class="tuile" data-choix="${i}" style="--fond: ${couleurHeat(valeur(p))}"
+        aria-label="${esc(p.entreprise)} ${fmtPct(valeur(p))}"><b>${esc(code(p))}</b><span>${fmtPct(valeur(p))}</span><small>${esc(p.entreprise)}</small></button>`).join("")}
+    </div></div>`).join("") || `<div class="vide">No open pitches.</div>`;
+}
+
+function dessinerPortefeuille() {
+  const r = data.resume;
+  $("resume").innerHTML = pied([
+    ["Club return", fmtPct(r.perf_club), cls(r.perf_club)], ["vs S&amp;P 500", fmtPct(r.perf_club - r.perf_indice), cls(r.perf_club - r.perf_indice)],
+    ["Avg pitch", fmtPct(r.perf_moyenne), cls(r.perf_moyenne)], ["Win rate", `${r.gagnants}/${r.nb_pitchs}`],
+    ["Beat S&amp;P", `${r.battent_indice}/${r.nb_pitchs}`], ["Targets hit", `${r.cibles_atteintes}/${r.nb_pitchs}`]
+  ]);
+  const ouverts = data.pitchs.map((p, i) => [p, i]).filter(([p]) => p.statut !== "closed" && p.serie.length).sort(([a], [b]) => b.perf - a.perf);
+  $("pnl").innerHTML = `<li class="entete"><span>Open P&amp;L · ${nombre(data.mise, 0)} per pitch</span><span>${ouverts.length} open</span></li>` +
+    ouverts.map(([p, i]) => `<li><button type="button" data-choix="${i}" aria-current="${choix === i}">
+      <span class="actif">${logoPitch(p)}<span class="noms"><b>${esc(code(p))}</b><small>${esc(tempsRestant(p))}</small></span></span>
+      <span class="num ${cls(p.perf)}">${fmtMontant(data.mise * p.perf / 100, p.devise)}</span>
+      <span class="num pct ${cls(p.perf)}">${fmtPct(p.perf)}</span></button></li>`).join("");
+}
+
+function dessinerFil() {
+  const evts = [];
+  data.pitchs.forEach(p => {
+    evts.push({ d: p.publie_le, html: `New pitch: <b>${court(p) ? "SELL" : "BUY"} ${esc(p.ticker)}</b> at ${fmtPrix(p.prix_pitch, p.devise)}, target ${fmtPrix(p.prix_cible, p.devise)}`, lien: p.lien });
+    if (p.cible_atteinte_le) evts.push({ d: p.cible_atteinte_le, html: `🎯 <b>${esc(p.ticker)}</b> hit its ${fmtPrix(p.prix_cible, p.devise)} target` });
+    if (p.statut === "closed") evts.push({ d: p.fin_horizon, html: `<b>${esc(p.ticker)}</b> closed at <span class="${cls(p.perf)}">${fmtPct(p.perf)}</span> (${fmtPct(p.ecart)} vs S&amp;P)` });
+  });
+  evts.sort((a, b) => b.d.localeCompare(a.d));
+  $("fil").innerHTML = evts.map(e => `<li><time datetime="${e.d}">${depuis(e.d)}</time><p>${e.lien ? `<a href="${esc(e.lien)}" target="_blank" rel="noopener">${e.html} ↗</a>` : e.html}</p></li>`).join("");
 }
 
 function dessinerAnalystes() {
-  $("bilan").innerHTML = "";
   const parAnalyste = {};
   data.pitchs.filter(p => p.analyste && p.serie.length).forEach(p => (parAnalyste[p.analyste] ??= []).push(p));
   const lignes = Object.entries(parAnalyste).map(([nom, ps]) => ({
     nom, n: ps.length, gagnants: ps.filter(p => p.perf > 0).length,
     perf: moyenne(ps.map(p => p.perf)), ecart: moyenne(ps.map(p => p.ecart))
   })).sort((a, b) => b.ecart - a.ecart);
-  $("liste").innerHTML = lignes.map((l, rang) => `<li><div class="ligne" style="cursor: default">
-    <span class="titre-ligne">${avatar(l.nom.split(/\s+/).map(m => m[0]).join("").slice(0, 3).toUpperCase(), l.nom)}<span style="min-width: 0">
-      <span class="nom" style="display: block">${rang === 0 && lignes.length > 1 ? "🏆 " : ""}${esc(l.nom)}</span>
-      <span class="sous">${l.n} pitch${l.n === 1 ? "" : "es"} · ${l.gagnants} winner${l.gagnants === 1 ? "" : "s"}</span>
-    </span></span>
-    <span class="spark"></span><span class="col-prix"></span>
-    <span class="droite-num col-ecart"><b class="${cls(l.ecart)}">${fmtPct(l.ecart)}</b><small>avg vs S&amp;P 500</small></span>
-    <span class="droite-num col-perf"><span class="badge ${cls(l.perf) || "plat"}">${fmtPct(l.perf)}</span></span>
-  </div></li>`).join("");
+  $("p-anal").hidden = !lignes.length;
+  $("anal").innerHTML = lignes.map(l => `<tr><td>${esc(l.nom)}</td><td class="num">${l.n}</td><td class="num">${l.gagnants}/${l.n}</td>
+    <td class="num ${cls(l.perf)}">${fmtPct(l.perf)}</td><td class="num ${cls(l.ecart)}">${fmtPct(l.ecart)}</td></tr>`).join("");
 }
 
-function dessinerFiche() {
-  const p = data.pitchs[choisi];
-  if (!p) return;
-  $("f-avatar").innerHTML = avatarPitch(p, 44);
-  $("f-nom").textContent = p.entreprise;
-  $("f-sous").innerHTML = `<span class="sens ${court(p) ? "vente" : "achat"}">${court(p) ? "SELL" : "BUY"}</span>${esc(p.ticker)} · ${esc(p.bourse)}${p.analyste ? " · by " + esc(p.analyste) : ""}`;
-  $("f-prix").textContent = fmtPrix(p.dernier_prix, p.devise);
-  const jour = variationJour(p);
-  $("f-jour").innerHTML = `<span class="badge ${cls(p.perf) || "plat"}" title="Return since the pitch">${fmtPct(p.perf)}</span>`
-    + (jour == null ? "" : ` <span class="${cls(jour)}" style="font-size: 13px; font-weight: 600">${fmtPct(jour)} today</span>`);
-
-  const notes = [];
-  if (p.donnees_anciennes) notes.push("Prices could not be refreshed today: these are the last figures available.");
-  else if (p.jours_sans_prix > 0) notes.push(`⚠ No new price since ${fmtDate(p.dernier_jour)} (market holiday or data delay).`);
-  if (p.intraday) notes.push("Intraday price: the market has not closed yet.");
-  if (p.ecart_prix_pitch != null && Math.abs(p.ecart_prix_pitch) > 1)
-    notes.push(`The price in the pitch was ${fmtPct(p.ecart_prix_pitch)} away from the last close before the post (${fmtPrix(p.cloture_reference, p.devise)}).`);
-  $("f-note").textContent = notes.join(" ");
-  $("f-note").hidden = !notes.length;
-
-  // Progress from the entry price towards the target (also right for shorts, whose target is below).
-  const progres = p.cible_atteinte_le ? 1 : Math.min(1, Math.max(0, (p.dernier_prix - p.prix_entree) / (p.prix_cible - p.prix_entree)));
-  $("f-cible").textContent = fmtPrix(p.prix_cible, p.devise);
-  $("f-cible-n").innerHTML = p.cible_atteinte_le ? `<span class="up">✓ hit on ${fmtDate(p.cible_atteinte_le)}</span>` : `${fmtPct(resteCible(p))} to go`;
-  $("f-cible-j").style.width = `${progres * 100}%`;
-  const duree = jours(p.date_entree, p.fin_horizon), ecoule = Math.min(duree, jours(p.date_entree, aujourdhui()));
-  $("f-horizon").textContent = `${p.horizon_mois} months`;
-  $("f-horizon-n").textContent = p.statut === "closed" ? `ended ${fmtDate(p.fin_horizon)}` : `${tempsRestant(p)} · ends ${fmtDate(p.fin_horizon)}`;
-  $("f-horizon-j").style.width = `${Math.max(2, ecoule / duree * 100)}%`;
-
-  const an = annualise(p);
-  const fait = (label, valeur, c = "") => `<div>${label}<b class="${c}">${valeur}</b></div>`;
-  $("f-faits").innerHTML =
-    fait("Entry price (from the pitch)", fmtPrix(p.prix_entree, p.devise)) +
-    fait("Published", fmtDate(p.publie_le)) +
-    fait("vs S&amp;P 500", fmtPct(p.ecart), cls(p.ecart)) +
-    (p.ecart_local != null ? fait(`vs ${esc(p.indice)} (home market)`, fmtPct(p.ecart_local), cls(p.ecart_local))
-                           : fait("S&amp;P 500, same dates", fmtPct(p.perf_indice), cls(p.perf_indice))) +
-    fait("Annualised", an == null ? "after 3 months" : fmtPct(an), an == null ? "" : cls(an)) +
-    fait("Analyst", p.analyste ? esc(p.analyste) : "–");
-  $("f-lien").href = p.lien;
-  $("f-yahoo").href = yahoo(p.ticker);
-
-  document.querySelectorAll("#f-vues button").forEach(b => b.setAttribute("aria-pressed", b.dataset.vue === vue));
-  const labels = p.serie.map(s => s.d), n = labels.length;
-  const couleur = css((p.perf ?? 0) < 0 ? "--down" : "--up"), indice = court(p) ? "Short S&P 500" : "S&P 500";
-  if (vue === "prix") {
-    $("f-legende").innerHTML = `<span><i style="--c: ${couleur}"></i>Price</span><span><i class="tiret" style="--c: var(--bench)"></i>Entry</span><span><i class="tiret" style="--c: var(--accent)"></i>Target</span>`;
-    const repere = { borderWidth: 1, pointHoverRadius: 0, tension: 0 };
-    graphe("c-detail", {
-      data: { labels, datasets: [
-        principale("Price", p.serie.map(s => s.prix), couleur, "start"),
-        secondaire("Entry price", Array(n).fill(p.prix_entree), css("--bench"), repere),
-        secondaire("Price target", Array(n).fill(p.prix_cible), css("--accent"), repere)
-      ]},
-      options: options(v => fmtPrix(v, p.devise))
-    });
-  } else {
-    $("f-legende").innerHTML = `<span><i style="--c: ${couleur}"></i>${esc(p.ticker)} (${court(p) ? "short" : "long"})</span><span><i class="tiret" style="--c: var(--bench)"></i>${indice}</span>`;
-    const sens = court(p) ? -1 : 1;
-    graphe("c-detail", {
-      data: { labels, datasets: [
-        principale(p.ticker, p.serie.map(s => s.r), couleur),
-        secondaire(indice, p.serie.map(s => s.b == null ? null : sens * s.b), css("--bench"))
-      ]},
-      options: options(fmtPct)
-    });
-  }
+function dessinerBande() {
+  const r = data.resume;
+  const items = [`<span><i>CLUB</i><b class="${cls(r.perf_club)}">${fmtPct(r.perf_club)}</b></span>`, `<span><i>SPX TR</i><b class="${cls(r.perf_indice)}">${fmtPct(r.perf_indice)}</b></span>`]
+    .concat(data.pitchs.filter(p => p.serie.length).map(p => `<span><i>${esc(p.ticker)}</i>${nombre(p.dernier_prix)} <b class="${cls(p.perf)}">${fmtPct(p.perf)}</b></span>`));
+  // Repeated so the loop is seamless whatever the screen width.
+  const tour = items.join("").repeat(Math.max(2, Math.ceil(12 / items.length)));
+  $("bande").innerHTML = tour + tour;
 }
 
-function ouvrirFiche(i, majHash = true) {
-  choisi = i;
-  if (!$("fiche").open) $("fiche").showModal();
-  dessinerFiche();
-  // The ticker in the address makes a pitch easy to share: …/#EQIX opens it directly.
-  if (majHash) history.replaceState(null, "", "#" + encodeURIComponent(data.pitchs[i].ticker));
+function dessinerEtat() {
+  const vieux = data.pitchs.filter(p => !p.donnees_anciennes && p.jours_sans_prix > 0);
+  $("statut").textContent = "Updated " + new Date(data.mis_a_jour).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+  $("statut").classList.toggle("alerte", !!(vieux.length || data.erreurs.length));
+  $("avis").innerHTML = (data.erreurs.length ? `<div class="avis erreur"><b>Data error</b> · ${data.erreurs.map(esc).join(" · ")}</div>` : "")
+    + (vieux.length ? `<div class="avis"><b>Stale price</b> · ${vieux.map(p => `${esc(p.ticker)} last updated ${fmtDate(p.dernier_jour)}`).join(" · ")}. Market holiday or Yahoo Finance delay; the last known price is used.</div>` : "");
 }
 
 function afficher() {
-  $("maj").textContent = "Updated " + new Date(data.mis_a_jour).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
-  dessinerAlertes();
-  dessinerStats();
-  dessinerPortefeuille();
+  dessinerEtat();
   dessinerListe();
-  if ($("fiche").open) dessinerFiche();
+  dessinerHeat();
+  dessinerGraphe();
+  dessinerPortefeuille();
+  dessinerFil();
+  dessinerAnalystes();
+  dessinerBande();
+}
+
+function choisir(c, { defiler = true } = {}) {
+  choix = c === "club" ? "club" : +c;
+  history.replaceState(null, "", choix === "club" ? location.pathname + location.search : "#" + encodeURIComponent(data.pitchs[choix].ticker));
+  dessinerListe(); dessinerPortefeuille(); dessinerGraphe();
+  // On a phone the chart sits below the list: bring it into view.
+  if (defiler && matchMedia("(max-width: 820px)").matches) document.querySelector(".p-graph").scrollIntoView({ behavior: "smooth" });
 }
 
 // --- Interactions ---
-$("liste").addEventListener("click", e => {
-  const b = e.target.closest("button.ligne");
-  if (b) ouvrirFiche(+b.dataset.i);
-});
-$("f-fermer").addEventListener("click", () => $("fiche").close());
-$("fiche").addEventListener("click", e => { if (e.target === $("fiche")) $("fiche").close(); });  // click on the backdrop
-$("fiche").addEventListener("close", () => {
-  history.replaceState(null, "", location.pathname + location.search);
-  document.querySelector(`button.ligne[data-i="${choisi}"]`)?.focus();
-});
-$("f-vues").addEventListener("click", e => {
-  const b = e.target.closest("button[data-vue]");
-  if (b) { vue = b.dataset.vue; dessinerFiche(); }
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-choix]");
+  if (b) choisir(b.dataset.choix);
 });
 $("periodes").addEventListener("click", e => {
   const b = e.target.closest("button[data-j]");
-  if (b && !b.disabled) { periode = +b.dataset.j; dessinerPortefeuille(); }
+  if (b && !b.disabled) { periode = +b.dataset.j; dessinerGraphe(); }
 });
-document.querySelector(".onglets").addEventListener("click", e => {
-  const b = e.target.closest("button[data-onglet]");
-  if (b) { onglet = b.dataset.onglet; dessinerListe(); }
+$("vues").addEventListener("click", e => {
+  const b = e.target.closest("button[data-vue]");
+  if (b) { vue = b.dataset.vue; dessinerGraphe(); }
 });
-document.querySelector(".onglets").addEventListener("keydown", e => {
-  if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
-  const visibles = [...document.querySelectorAll(".onglets button:not([hidden])")];
-  const i = visibles.findIndex(b => b.dataset.onglet === onglet);
-  const suivant = visibles[(i + (e.key === "ArrowRight" ? 1 : visibles.length - 1)) % visibles.length];
-  onglet = suivant.dataset.onglet; dessinerListe(); suivant.focus();
+$("heat-mode").addEventListener("click", e => {
+  const b = e.target.closest("button[data-m]");
+  if (b) { modeHeat = b.dataset.m; dessinerHeat(); }
 });
+$("cols").addEventListener("click", e => {
+  const b = e.target.closest("button[data-cle]");
+  if (!b) return;
+  // A second click reverses the order; numbers start with the largest.
+  tri = tri.cle === b.dataset.cle ? { cle: tri.cle, sens: -tri.sens } : { cle: b.dataset.cle, sens: b.dataset.cle === "nom" ? 1 : -1 };
+  dessinerListe();
+});
+$("statut-liste").addEventListener("change", e => { statutListe = e.target.value; dessinerListe(); });
+$("b-recherche").addEventListener("click", () => {
+  const ouvert = $("recherche").hidden;
+  $("recherche").hidden = !ouvert;
+  $("b-recherche").setAttribute("aria-expanded", ouvert);
+  if (ouvert) $("q").focus();
+});
+$("q").addEventListener("input", e => { q = e.target.value; dessinerListe(); });
 $("filtres").addEventListener("click", e => {
   const b = e.target.closest("button[data-f]");
   if (!b) return;
@@ -754,36 +799,39 @@ $("filtres").addEventListener("click", e => {
   document.querySelectorAll("#filtres button").forEach(x => x.setAttribute("aria-pressed", x === b));
   dessinerListe();
 });
-$("recherche").addEventListener("input", e => { recherche = e.target.value; dessinerListe(); });
-$("tri").addEventListener("change", e => { tri = e.target.value; dessinerListe(); });
-
-// Theme: follows the system; the button overrides it and the choice is remembered on this device.
-const sombre = () => document.documentElement.dataset.theme
-  ? document.documentElement.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
-try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch {}
-$("theme").addEventListener("click", () => {
-  const t = sombre() ? "light" : "dark";
-  document.documentElement.dataset.theme = t;
-  try { localStorage.setItem("theme", t); } catch {}
-  if (data) afficher();
+// Arrow keys move through the watchlist.
+$("watch").addEventListener("keydown", e => {
+  if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+  const rangs = [...document.querySelectorAll("#watch .rang")], i = rangs.indexOf(document.activeElement);
+  if (i < 0) return;
+  e.preventDefault();
+  const suivant = rangs[Math.min(rangs.length - 1, Math.max(0, i + (e.key === "ArrowDown" ? 1 : -1)))];
+  choisir(suivant.dataset.choix, { defiler: false });
+  document.querySelectorAll("#watch .rang")[rangs.indexOf(suivant)]?.focus();
 });
-// Chart colours follow light / dark mode.
-matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => data && afficher());
+$("b-methode").addEventListener("click", () => $("methode").showModal());
+$("f-methode").addEventListener("click", () => $("methode").close());
+$("methode").addEventListener("click", e => { if (e.target === $("methode")) $("methode").close(); });
 
 // A shared link such as …/#EQIX opens that pitch, on load or when the address changes.
-function ficheDepuisHash() {
+function choixDepuisHash() {
   const i = data.pitchs.findIndex(p => p.ticker === decodeURIComponent(location.hash.slice(1)));
-  if (i >= 0) ouvrirFiche(i, false);
+  if (i >= 0 && i !== choix) { choix = i; afficher(); }
 }
-addEventListener("hashchange", () => data && ficheDepuisHash());
+addEventListener("hashchange", () => data && choixDepuisHash());
 
 fetch("data.json", { cache: "no-store" })
   .then(r => r.json())
-  .then(d => { data = d; afficher(); ficheDepuisHash(); })
-  // The charts are drawn on a canvas: redraw them once Inter has loaded.
+  .then(d => {
+    data = d;
+    const i = data.pitchs.findIndex(p => p.ticker === decodeURIComponent(location.hash.slice(1)));
+    if (i >= 0) choix = i;
+    afficher();
+  })
+  // The chart is drawn on a canvas: redraw it once the fonts have loaded.
   .then(() => document.fonts?.ready)
-  .then(() => afficher())
-  .catch(() => { $("liste").innerHTML = `<li class="vide"><b>Could not load the data</b>Please try again in a moment.</li>`; });
+  .then(() => dessinerGraphe())
+  .catch(() => { $("watch").innerHTML = `<li class="vide">Could not load the data. Please try again in a moment.</li>`; });
 </script>
 </body>
 </html>
