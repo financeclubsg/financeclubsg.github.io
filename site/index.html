@@ -92,8 +92,16 @@
   th { text-align: left; font-weight: 500; color: var(--muted); font-size: 12px; padding: 0 10px 8px; border-bottom: 1px solid var(--axis); white-space: nowrap; }
   td { padding: 12px 10px; border-bottom: 1px solid var(--grid); white-space: nowrap; }
   td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
-  tbody tr { cursor: pointer; }
-  tbody tr:hover, tbody tr.sel { background: var(--hover); }
+  #lignes tr { cursor: pointer; }
+  #lignes tr:hover, #lignes tr.sel { background: var(--hover); }
+  #lignes tr:focus-visible { outline: 2px solid var(--club); outline-offset: -2px; }
+  th button { all: unset; cursor: pointer; }
+  th button:hover { color: var(--ink); }
+  th button:focus-visible { outline: 2px solid var(--club); outline-offset: 2px; border-radius: 2px; }
+  th[aria-sort] button { color: var(--ink); }
+  th[aria-sort="ascending"] button::after { content: " ↑"; }
+  th[aria-sort="descending"] button::after { content: " ↓"; }
+  .flag { color: var(--indice); font-size: 12px; }
   .table-scroll { overflow-x: auto; margin: 0 -10px; }
   .nom { font-weight: 600; }
   .tick { color: var(--muted); font-size: 12px; }
@@ -113,6 +121,11 @@
   .methode { color: var(--ink-2); font-size: 13px; }
   .methode ul { padding-left: 18px; margin: 8px 0 0; }
   .alerte { border-color: var(--down); color: var(--down); font-size: 13px; margin-bottom: 16px; }
+  .avis { border-color: var(--indice); color: var(--ink-2); font-size: 13px; margin-bottom: 16px; }
+  .bascule { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 10px; }
+  .bascule button { font: inherit; font-size: 13px; padding: 4px 12px; border: 0; background: none; color: var(--ink-2); cursor: pointer; }
+  .bascule button[aria-pressed="true"] { background: var(--hover); color: var(--ink); font-weight: 600; }
+  .note-detail { color: var(--muted); font-size: 12px; margin: -8px 0 12px; }
   .vide { color: var(--ink-2); text-align: center; padding: 32px 0; }
 
   @media (max-width: 720px) {
@@ -145,20 +158,21 @@
 
   <section class="card">
     <h2>The club vs the market</h2>
-    <p class="sub">Cumulative return: 1,000 invested in each pitch at the price stated in the pitch, compared with the same 1,000 put in the S&amp;P 500 on the same day.</p>
+    <p class="sub">Cumulative return of an equal-weighted portfolio holding every open pitch, compared with the same trades in the S&amp;P 500 (dividends reinvested). Each pitch enters at the price stated in the pitch.</p>
     <div class="legend"><span style="--c: var(--club)">Club portfolio</span><span style="--c: var(--indice)">S&amp;P 500</span></div>
     <div class="chart-box"><canvas id="c-portefeuille" aria-label="Cumulative return of the club portfolio compared with the indices"></canvas></div>
   </section>
 
   <section class="card">
     <h2>All pitches</h2>
-    <p class="sub">Click a row to see the details.</p>
+    <p class="sub">Click a row to see the details. Click a column title to sort.</p>
     <div class="table-scroll">
       <table>
-        <thead><tr>
-          <th>Company</th><th>Published</th><th>Call</th>
+        <thead><tr id="entetes">
+          <th><button data-cle="entreprise">Company</button></th><th><button data-cle="publie_le">Published</button></th><th><button data-cle="position">Call</button></th>
           <th class="num">Entry</th><th class="num">Last price</th>
-          <th class="num">Return</th><th class="num">vs S&amp;P 500</th><th class="num">Target</th><th>Status</th>
+          <th class="num"><button data-cle="perf">Return</button></th><th class="num"><button data-cle="ecart">vs S&amp;P 500</button></th>
+          <th class="num"><button data-cle="reste">Target</button></th><th class="num"><button data-cle="fin_horizon">Time left</button></th>
         </tr></thead>
         <tbody id="lignes"></tbody>
       </table>
@@ -178,19 +192,53 @@
       <div>Last price<b id="d-entree"></b></div>
       <div>Price target<b id="d-cible"></b></div>
       <div>Horizon ends<b id="d-fin"></b></div>
+      <div>Return<b id="d-perf"></b></div>
+      <div>Annualised<b id="d-annuel"></b></div>
+      <div>Time left<b id="d-reste"></b></div>
+      <div>Analyst<b id="d-analyste"></b></div>
     </div>
-    <div class="legend"><span style="--c: var(--club)">Share price</span><span style="--c: var(--muted)">Entry price and price target</span></div>
+    <p class="note-detail" id="d-note" hidden></p>
+    <div class="bascule" role="group" aria-label="Chart view">
+      <button type="button" data-vue="prix" aria-pressed="true">Price</button><button type="button" data-vue="indice" aria-pressed="false">vs S&amp;P 500</button>
+    </div>
+    <div class="legend" id="d-legende"></div>
     <div class="chart-box"><canvas id="c-detail" aria-label="Share price since the pitch"></canvas></div>
+  </section>
+
+  <section class="card" id="bilan" hidden>
+    <h2>Closed pitches</h2>
+    <p class="sub">Pitches whose horizon has ended, with their final result.</p>
+    <div class="facts" id="bilan-chiffres"></div>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Company</th><th>Call</th><th class="num">Return</th><th class="num">vs S&amp;P 500</th><th>Target</th></tr></thead>
+        <tbody id="bilan-lignes"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card" id="classement" hidden>
+    <h2>Analysts</h2>
+    <p class="sub">Average result of each analyst's pitches, best first (by return vs the S&amp;P 500).</p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Analyst</th><th class="num">Pitches</th><th class="num">Winners</th><th class="num">Avg return</th><th class="num">Avg vs S&amp;P 500</th></tr></thead>
+        <tbody id="classement-lignes"></tbody>
+      </table>
+    </div>
   </section>
 
   <section class="card methode">
     <h2>Methodology</h2>
     <ul>
-      <li>Every pitch posted on the club's LinkedIn page is tracked automatically.</li>
+      <li>Every pitch posted on the club's LinkedIn page is added to the tracker, and its prices are then updated automatically several times a day.</li>
       <li>Entry price: the share price stated in the pitch itself. Each pitch is tracked from the last market close before the post, and its benchmark index from that same close.</li>
       <li>BUY = long; SELL = short (gains when the price falls). The position is held until the end of the stated horizon, then frozen.</li>
       <li>Returns include dividends and are in each stock's own currency: a euro stock is compared with the S&amp;P 500 without converting euros to dollars (no FX effect).</li>
-      <li>Benchmark: the S&amp;P 500, for every pitch. Each pitch's detail also shows how it did against its home market index (DAX for Germany, STI for Singapore…).</li>
+      <li>Benchmark: the S&amp;P 500 Total Return index (dividends reinvested, like the stocks), for every pitch. Each pitch's detail also shows how it did against its home market index (DAX for Germany, STI for Singapore…); except for the DAX, those home indices leave dividends out.</li>
+      <li>Club portfolio: equal weight in every open pitch, rebalanced daily, with daily returns compounded (time-weighted). Adding a new pitch therefore doesn't move the curve. A pitch leaves the portfolio when its horizon ends.</li>
+      <li>Prices are refreshed during the day, so the latest price can be an intraday one (marked “intraday”) until the market closes. A ⚠ marks a stock with no new price for a trading day or more (market holiday or data delay).</li>
+      <li>Annualised returns are only shown once a pitch has been held for 3 months: over a few days they are meaningless.</li>
       <li>Price data: Yahoo Finance.</li>
     </ul>
     <p><b>Hypothetical performance, for educational purposes only. Not investment advice.</b></p>
@@ -207,11 +255,23 @@ const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": 
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const $ = id => document.getElementById(id);
 const yahoo = ticker => "https://finance.yahoo.com/quote/" + encodeURIComponent(ticker) + "/";
-// Older data.json files carry French status labels.
-const STATUTS = { open: "Open", closed: "Closed", pending: "Pending", "en cours": "Open", "terminé": "Closed", "en attente": "Pending" };
-const fmtStatut = p => p.statut === "pending" || p.statut === "en attente" ? "Pending" : STATUTS[p.statut] ?? p.statut;
+const JOUR = 864e5;
+const jours = (a, b) => Math.round((new Date(b + "T12:00:00Z") - new Date(a + "T12:00:00Z")) / JOUR);
+const moyenne = xs => xs.length ? xs.reduce((s, x) => s + x, 0) / xs.length : null;
+const aujourdhui = () => data.mis_a_jour.slice(0, 10);
+// Distance left to the price target, from the last price.
+const resteCible = p => p.dernier_prix ? (p.prix_cible / p.dernier_prix - 1) * 100 : null;
+function tempsRestant(p) {
+  if (p.statut === "closed") return "Closed";
+  const j = jours(aujourdhui(), p.fin_horizon);
+  return j <= 0 ? "Ends today" : j < 45 ? `${j} days` : `${Math.round(j / 30.44)} mo`;
+}
+function annualise(p) {
+  const j = jours(p.date_entree, p.dernier_jour);
+  return p.perf == null || j < 90 ? null : (Math.pow(1 + p.perf / 100, 365 / j) - 1) * 100;
+}
 
-let data, choisi = 0, graphes = {};
+let data, choisi = 0, vue = "prix", tri = { cle: "publie_le", sens: -1 }, graphes = {};
 
 // Vertical line that follows the cursor, to read a specific date.
 const viseur = {
@@ -272,7 +332,8 @@ function dessinerDetail() {
   const p = data.pitchs[choisi];
   if (!p || !p.serie.length) { $("detail").hidden = true; return; }
   $("detail").hidden = false;
-  $("d-titre").textContent = `${p.entreprise} · ${p.position === "BUY" ? "Buy" : "Short"}`;
+  const court = p.position !== "BUY";
+  $("d-titre").textContent = `${p.entreprise} · ${court ? "Short" : "Buy"}`;
   $("d-sous-titre").textContent = `${p.ticker} on ${p.bourse} · published ${fmtDate(p.publie_le)} · vs S&P 500: ${fmtPct(p.ecart)}`
     + (p.ecart_local != null ? ` · vs ${p.indice} (home market): ${fmtPct(p.ecart_local)}` : "");
   $("d-lien").href = p.lien;
@@ -281,23 +342,131 @@ function dessinerDetail() {
   $("d-entree").textContent = fmtPrix(p.dernier_prix, p.devise);
   $("d-cible").textContent = fmtPrix(p.prix_cible, p.devise);
   $("d-fin").textContent = fmtDate(p.fin_horizon);
+  $("d-perf").textContent = fmtPct(p.perf); $("d-perf").className = cls(p.perf);
+  const an = annualise(p);
+  $("d-annuel").textContent = an == null ? "after 3 months" : fmtPct(an);
+  $("d-annuel").className = an == null ? "" : cls(an);
+  $("d-reste").textContent = tempsRestant(p);
+  $("d-analyste").textContent = p.analyste || "–";
+
+  const notes = [];
+  if (p.ecart_prix_pitch != null && Math.abs(p.ecart_prix_pitch) > 1)
+    notes.push(`The price in the pitch was ${fmtPct(p.ecart_prix_pitch)} away from the last close before the post (${fmtPrix(p.cloture_reference, p.devise)}).`);
+  if (p.donnees_anciennes) notes.push("Prices could not be refreshed today: these are the last figures available.");
+  else if (p.jours_sans_prix > 0) notes.push(`No new price since ${fmtDate(p.dernier_jour)} (market holiday or data delay).`);
+  if (p.intraday) notes.push("The last price is intraday: the market has not closed yet.");
+  $("d-note").textContent = notes.join(" ");
+  $("d-note").hidden = !notes.length;
+
+  document.querySelectorAll(".bascule button").forEach(b => b.setAttribute("aria-pressed", b.dataset.vue === vue));
   const labels = p.serie.map(s => s.d), n = labels.length;
-  const repere = { borderWidth: 1, borderDash: [4, 4], pointRadius: 0, pointHoverRadius: 0 };
-  graphe("c-detail", {
-    data: { labels, datasets: [
-      ligne("Share price", p.serie.map(s => s.prix), css("--club")),
-      ligne("Entry price", Array(n).fill(p.prix_entree), css("--muted"), repere),
-      ligne("Price target", Array(n).fill(p.prix_cible), css("--muted"), repere)
-    ]},
-    options: options(v => fmtPrix(v, p.devise))
+  const indice = court ? "Short S&P 500" : "S&P 500";
+  const legende = vue === "prix"
+    ? [["Share price", "--club"], ["Entry price and price target", "--muted"]]
+    : [[`${p.entreprise} (${court ? "short" : "long"})`, "--club"], [indice, "--indice"]];
+  $("d-legende").innerHTML = legende.map(([t, c]) => `<span style="--c: var(${c})">${esc(t)}</span>`).join("");
+
+  if (vue === "prix") {
+    const repere = { borderWidth: 1, borderDash: [4, 4], pointRadius: 0, pointHoverRadius: 0 };
+    graphe("c-detail", {
+      data: { labels, datasets: [
+        ligne("Share price", p.serie.map(s => s.prix), css("--club")),
+        ligne("Entry price", Array(n).fill(p.prix_entree), css("--muted"), repere),
+        ligne("Price target", Array(n).fill(p.prix_cible), css("--muted"), repere)
+      ]},
+      options: options(v => fmtPrix(v, p.devise))
+    });
+  } else {
+    const sens = court ? -1 : 1;
+    graphe("c-detail", {
+      data: { labels, datasets: [
+        ligne(p.entreprise, p.serie.map(s => s.r), css("--club")),
+        ligne(indice, p.serie.map(s => s.b == null ? null : sens * s.b), css("--indice"))
+      ]},
+      options: options(fmtPct)
+    });
+  }
+}
+
+function cleTri(p, cle) {
+  if (cle === "reste") return p.cible_atteinte_le ? -Infinity : resteCible(p);
+  if (cle === "fin_horizon") return p.statut === "closed" ? "0" : p.fin_horizon;
+  return p[cle];
+}
+
+function dessinerTableau() {
+  document.querySelectorAll("#entetes th").forEach(th => {
+    const b = th.querySelector("button");
+    if (b && b.dataset.cle === tri.cle) th.setAttribute("aria-sort", tri.sens > 0 ? "ascending" : "descending");
+    else th.removeAttribute("aria-sort");
   });
+  const ordre = data.pitchs.map((p, i) => i).sort((a, b) => {
+    const x = cleTri(data.pitchs[a], tri.cle), y = cleTri(data.pitchs[b], tri.cle);
+    if (x == null || y == null) return x == null ? 1 : -1;  // missing values always last
+    return (x < y ? -1 : x > y ? 1 : 0) * tri.sens;
+  });
+  $("lignes").innerHTML = data.pitchs.length ? ordre.map(i => {
+    const p = data.pitchs[i], reste = resteCible(p);
+    const cible = p.cible_atteinte_le ? `<span class="up">✓ hit on ${fmtDate(p.cible_atteinte_le)}</span>`
+                                      : `${fmtPrix(p.prix_cible, p.devise)}${reste != null ? ` <span class="tick">(${fmtPct(reste)})</span>` : ""}`;
+    const drapeau = p.donnees_anciennes ? ` <span class="flag" title="Prices could not be refreshed today">⚠ not updated</span>`
+      : p.jours_sans_prix > 0 ? ` <span class="flag" title="No new price since ${esc(fmtDate(p.dernier_jour))} (market holiday or data delay)">⚠ ${esc(fmtDate(p.dernier_jour))}</span>`
+      : p.intraday ? ` <span class="tick" title="The market has not closed yet">intraday</span>` : "";
+    return `<tr data-i="${i}" tabindex="0" aria-selected="${i === choisi}" class="${i === choisi ? "sel" : ""}">
+      <td><div class="nom">${esc(p.entreprise)}</div><div class="tick"><a href="${esc(yahoo(p.ticker))}" target="_blank" rel="noopener" title="Open ${esc(p.ticker)} on Yahoo Finance">${esc(p.ticker)} ↗</a></div></td>
+      <td>${fmtDate(p.publie_le)}</td>
+      <td><span class="pill">${p.position === "BUY" ? "▲ BUY" : "▼ SELL"}</span></td>
+      <td class="num">${fmtPrix(p.prix_entree, p.devise)}</td>
+      <td class="num">${fmtPrix(p.dernier_prix, p.devise)}${drapeau}</td>
+      <td class="num ${cls(p.perf)}">${fmtPct(p.perf)}</td>
+      <td class="num ${cls(p.ecart)}">${fmtPct(p.ecart)}</td>
+      <td class="num">${cible}</td>
+      <td class="num">${tempsRestant(p)}</td>
+    </tr>`;
+  }).join("") : `<tr><td colspan="9" class="vide">No pitches yet.</td></tr>`;
+}
+
+function dessinerBilan() {
+  const finis = data.pitchs.filter(p => p.statut === "closed" && p.serie.length);
+  $("bilan").hidden = !finis.length;
+  if (!finis.length) return;
+  const tries = [...finis].sort((a, b) => b.perf - a.perf);
+  const touchees = finis.filter(p => p.cible_atteinte_le).length;
+  const chiffre = (label, valeur, c = "") => `<div>${label}<b class="${c}">${valeur}</b></div>`;
+  const moy = moyenne(finis.map(p => p.perf)), moyEcart = moyenne(finis.map(p => p.ecart));
+  $("bilan-chiffres").innerHTML =
+    chiffre("Targets hit", `${touchees} / ${finis.length}`) +
+    chiffre("Average return", fmtPct(moy), cls(moy)) +
+    chiffre("Average vs S&amp;P 500", fmtPct(moyEcart), cls(moyEcart)) +
+    chiffre("Best · worst", `${esc(tries[0].ticker)} ${fmtPct(tries[0].perf)} · ${esc(tries.at(-1).ticker)} ${fmtPct(tries.at(-1).perf)}`);
+  $("bilan-lignes").innerHTML = tries.map(p => `<tr>
+    <td><div class="nom">${esc(p.entreprise)}</div><div class="tick">${esc(p.ticker)} · ${fmtDate(p.publie_le)}</div></td>
+    <td><span class="pill">${p.position === "BUY" ? "▲ BUY" : "▼ SELL"}</span></td>
+    <td class="num ${cls(p.perf)}">${fmtPct(p.perf)}</td>
+    <td class="num ${cls(p.ecart)}">${fmtPct(p.ecart)}</td>
+    <td>${p.cible_atteinte_le ? `<span class="up">✓ ${fmtDate(p.cible_atteinte_le)}</span>` : "Missed"}</td>
+  </tr>`).join("");
+}
+
+function dessinerClassement() {
+  const parAnalyste = {};
+  data.pitchs.filter(p => p.analyste && p.serie.length).forEach(p => (parAnalyste[p.analyste] ??= []).push(p));
+  const lignes = Object.entries(parAnalyste).map(([nom, ps]) => ({
+    nom, n: ps.length, gagnants: ps.filter(p => p.perf > 0).length,
+    perf: moyenne(ps.map(p => p.perf)), ecart: moyenne(ps.map(p => p.ecart))
+  })).sort((a, b) => b.ecart - a.ecart);
+  $("classement").hidden = !lignes.length;
+  $("classement-lignes").innerHTML = lignes.map(l => `<tr>
+    <td class="nom">${esc(l.nom)}</td><td class="num">${l.n}</td><td class="num">${l.gagnants} / ${l.n}</td>
+    <td class="num ${cls(l.perf)}">${fmtPct(l.perf)}</td><td class="num ${cls(l.ecart)}">${fmtPct(l.ecart)}</td>
+  </tr>`).join("");
 }
 
 function afficher() {
   const r = data.resume;
   $("maj").textContent = "Last updated: " + new Date(data.mis_a_jour).toLocaleString("en-GB", { dateStyle: "long", timeStyle: "short" });
   $("t-club").textContent = fmtPct(r.perf_club); $("t-club").className = "value " + cls(r.perf_club);
-  $("t-club-n").textContent = `${r.nb_pitchs} pitch${r.nb_pitchs === 1 ? "" : "es"} tracked`;
+  $("t-club-n").textContent = `${r.nb_pitchs} pitch${r.nb_pitchs === 1 ? "" : "es"} · average pitch ${fmtPct(r.perf_moyenne)}`;
   $("t-indice").textContent = fmtPct(r.perf_indice); $("t-indice").className = "value " + cls(r.perf_indice);
   const ecart = r.perf_club != null ? r.perf_club - r.perf_indice : null;
   $("t-indice-n").textContent = ecart == null ? "" : `the club is ${fmtPct(Math.abs(ecart)).replace(/^[+−]/, "")} ${ecart >= 0 ? "ahead" : "behind"}`;
@@ -305,39 +474,60 @@ function afficher() {
   $("t-gagnants-n").textContent = `${r.battent_indice} / ${r.nb_pitchs} beat their index`;
   $("t-cibles").textContent = `${r.cibles_atteintes} / ${r.nb_pitchs}`;
 
-  if (data.erreurs.length) {
-    $("erreurs").innerHTML = `<div class="card alerte">Prices unavailable today for: ${data.erreurs.map(esc).join(" · ")}</div>`;
-  }
+  $("erreurs").innerHTML = (data.erreurs.length
+    ? `<div class="card alerte">Prices unavailable today for: ${data.erreurs.map(esc).join(" · ")}</div>` : "")
+    + (() => {
+      const vieux = data.pitchs.filter(p => !p.donnees_anciennes && p.jours_sans_prix > 0);
+      return vieux.length ? `<div class="card avis">⚠ No new price yet for ${vieux.map(p =>
+        `${esc(p.entreprise)} (last: ${fmtDate(p.dernier_jour)})`).join(" · ")}, a market holiday or a delay at Yahoo Finance. Its last known price is used meanwhile.</div>` : "";
+    })();
 
-  $("lignes").innerHTML = data.pitchs.length ? data.pitchs.map((p, i) => {
-    const reste = p.dernier_prix ? (p.prix_cible / p.dernier_prix - 1) * 100 : null;
-    const cible = p.cible_atteinte_le ? `<span class="up">✓ hit on ${fmtDate(p.cible_atteinte_le)}</span>`
-                                      : `${fmtPrix(p.prix_cible, p.devise)}${reste != null ? ` <span class="tick">(${fmtPct(reste)})</span>` : ""}`;
-    return `<tr data-i="${i}" class="${i === choisi ? "sel" : ""}">
-      <td><div class="nom">${esc(p.entreprise)}</div><div class="tick"><a href="${esc(yahoo(p.ticker))}" target="_blank" rel="noopener" title="Open ${esc(p.ticker)} on Yahoo Finance">${esc(p.ticker)} ↗</a></div></td>
-      <td>${fmtDate(p.publie_le)}</td>
-      <td><span class="pill">${p.position === "BUY" ? "▲ BUY" : "▼ SELL"}</span></td>
-      <td class="num">${fmtPrix(p.prix_entree, p.devise)}</td>
-      <td class="num">${fmtPrix(p.dernier_prix, p.devise)}</td>
-      <td class="num ${cls(p.perf)}">${fmtPct(p.perf)}</td>
-      <td class="num ${cls(p.ecart)}">${fmtPct(p.ecart)}</td>
-      <td class="num">${cible}</td>
-      <td${p.serie.length ? "" : ' title="Entry price set at the next market close"'}>${esc(fmtStatut(p))}</td>
-    </tr>`;
-  }).join("") : `<tr><td colspan="9" class="vide">No pitches yet.</td></tr>`;
-
+  dessinerTableau();
   dessinerPortefeuille();
   dessinerDetail();
+  dessinerBilan();
+  dessinerClassement();
+}
+
+function choisir(tr) {
+  choisi = +tr.dataset.i;
+  document.querySelectorAll("#lignes tr").forEach(t => {
+    t.classList.toggle("sel", t === tr);
+    t.setAttribute("aria-selected", t === tr);
+  });
+  dessinerDetail();
+  $("detail").scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
 $("lignes").addEventListener("click", e => {
   if (e.target.closest("a")) return;  // the Yahoo link opens on its own, without selecting the row
   const tr = e.target.closest("tr[data-i]");
-  if (!tr) return;
-  choisi = +tr.dataset.i;
-  document.querySelectorAll("#lignes tr").forEach(t => t.classList.toggle("sel", t === tr));
+  if (tr) choisir(tr);
+});
+$("lignes").addEventListener("keydown", e => {
+  const tr = e.target.closest?.("tr[data-i]");
+  if (!tr || e.target !== tr) return;
+  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); choisir(tr); }
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+    e.preventDefault();
+    (e.key === "ArrowDown" ? tr.nextElementSibling : tr.previousElementSibling)?.focus();
+  }
+});
+
+$("entetes").addEventListener("click", e => {
+  const b = e.target.closest("button[data-cle]");
+  if (!b) return;
+  // A second click reverses the order; numbers start with the largest.
+  tri = tri.cle === b.dataset.cle ? { cle: tri.cle, sens: -tri.sens }
+      : { cle: b.dataset.cle, sens: ["entreprise", "position", "reste", "fin_horizon"].includes(b.dataset.cle) ? 1 : -1 };
+  dessinerTableau();
+});
+
+document.querySelector(".bascule").addEventListener("click", e => {
+  const b = e.target.closest("button[data-vue]");
+  if (!b) return;
+  vue = b.dataset.vue;
   dessinerDetail();
-  $("detail").scrollIntoView({ behavior: "smooth", block: "nearest" });
 });
 
 // Chart colours follow light / dark mode.
