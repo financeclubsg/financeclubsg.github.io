@@ -1,12 +1,12 @@
 {
- "mis_a_jour": "2026-10-28T01:34:01Z",
+ "mis_a_jour": "2026-10-28T02:10:59Z",
  "mise": 1000.0,
  "resume": {
-  "nb_pitchs": 2,
-  "perf_club": -0.39,
-  "perf_indice": -0.32,
-  "gagnants": 1,
-  "battent_indice": 1,
+  "nb_pitchs": 3,
+  "perf_club": 0.84,
+  "perf_indice": -0.01,
+  "gagnants": 2,
+  "battent_indice": 2,
   "cibles_atteintes": 0
  },
  "portefeuille": [
@@ -37,16 +37,55 @@
   },
   {
    "d": "2026-10-26",
-   "club": -1.75,
-   "indice": -0.61
+   "club": -1.17,
+   "indice": -0.41
   },
   {
    "d": "2026-10-27",
-   "club": -0.39,
-   "indice": -0.32
+   "club": 0.84,
+   "indice": -0.01
   }
  ],
  "pitchs": [
+  {
+   "entreprise": "Equinix",
+   "ticker": "EQIX",
+   "bourse": "Nasdaq",
+   "position": "BUY",
+   "publie_le": "2026-10-27",
+   "prix_pitch": 967.65,
+   "prix_cible": 1231.09,
+   "devise": "USD",
+   "horizon_mois": 12,
+   "indice": "S&P 500",
+   "lien": "https://www.linkedin.com/feed/update/urn:li:activity:7520786737271406592/",
+   "statut": "open",
+   "date_entree": "2026-10-26",
+   "prix_entree": 967.65,
+   "fin_horizon": "2027-10-27",
+   "dernier_jour": "2026-10-27",
+   "dernier_prix": 999.38,
+   "perf": 3.28,
+   "perf_indice": 0.6,
+   "ecart": 2.68,
+   "perf_indice_local": null,
+   "ecart_local": null,
+   "cible_atteinte_le": null,
+   "serie": [
+    {
+     "d": "2026-10-26",
+     "prix": 967.65,
+     "r": 0.0,
+     "b": 0.0
+    },
+    {
+     "d": "2026-10-27",
+     "prix": 999.38,
+     "r": 3.28,
+     "b": 0.6
+    }
+   ]
+  },
   {
    "entreprise": "Micron Technology",
    "ticker": "MU",
