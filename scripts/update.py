@@ -123,6 +123,50 @@ def jours_sans_prix(dernier_jour, maintenant):
     return max(0, int(np.busday_count(dernier_jour, maintenant.date())) - 1)
 
 
+def cotation(ticker):
+    """Cotation du moment chez Yahoo (dernier cours, avant- et après-bourse). Vide si elle ne répond pas."""
+    try:
+        return yf.Ticker(ticker).info or {}
+    except Exception as e:
+        print(f"WARNING quote unavailable for {ticker}: {e}", file=sys.stderr)
+        return {}
+
+
+def completer(h, cote):
+    """Ajoute la dernière séance quand l'historique de Yahoo ne l'a pas encore (clôture vide) mais que sa cotation l'a."""
+    cours, quand = cote.get("regularMarketPrice"), cote.get("regularMarketTime")
+    if not cours or not quand or h.empty:
+        return h
+    jour = pd.Timestamp(quand, unit="s", tz="UTC").tz_convert(h.index.tz).normalize()
+    if jour <= h.index[-1].normalize():
+        return h
+    dernier = h.iloc[-1]
+    # Plus haut et plus bas inconnus : on prend le cours, ce qui ne peut pas faire croire à tort qu'une cible est atteinte.
+    ligne = {"Close": cours, "High": cours, "Low": cours, "Adj Close": cours * dernier["Adj Close"] / dernier["Close"]}
+    return pd.concat([h, pd.DataFrame([ligne], index=pd.DatetimeIndex([jour], name=h.index.name))])
+
+
+def hors_seance(cote, sens, perf, dernier_prix):
+    """Dernier cours avant- ou après-bourse (actions américaines), s'il est plus récent que la clôture.
+
+    Il est seulement affiché : les rendements restent calculés sur les cours officiels.
+    """
+    candidats = [(cote.get(f"{k}MarketTime"), cote.get(f"{k}MarketPrice"), k) for k in ("post", "pre")]
+    candidats = [c for c in candidats if c[0] and c[1] and c[0] > (cote.get("regularMarketTime") or 0)]
+    if not candidats or not dernier_prix or perf is None:
+        return None
+    quand, cours, nom = max(candidats)
+    rapport = cours / dernier_prix
+    valeur = 1 + sens * perf / 100  # valeur de la position au dernier cours officiel (1 = la mise)
+    return {
+        "type": nom,
+        "prix": prix(cours),
+        "variation": pct(rapport - 1),
+        "perf": pct(sens * (valeur * rapport - 1)),
+        "heure": pd.Timestamp(quand, unit="s", tz="UTC").strftime("%Y-%m-%dT%H:%M:%SZ"),
+    }
+
+
 def rendement_indice(ticker, debut, jours):
     """Rendement d'un indice depuis le premier jour, aligné jour par jour sur l'action (jours fériés différents)."""
     idx = historique(ticker, debut)["Adj Close"]
@@ -157,6 +201,9 @@ def analyser(p, maintenant):
         raise RuntimeError(f"no close found before the post for {p['ticker']}")
 
     fin_horizon = publie_le.tz_convert(h.index.tz) + pd.DateOffset(months=resultat["horizon_mois"])
+    termine = maintenant >= fin_horizon
+    cote = {} if termine else cotation(p["ticker"])
+    h = completer(h, cote)
     h = h[(h.index >= reference) & (h.index <= fin_horizon)]
 
     jours = [ts.date() for ts in h.index]
@@ -169,7 +216,6 @@ def analyser(p, maintenant):
 
     apres = h.iloc[1:]  # les séances qui suivent le post
     atteinte = apres[apres["High"] >= cible] if sens == 1 else apres[apres["Low"] <= cible]
-    termine = maintenant >= fin_horizon
 
     # Le prix annoncé dans le pitch peut différer de la clôture de référence (cours de la veille, coquille…).
     cloture_reference = float(h["Close"].iloc[0])
@@ -190,6 +236,7 @@ def analyser(p, maintenant):
         "dernier_prix": prix(h["Close"].iloc[-1]),
         "intraday": not termine and seance_en_cours(h, maintenant),
         "jours_sans_prix": 0 if termine else jours_sans_prix(jours[-1], maintenant),
+        "hors_seance": None if termine else hors_seance(cote, sens, pct(r[-1]), float(h["Close"].iloc[-1])),
         "perf": pct(r[-1]),
         "perf_indice": pct(b[-1]),
         "ecart": pct(r[-1] - sens * b[-1]),

@@ -140,5 +140,42 @@ class Main(unittest.TestCase):
         self.assertEqual([p["ticker"] for p in data["pitchs"]], ["OK"])
 
 
+class Cotation(unittest.TestCase):
+    def test_complete_une_cloture_manquante(self):
+        h = cours(["2026-10-26"], [100.0], tz="Europe/Berlin")
+        h["Adj Close"] = 50.0  # facteur d'ajustement 0,5
+        quand = pd.Timestamp("2026-10-27T15:30:00Z").timestamp()
+        complet = update.completer(h, {"regularMarketPrice": 110.0, "regularMarketTime": quand})
+        self.assertEqual([d.date().isoformat() for d in complet.index], ["2026-10-26", "2026-10-27"])
+        self.assertEqual(complet["Close"].iloc[-1], 110.0)
+        self.assertEqual(complet["Adj Close"].iloc[-1], 55.0)
+        self.assertEqual(complet["High"].iloc[-1], 110.0)
+
+    def test_ne_double_pas_une_seance_connue(self):
+        h = cours(["2026-10-27"], [100.0])
+        quand = pd.Timestamp("2026-10-27T20:00:00Z").timestamp()
+        self.assertEqual(len(update.completer(h, {"regularMarketPrice": 101.0, "regularMarketTime": quand})), 1)
+        self.assertEqual(len(update.completer(h, {})), 1)
+
+    def test_apres_bourse(self):
+        cote = {"regularMarketTime": 1000, "postMarketTime": 2000, "postMarketPrice": 110.0, "preMarketTime": None}
+        hs = update.hors_seance(cote, 1, 10.0, 100.0)  # +10 % au cours officiel, puis +10 % après-bourse
+        self.assertEqual((hs["type"], hs["prix"], hs["variation"], hs["perf"]), ("post", 110.0, 10.0, 21.0))
+
+    def test_apres_bourse_vente_a_decouvert(self):
+        cote = {"regularMarketTime": 1000, "postMarketTime": 2000, "postMarketPrice": 90.0}
+        hs = update.hors_seance(cote, -1, 10.0, 100.0)  # position à 1,10 ; le cours baisse encore de 10 %
+        self.assertEqual(hs["perf"], 19.0)
+
+    def test_cours_hors_seance_plus_ancien_ignore(self):
+        cote = {"regularMarketTime": 3000, "postMarketTime": 2000, "postMarketPrice": 110.0}
+        self.assertIsNone(update.hors_seance(cote, 1, 0.0, 100.0))
+        self.assertIsNone(update.hors_seance({}, 1, 0.0, 100.0))
+
+    def test_avant_bourse_plus_recent_que_l_apres_bourse(self):
+        cote = {"regularMarketTime": 1000, "postMarketTime": 2000, "postMarketPrice": 110.0, "preMarketTime": 3000, "preMarketPrice": 105.0}
+        self.assertEqual(update.hors_seance(cote, 1, 0.0, 100.0)["type"], "pre")
+
+
 if __name__ == "__main__":
     unittest.main()

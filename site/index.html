@@ -26,6 +26,7 @@
     --warn: #f2b14c;
     --bench: #8a9099;
     --target: #5fe08b;
+    --ah: #8fb4ff;
     --mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
     --sans: Roboto, system-ui, -apple-system, "Segoe UI", sans-serif;
   }
@@ -114,6 +115,7 @@
   .actif b { display: block; font-weight: 500; font-size: 15px; }
   .actif small { display: block; color: var(--muted); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .rang .num { text-align: right; font-size: 15px; }
+  .rang .num small { display: block; font-size: 11px; color: var(--ah); }
   .vide { padding: 24px 16px; color: var(--muted); font-size: 13px; text-align: center; }
 
   .logo { position: relative; flex: none; width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; font: 700 10px/1 var(--mono); letter-spacing: -0.04em;
@@ -151,6 +153,7 @@
   .zone .legende .nom { font-size: 18px; color: var(--ink-2); }
   .zone .legende .chg { font-family: var(--mono); font-size: 17px; margin-top: 2px; }
   .zone .legende .note { font-size: 11px; color: var(--warn); margin-top: 4px; }
+  .zone .legende .ah { font-family: var(--mono); font-size: 13px; color: var(--ah); margin-top: 2px; }
   .chart-box { position: relative; height: 380px; }
   .g-pied { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); border-top: 1px solid var(--line); }
   .g-pied div { padding: 10px 16px; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; min-width: 0; }
@@ -310,7 +313,7 @@
       </div>
     </div>
     <div class="zone">
-      <div class="legende"><div class="nom" id="g-legende"></div><div class="chg" id="g-chg"></div><div class="note" id="g-note"></div></div>
+      <div class="legende"><div class="nom" id="g-legende"></div><div class="chg" id="g-chg"></div><div class="ah" id="g-ah"></div><div class="note" id="g-note"></div></div>
       <div class="chart-box"><canvas id="c-graph" aria-label="Chart of the selected pitch or of the club portfolio"></canvas></div>
     </div>
     <div class="g-pied" id="g-pied"></div>
@@ -356,6 +359,7 @@
       <li>Club portfolio: equal weight in every open pitch, rebalanced daily, with daily returns compounded (time-weighted). Adding a new pitch therefore doesn't move the curve. A pitch leaves the portfolio when its horizon ends.</li>
       <li>P&amp;L figures assume 1,000 invested in each pitch, in the stock's own currency.</li>
       <li>Prices are refreshed during the day, so the latest price can be an intraday one until the market closes. An orange dot marks a stock with no new price for a trading day or more (market holiday or data delay).</li>
+      <li>US stocks also show their latest pre-market or after-hours price (in blue, marked PRE or AH), with the return the pitch would have at that price. It is for information only: all returns, the portfolio and the comparisons use official closing prices. Yahoo Finance prices can be delayed by up to 15 minutes.</li>
       <li>Annualised returns are only shown once a pitch has been held for 3 months: over a few days they are meaningless.</li>
       <li>Price data: Yahoo Finance.</li>
     </ul>
@@ -400,6 +404,9 @@ function variationJour(p) {
   const s = p.serie;
   return s.length > 1 && s.at(-2).prix ? (s.at(-1).prix / s.at(-2).prix - 1) * 100 : null;
 }
+// Pre-market and after-hours prices only exist for US stocks, so their time is shown in New York time.
+const nomHS = hs => hs.type === "pre" ? "Pre-market" : "After hours";
+const heureHS = hs => new Date(hs.heure).toLocaleString("en-US", { timeZone: "America/New_York", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) + " ET";
 function depuis(d) {
   const j = jours(d, aujourdhui());
   return j <= 0 ? "Today" : j === 1 ? "1 day ago" : j < 31 ? `${j} days ago` : fmtDate(d);
@@ -438,7 +445,7 @@ const etiquettes = {
       .sort((a, b) => a.py - b.py);
     // Labels whose prices are close would overlap: push them apart, keeping them inside the chart.
     tags.forEach((t, i) => { t.ty = i ? Math.max(t.py, tags[i - 1].ty + h + 2) : t.py; });
-    for (let i = tags.length - 1, plafond = bottom + h / 2; i >= 0; i--) {
+    for (let i = tags.length - 1, plafond = bottom - h / 2; i >= 0; i--) {
       tags[i].ty = Math.min(tags[i].ty, plafond);
       plafond = tags[i].ty - h - 2;
     }
@@ -547,6 +554,7 @@ function dessinerClub() {
   $("g-legende").textContent = "Club Portfolio · " + (periode ? `since ${fmtDate(base.d)}` : "since inception");
   $("g-chg").innerHTML = `<span class="${cls(dernier)}">${fmtPct(dernier)}</span> <span style="color: var(--ink-2)">vs S&amp;P ${fmtPct(indice.at(-1))}</span>`;
   $("g-note").textContent = "";
+  $("g-ah").textContent = "";
   dessiner({
     data: { labels: pts.map(p => p.d), datasets: [aire("Club", club, couleur), ligne("S&P 500 TR", indice, css("--bench"), { borderDash: [5, 4], borderWidth: 1.4 })] },
     options: options(v => fmtPct(v, 1), [
@@ -587,6 +595,8 @@ function dessinerPitch(p) {
   if (p.ecart_prix_pitch != null && Math.abs(p.ecart_prix_pitch) > 1)
     notes.push(`Pitch price ${fmtPct(p.ecart_prix_pitch, 1)} from the prior close (${fmtPrix(p.cloture_reference, p.devise)}).`);
   $("g-note").textContent = notes.join(" ");
+  const hs = p.hors_seance;
+  $("g-ah").innerHTML = hs ? `${nomHS(hs)} ${nombre(hs.prix)} ${fmtPct(hs.variation)} · ${heureHS(hs)} <span style="color: var(--muted)">· return at this price ${fmtPct(hs.perf)}</span>` : "";
 
   if (vue === "prix") {
     dessiner({
@@ -601,8 +611,9 @@ function dessinerPitch(p) {
           { valeur: p.prix_entree, couleur: css("--bench"), texte: nombre(p.prix_entree), ligne: true, etiquette: "ENTRY" },
           { valeur: p.prix_cible, couleur: css("--target"), texte: nombre(p.prix_cible), ligne: true,
             etiquette: p.cible_atteinte_le ? "TARGET ✓" : `TARGET ${fmtPct(resteCible(p), 1)}` },
-          { valeur: p.dernier_prix, couleur, texte: nombre(p.dernier_prix), ligne: true }
-        ]),
+          { valeur: p.dernier_prix, couleur, texte: nombre(p.dernier_prix), ligne: true },
+          hs && { valeur: hs.prix, couleur: css("--ah"), texte: nombre(hs.prix), ligne: true, etiquette: hs.type === "pre" ? "PRE" : "AH" }
+        ].filter(Boolean)),
       }
     });
     graphe.options.plugins.tooltip.filter = it => it.datasetIndex === 0;
@@ -662,7 +673,7 @@ function dessinerListe() {
   $("watch").innerHTML = club + (lignes.length ? lignes.map(([p, i]) => `<li><button type="button" class="rang" data-choix="${i}" aria-current="${choix === i}"
       title="${esc(p.entreprise)} · ${court(p) ? "SELL" : "BUY"} · ${esc(tempsRestant(p))}${p.jours_sans_prix > 0 ? " · no new price since " + esc(fmtDate(p.dernier_jour)) : ""}">
       <span class="actif">${logoPitch(p)}<span class="noms"><b>${esc(code(p))} <span style="font: 500 10px var(--mono); color: var(--${court(p) ? "down" : "up"})">${court(p) ? "S" : "B"}</span></b><small>${esc(p.entreprise)}</small></span></span>
-      <span class="num">${nombre(p.dernier_prix)}</span><span class="num ${cls(p.perf)}">${fmtPct(p.perf)}</span></button></li>`).join("")
+      <span class="num">${nombre(p.dernier_prix)}${p.hors_seance ? `<small title="${nomHS(p.hors_seance)}, ${esc(heureHS(p.hors_seance))}">${p.hors_seance.type === "pre" ? "PRE" : "AH"} ${nombre(p.hors_seance.prix)}</small>` : ""}</span><span class="num ${cls(p.perf)}">${fmtPct(p.perf)}</span></button></li>`).join("")
     : `<li class="vide">${statutListe === "clos" && !data.pitchs.some(p => p.statut === "closed") ? "No closed pitches yet." : "No pitch matches."}</li>`);
 }
 
