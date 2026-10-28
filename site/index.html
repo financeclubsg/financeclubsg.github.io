@@ -5,58 +5,71 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>Stock Pitch Tracker · Finance Club Singapore</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
     color-scheme: light;
-    --page: #f6f5f1;
-    --surface: #fcfcfb;
-    --ink: #0b0b0b;
-    --ink-2: #52514e;
-    --muted: #898781;
-    --grid: #e1e0d9;
-    --axis: #c3c2b7;
-    --border: rgba(11, 11, 11, 0.10);
-    --brand: #2c4a33;
-    --brand-ink: #f3f1e8;
-    --club: #2a78d6;
-    --indice: #eb6834;
-    --up: #006300;
-    --down: #d03b3b;
-    --hover: rgba(11, 11, 11, 0.04);
+    --page: #f2f4f7;
+    --surface: #ffffff;
+    --surface-2: #f6f7f9;
+    --ink: #0e1621;
+    --ink-2: #4a5565;
+    --muted: #8b95a3;
+    --line: #e5e8ed;
+    --brand: #1d3a28;
+    --brand-2: #2c5a3d;
+    --accent: #13a856;
+    --up: #0f9d58;
+    --down: #e0464c;
+    --warn: #d9822b;
+    --bench: #8b95a3;
+    --shadow: 0 1px 2px rgba(14, 22, 33, 0.04), 0 4px 16px rgba(14, 22, 33, 0.05);
+    --hover: rgba(14, 22, 33, 0.035);
+    --backdrop: rgba(14, 22, 33, 0.35);
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       color-scheme: dark;
-      --page: #0d0d0d;
-      --surface: #1a1a19;
-      --ink: #f0efec;
-      --ink-2: #c3c2b7;
-      --grid: #2c2c2a;
-      --axis: #383835;
-      --border: rgba(255, 255, 255, 0.10);
-      --brand: #1f3524;
-      --club: #3987e5;
-      --indice: #d95926;
-      --up: #0ca30c;
-      --down: #e66767;
-      --hover: rgba(255, 255, 255, 0.05);
+      --page: #0a0e13;
+      --surface: #121821;
+      --surface-2: #19212c;
+      --ink: #e9eef3;
+      --ink-2: #aab4c0;
+      --muted: #6f7b89;
+      --line: #222b37;
+      --brand: #10241a;
+      --brand-2: #1a3a28;
+      --accent: #2bd47a;
+      --up: #2bd47a;
+      --down: #ff6b70;
+      --warn: #f0a050;
+      --bench: #6f7b89;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.25);
+      --hover: rgba(255, 255, 255, 0.04);
+      --backdrop: rgba(0, 0, 0, 0.6);
     }
   }
   :root[data-theme="dark"] {
     color-scheme: dark;
-    --page: #0d0d0d;
-    --surface: #1a1a19;
-    --ink: #f0efec;
-    --ink-2: #c3c2b7;
-    --grid: #2c2c2a;
-    --axis: #383835;
-    --border: rgba(255, 255, 255, 0.10);
-    --brand: #1f3524;
-    --club: #3987e5;
-    --indice: #d95926;
-    --up: #0ca30c;
-    --down: #e66767;
-    --hover: rgba(255, 255, 255, 0.05);
+    --page: #0a0e13;
+    --surface: #121821;
+    --surface-2: #19212c;
+    --ink: #e9eef3;
+    --ink-2: #aab4c0;
+    --muted: #6f7b89;
+    --line: #222b37;
+    --brand: #10241a;
+    --brand-2: #1a3a28;
+    --accent: #2bd47a;
+    --up: #2bd47a;
+    --down: #ff6b70;
+    --warn: #f0a050;
+    --bench: #6f7b89;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.25);
+    --hover: rgba(255, 255, 255, 0.04);
+    --backdrop: rgba(0, 0, 0, 0.6);
   }
 
   * { box-sizing: border-box; }
@@ -64,172 +77,240 @@
     margin: 0;
     background: var(--page);
     color: var(--ink);
-    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+    font: 15px/1.5 Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-feature-settings: "tnum" 1, "cv11" 1;
+    -webkit-font-smoothing: antialiased;
   }
-  header { background: var(--brand); color: var(--brand-ink); padding: 32px 16px 28px; }
-  .wrap { max-width: 1040px; margin: 0 auto; }
-  main.wrap { padding: 24px 16px 48px; }
-  .eyebrow { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.75; margin: 0 0 6px; }
-  h1 { font-size: 28px; line-height: 1.2; margin: 0 0 8px; font-weight: 700; }
-  header p { margin: 0; max-width: 640px; opacity: 0.85; }
-  .maj { margin-top: 14px; font-size: 13px; opacity: 0.7; }
-
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
-  h2 { font-size: 17px; margin: 0 0 4px; }
-  .sub { color: var(--ink-2); font-size: 13px; margin: 0 0 16px; }
-
-  .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
-  .tile .label { color: var(--ink-2); font-size: 13px; }
-  .tile .value { font-size: 30px; font-weight: 650; margin-top: 4px; line-height: 1.1; }
-  .tile .note { color: var(--muted); font-size: 12px; margin-top: 4px; }
-
-  .chart-box { position: relative; height: 300px; }
-  .legend { display: flex; gap: 18px; font-size: 13px; color: var(--ink-2); margin-bottom: 10px; flex-wrap: wrap; }
-  .legend span::before { content: ""; display: inline-block; width: 14px; height: 2px; vertical-align: middle; margin-right: 6px; background: var(--c); border-radius: 2px; }
-  section { margin-bottom: 16px; }
-
-  table { width: 100%; border-collapse: collapse; font-size: 14px; }
-  th { text-align: left; font-weight: 500; color: var(--muted); font-size: 12px; padding: 0 10px 8px; border-bottom: 1px solid var(--axis); white-space: nowrap; }
-  td { padding: 12px 10px; border-bottom: 1px solid var(--grid); white-space: nowrap; }
-  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
-  #lignes tr { cursor: pointer; }
-  #lignes tr:hover, #lignes tr.sel { background: var(--hover); }
-  #lignes tr:focus-visible { outline: 2px solid var(--club); outline-offset: -2px; }
-  th button { all: unset; cursor: pointer; }
-  th button:hover { color: var(--ink); }
-  th button:focus-visible { outline: 2px solid var(--club); outline-offset: 2px; border-radius: 2px; }
-  th[aria-sort] button { color: var(--ink); }
-  th[aria-sort="ascending"] button::after { content: " ↑"; }
-  th[aria-sort="descending"] button::after { content: " ↓"; }
-  .flag { color: var(--indice); font-size: 12px; }
-  .table-scroll { overflow-x: auto; margin: 0 -10px; }
-  .nom { font-weight: 600; }
-  .tick { color: var(--muted); font-size: 12px; }
-  .pill { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); }
+  button { font: inherit; color: inherit; }
+  a { color: var(--accent); }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
   .up { color: var(--up); }
   .down { color: var(--down); }
 
-  .detail-head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: baseline; }
-  .liens { display: flex; gap: 16px; flex-wrap: wrap; }
-  .tick a { color: inherit; text-decoration: none; }
-  .tick a:hover { color: var(--club); text-decoration: underline; }
-  .facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 16px 0; }
-  .facts div { font-size: 13px; color: var(--ink-2); }
-  .facts b { display: block; color: var(--ink); font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
-  a { color: var(--club); }
+  /* Top bar */
+  .topbar { background: linear-gradient(120deg, var(--brand), var(--brand-2)); color: #f2f5f1; }
+  .topbar .wrap { display: flex; align-items: center; gap: 12px; padding-top: 14px; padding-bottom: 14px; }
+  .logo { width: 36px; height: 36px; border-radius: 10px; background: rgba(255, 255, 255, 0.14); display: grid; place-items: center; font-weight: 800; font-size: 12px; letter-spacing: 0.02em; flex: none; }
+  .marque { line-height: 1.2; min-width: 0; }
+  .marque b { display: block; font-size: 16px; font-weight: 700; }
+  .marque span { font-size: 12px; opacity: 0.7; }
+  .topbar .droite { margin-left: auto; display: flex; align-items: center; gap: 10px; font-size: 12px; }
+  .live { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; opacity: 0.85; }
+  .live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #4ee08f; box-shadow: 0 0 0 3px rgba(78, 224, 143, 0.25); }
+  .icone { all: unset; cursor: pointer; width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: rgba(255, 255, 255, 0.12); color: #f2f5f1; }
+  .icone:hover { background: rgba(255, 255, 255, 0.2); }
+  .icone:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 
-  .methode { color: var(--ink-2); font-size: 13px; }
-  .methode ul { padding-left: 18px; margin: 8px 0 0; }
-  .alerte { border-color: var(--down); color: var(--down); font-size: 13px; margin-bottom: 16px; }
-  .avis { border-color: var(--indice); color: var(--ink-2); font-size: 13px; margin-bottom: 16px; }
-  .bascule { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 10px; }
-  .bascule button { font: inherit; font-size: 13px; padding: 4px 12px; border: 0; background: none; color: var(--ink-2); cursor: pointer; }
-  .bascule button[aria-pressed="true"] { background: var(--hover); color: var(--ink); font-weight: 600; }
-  .note-detail { color: var(--muted); font-size: 12px; margin: -8px 0 12px; }
-  .vide { color: var(--ink-2); text-align: center; padding: 32px 0; }
+  main.wrap { padding-top: 20px; padding-bottom: 48px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); }
 
+  .alerte { padding: 12px 16px; font-size: 13px; margin-bottom: 12px; border-left: 4px solid var(--down); color: var(--ink-2); }
+  .alerte.avis { border-left-color: var(--warn); }
+
+  /* Hero */
+  .hero { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 16px; margin-bottom: 16px; }
+  .perf { padding: 22px 22px 16px; min-width: 0; }
+  .perf-tete { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+  .etiquette { color: var(--ink-2); font-size: 13px; font-weight: 500; }
+  .gros { font-size: 44px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; margin: 6px 0 4px; }
+  .compare { font-size: 13px; color: var(--ink-2); display: flex; gap: 14px; flex-wrap: wrap; }
+  .compare i { display: inline-block; width: 12px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 6px; background: var(--c); }
+  .compare .tiret { background: repeating-linear-gradient(90deg, var(--c) 0 4px, transparent 4px 7px); }
+  .chips { display: inline-flex; gap: 4px; background: var(--surface-2); border-radius: 10px; padding: 3px; }
+  .chips button { all: unset; cursor: pointer; font-size: 12px; font-weight: 600; color: var(--ink-2); padding: 5px 10px; border-radius: 8px; }
+  .chips button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
+  .chips button:disabled { opacity: 0.35; cursor: default; }
+  .chips button:focus-visible { outline: 2px solid var(--accent); }
+  .chart-box { position: relative; height: 260px; margin-top: 14px; }
+
+  .stats { display: grid; gap: 12px; }
+  .stat { padding: 16px 18px; display: flex; flex-direction: column; justify-content: center; }
+  .stat .valeur { font-size: 26px; font-weight: 750; letter-spacing: -0.02em; line-height: 1.15; margin-top: 2px; }
+  .stat .note { color: var(--muted); font-size: 12px; }
+  .jauge { height: 6px; background: var(--surface-2); border-radius: 99px; overflow: hidden; margin-top: 8px; }
+  .jauge span { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
+
+  /* Tabs and list */
+  .onglets { display: flex; gap: 22px; border-bottom: 1px solid var(--line); padding: 0 20px; overflow-x: auto; }
+  .onglets button { all: unset; cursor: pointer; padding: 16px 0 13px; font-weight: 600; font-size: 14px; color: var(--muted); border-bottom: 3px solid transparent; white-space: nowrap; }
+  .onglets button[hidden] { display: none; }
+  .onglets button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+  .onglets button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .onglets .nb { display: inline-block; min-width: 20px; padding: 0 6px; margin-left: 6px; border-radius: 99px; background: var(--surface-2); color: var(--ink-2); font-size: 11px; text-align: center; line-height: 18px; }
+
+  .outils { display: flex; gap: 10px; padding: 14px 20px; flex-wrap: wrap; align-items: center; }
+  .outils[hidden] { display: none; }
+  .recherche { flex: 1 1 200px; position: relative; }
+  .recherche input { width: 100%; font: inherit; font-size: 14px; color: var(--ink); background: var(--surface-2); border: 1px solid transparent; border-radius: 10px; padding: 8px 12px 8px 34px; }
+  .recherche input:focus { outline: none; border-color: var(--accent); background: var(--surface); }
+  .recherche svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+  select { font: inherit; font-size: 13px; font-weight: 500; color: var(--ink); background: var(--surface-2); border: 1px solid transparent; border-radius: 10px; padding: 8px 10px; }
+  select:focus { outline: none; border-color: var(--accent); }
+
+  .entete-liste { display: grid; grid-template-columns: minmax(0, 2.2fr) 110px minmax(0, 1fr) minmax(0, 1fr) 120px; gap: 12px; padding: 4px 20px 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+  .entete-liste[hidden] { display: none; }
+  .entete-liste span:not(:first-child) { text-align: right; }
+  .liste { list-style: none; margin: 0; padding: 0 8px 8px; }
+  .ligne { all: unset; display: grid; grid-template-columns: minmax(0, 2.2fr) 110px minmax(0, 1fr) minmax(0, 1fr) 120px; gap: 12px; align-items: center; box-sizing: border-box; width: 100%; padding: 12px; border-radius: 14px; cursor: pointer; }
+  .ligne:hover { background: var(--hover); }
+  .ligne:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .liste li + li { border-top: 1px solid var(--line); }
+  .titre-ligne { display: flex; gap: 12px; align-items: center; min-width: 0; }
+  .avatar { flex: none; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 12px; letter-spacing: -0.02em;
+    background: hsl(var(--h) 55% 92%); color: hsl(var(--h) 55% 30%); }
+  :root[data-theme="dark"] .avatar { background: hsl(var(--h) 35% 22%); color: hsl(var(--h) 70% 78%); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .avatar { background: hsl(var(--h) 35% 22%); color: hsl(var(--h) 70% 78%); } }
+  .nom { font-weight: 650; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sous { color: var(--muted); font-size: 12px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .sens { font-size: 10px; font-weight: 700; letter-spacing: 0.05em; padding: 1px 6px; border-radius: 5px; }
+  .sens.achat { background: color-mix(in srgb, var(--up) 14%, transparent); color: var(--up); }
+  .sens.vente { background: color-mix(in srgb, var(--down) 14%, transparent); color: var(--down); }
+  .drapeau { color: var(--warn); font-weight: 600; }
+  .spark { width: 110px; height: 36px; display: block; }
+  .droite-num { text-align: right; min-width: 0; }
+  .droite-num b { display: block; font-weight: 650; }
+  .droite-num small { color: var(--muted); font-size: 12px; }
+  .badge { display: inline-block; min-width: 76px; text-align: center; padding: 6px 10px; border-radius: 10px; font-weight: 700; font-size: 14px; }
+  .badge.up { background: color-mix(in srgb, var(--up) 13%, transparent); }
+  .badge.down { background: color-mix(in srgb, var(--down) 13%, transparent); }
+  .badge.plat { background: var(--surface-2); color: var(--ink-2); }
+  .vide { color: var(--ink-2); text-align: center; padding: 40px 16px; }
+  .vide b { display: block; color: var(--ink); font-size: 16px; margin-bottom: 4px; }
+
+  .bilan { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 0 20px 12px; }
+  .bilan div, .faits div { background: var(--surface-2); border-radius: 12px; padding: 12px 14px; font-size: 12px; color: var(--ink-2); }
+  .bilan b, .faits b { display: block; color: var(--ink); font-size: 17px; font-weight: 700; margin-top: 2px; }
+  .bilan b.up, .faits b.up { color: var(--up); }
+  .bilan b.down, .faits b.down { color: var(--down); }
+
+  .methode { margin-top: 16px; padding: 4px 20px; color: var(--ink-2); font-size: 13px; }
+  .methode summary { cursor: pointer; font-weight: 600; color: var(--ink); padding: 14px 0; font-size: 14px; }
+  .methode ul { padding-left: 18px; margin: 0 0 10px; }
+  .methode p { margin: 0 0 16px; }
+
+  /* Detail panel: slides in from the right, or up from the bottom on phones */
+  dialog#fiche { border: 0; padding: 0; margin: 0 0 0 auto; height: 100%; max-height: 100%; width: min(520px, 100%); max-width: 100%; background: var(--surface); color: var(--ink); box-shadow: -8px 0 40px rgba(0, 0, 0, 0.2); overscroll-behavior: contain; }
+  dialog#fiche[open] { animation: glisse 0.22s ease-out; }
+  dialog#fiche::backdrop { background: var(--backdrop); }
+  @keyframes glisse { from { transform: translateX(40px); opacity: 0; } }
+  .fiche-tete { position: sticky; top: 0; background: var(--surface); display: flex; gap: 12px; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--line); z-index: 1; }
+  .fiche-tete .nom { font-size: 17px; }
+  .fermer { all: unset; cursor: pointer; margin-left: auto; width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: var(--surface-2); color: var(--ink-2); flex: none; }
+  .fermer:hover { color: var(--ink); }
+  .fermer:focus-visible { outline: 2px solid var(--accent); }
+  .fiche-corps { padding: 18px 20px 28px; }
+  .prix-fiche { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .prix-fiche .gros { font-size: 36px; margin: 0; }
+  .note-fiche { font-size: 12px; color: var(--warn); margin: 8px 0 0; }
+  .barre-outils { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; gap: 8px; flex-wrap: wrap; }
+  .fiche-corps .chart-box { height: 230px; }
+  .progres { margin-top: 18px; }
+  .progres .ligne-progres { display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-2); margin-bottom: 6px; gap: 8px; }
+  .progres .ligne-progres b { color: var(--ink); font-weight: 600; }
+  .progres + .progres { margin-top: 14px; }
+  .faits { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 18px; }
+  .boutons { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+  .bouton { flex: 1 1 180px; text-align: center; text-decoration: none; font-weight: 600; font-size: 14px; padding: 11px 14px; border-radius: 12px; background: var(--accent); color: #fff; }
+  :root[data-theme="dark"] .bouton { color: #06130b; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .bouton { color: #06130b; } }
+  .bouton.second { background: var(--surface-2); color: var(--ink); }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+  }
   @media (max-width: 720px) {
-    .tiles, .facts { grid-template-columns: repeat(2, 1fr); }
-    h1 { font-size: 23px; }
-    .tile .value { font-size: 24px; }
-    .chart-box { height: 240px; }
+    .entete-liste { display: none; }
+    .ligne { grid-template-columns: minmax(0, 1fr) auto; row-gap: 4px; }
+    .ligne .spark, .ligne .col-prix { display: none; }
+    .ligne .col-ecart { grid-column: 1; grid-row: 2; text-align: left; padding-left: 54px; display: flex; gap: 6px; align-items: baseline; }
+    .ligne .col-perf { grid-column: 2; grid-row: 1 / span 2; }
+    .badge { min-width: 70px; }
+    .gros { font-size: 36px; }
+    .bilan { grid-template-columns: repeat(2, 1fr); }
+    .chart-box { height: 220px; }
+    .topbar .maj { display: none; }
+    dialog#fiche { margin: auto 0 0; width: 100%; height: 92%; border-radius: 20px 20px 0 0; }
+    @keyframes glisse { from { transform: translateY(60px); opacity: 0; } }
   }
 </style>
 </head>
 <body>
-<header>
+<header class="topbar">
   <div class="wrap">
-    <p class="eyebrow">Finance Club Singapore</p>
-    <h1>Stock Pitch Tracker</h1>
-    <p>What if we had followed every one of the club's calls on the day it was posted on LinkedIn? Hypothetical performance, updated daily.</p>
-    <p class="maj" id="maj"></p>
+    <div class="logo" aria-hidden="true">FCS</div>
+    <div class="marque"><b>Stock Pitch Tracker</b><span>Finance Club Singapore</span></div>
+    <div class="droite">
+      <span class="live maj" id="maj"></span>
+      <button class="icone" id="theme" type="button" aria-label="Switch light / dark mode">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
+    </div>
   </div>
 </header>
 
 <main class="wrap">
   <div id="erreurs"></div>
 
-  <div class="tiles">
-    <div class="card tile"><div class="label">Club portfolio</div><div class="value" id="t-club">–</div><div class="note" id="t-club-n"></div></div>
-    <div class="card tile"><div class="label">S&amp;P 500, same dates</div><div class="value" id="t-indice">–</div><div class="note" id="t-indice-n"></div></div>
-    <div class="card tile"><div class="label">Winning pitches</div><div class="value" id="t-gagnants">–</div><div class="note" id="t-gagnants-n"></div></div>
-    <div class="card tile"><div class="label">Price targets hit</div><div class="value" id="t-cibles">–</div><div class="note">since publication</div></div>
+  <div class="hero">
+    <section class="card perf">
+      <div class="perf-tete">
+        <div>
+          <div class="etiquette">Club portfolio · <span id="h-periode">since the first pitch</span></div>
+          <div class="gros" id="h-club">–</div>
+          <div class="compare">
+            <span><i id="h-pastille" style="--c: var(--up)"></i>Club <b id="h-club-2"></b></span>
+            <span><i class="tiret" style="--c: var(--bench)"></i>S&amp;P 500 <b id="h-indice"></b></span>
+          </div>
+        </div>
+        <div class="chips" id="periodes" role="group" aria-label="Period">
+          <button type="button" data-j="7">1W</button><button type="button" data-j="31">1M</button><button type="button" data-j="92">3M</button><button type="button" data-j="366">1Y</button><button type="button" data-j="0" aria-pressed="true">All</button>
+        </div>
+      </div>
+      <div class="chart-box"><canvas id="c-portefeuille" aria-label="Cumulative return of the club portfolio compared with the S&amp;P 500"></canvas></div>
+    </section>
+
+    <div class="stats">
+      <div class="card stat"><div class="etiquette">Winning pitches</div><div class="valeur" id="s-gagnants">–</div><div class="jauge"><span id="s-gagnants-j"></span></div></div>
+      <div class="card stat"><div class="etiquette">Beat the S&amp;P 500</div><div class="valeur" id="s-battent">–</div><div class="jauge"><span id="s-battent-j"></span></div></div>
+      <div class="card stat"><div class="etiquette">Average pitch</div><div class="valeur" id="s-moyenne">–</div><div class="note" id="s-moyenne-n"></div></div>
+      <div class="card stat"><div class="etiquette">Price targets hit</div><div class="valeur" id="s-cibles">–</div><div class="note">since publication</div></div>
+    </div>
   </div>
 
   <section class="card">
-    <h2>The club vs the market</h2>
-    <p class="sub">Cumulative return of an equal-weighted portfolio holding every open pitch, compared with the same trades in the S&amp;P 500 (dividends reinvested). Each pitch enters at the price stated in the pitch.</p>
-    <div class="legend"><span style="--c: var(--club)">Club portfolio</span><span style="--c: var(--indice)">S&amp;P 500</span></div>
-    <div class="chart-box"><canvas id="c-portefeuille" aria-label="Cumulative return of the club portfolio compared with the indices"></canvas></div>
-  </section>
-
-  <section class="card">
-    <h2>All pitches</h2>
-    <p class="sub">Click a row to see the details. Click a column title to sort.</p>
-    <div class="table-scroll">
-      <table>
-        <thead><tr id="entetes">
-          <th><button data-cle="entreprise">Company</button></th><th><button data-cle="publie_le">Published</button></th><th><button data-cle="position">Call</button></th>
-          <th class="num">Entry</th><th class="num">Last price</th>
-          <th class="num"><button data-cle="perf">Return</button></th><th class="num"><button data-cle="ecart">vs S&amp;P 500</button></th>
-          <th class="num"><button data-cle="reste">Target</button></th><th class="num"><button data-cle="fin_horizon">Time left</button></th>
-        </tr></thead>
-        <tbody id="lignes"></tbody>
-      </table>
+    <div class="onglets" role="tablist" aria-label="Pitches">
+      <button type="button" role="tab" id="o-ouverts" data-onglet="ouverts" aria-selected="true" aria-controls="panneau">Open positions<span class="nb" id="nb-ouverts">0</span></button>
+      <button type="button" role="tab" id="o-clos" data-onglet="clos" aria-selected="false" aria-controls="panneau">Closed<span class="nb" id="nb-clos">0</span></button>
+      <button type="button" role="tab" id="o-analystes" data-onglet="analystes" aria-selected="false" aria-controls="panneau" hidden>Analysts<span class="nb" id="nb-analystes">0</span></button>
     </div>
-  </section>
-
-  <section class="card" id="detail" hidden>
-    <div class="detail-head">
-      <div><h2 id="d-titre"></h2><p class="sub" id="d-sous-titre"></p></div>
-      <div class="liens">
-        <a id="d-lien" target="_blank" rel="noopener">View the pitch on LinkedIn ↗</a>
-        <a id="d-yahoo" target="_blank" rel="noopener">View on Yahoo Finance ↗</a>
+    <div id="panneau" role="tabpanel">
+      <div class="outils" id="outils">
+        <label class="recherche">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="search" id="recherche" placeholder="Search a company or ticker" aria-label="Search a company or ticker" autocomplete="off">
+        </label>
+        <div class="chips" id="filtres" role="group" aria-label="Call">
+          <button type="button" data-f="tous" aria-pressed="true">All</button><button type="button" data-f="BUY">Buy</button><button type="button" data-f="SELL">Sell</button>
+        </div>
+        <select id="tri" aria-label="Sort by">
+          <option value="recent">Newest first</option>
+          <option value="perf-">Best return</option>
+          <option value="perf+">Worst return</option>
+          <option value="ecart-">Best vs S&amp;P 500</option>
+          <option value="cible">Closest to target</option>
+          <option value="fin">Ending soonest</option>
+          <option value="nom">Name A–Z</option>
+        </select>
       </div>
-    </div>
-    <div class="facts">
-      <div>Entry price (from the pitch)<b id="d-pitch"></b></div>
-      <div>Last price<b id="d-entree"></b></div>
-      <div>Price target<b id="d-cible"></b></div>
-      <div>Horizon ends<b id="d-fin"></b></div>
-      <div>Return<b id="d-perf"></b></div>
-      <div>Annualised<b id="d-annuel"></b></div>
-      <div>Time left<b id="d-reste"></b></div>
-      <div>Analyst<b id="d-analyste"></b></div>
-    </div>
-    <p class="note-detail" id="d-note" hidden></p>
-    <div class="bascule" role="group" aria-label="Chart view">
-      <button type="button" data-vue="prix" aria-pressed="true">Price</button><button type="button" data-vue="indice" aria-pressed="false">vs S&amp;P 500</button>
-    </div>
-    <div class="legend" id="d-legende"></div>
-    <div class="chart-box"><canvas id="c-detail" aria-label="Share price since the pitch"></canvas></div>
-  </section>
-
-  <section class="card" id="bilan" hidden>
-    <h2>Closed pitches</h2>
-    <p class="sub">Pitches whose horizon has ended, with their final result.</p>
-    <div class="facts" id="bilan-chiffres"></div>
-    <div class="table-scroll">
-      <table>
-        <thead><tr><th>Company</th><th>Call</th><th class="num">Return</th><th class="num">vs S&amp;P 500</th><th>Target</th></tr></thead>
-        <tbody id="bilan-lignes"></tbody>
-      </table>
+      <div id="bilan"></div>
+      <div class="entete-liste" id="entete-liste" aria-hidden="true"><span>Company</span><span>Since pitch</span><span>Last price</span><span>vs S&amp;P 500</span><span>Return</span></div>
+      <ul class="liste" id="liste"></ul>
     </div>
   </section>
 
-  <section class="card" id="classement" hidden>
-    <h2>Analysts</h2>
-    <p class="sub">Average result of each analyst's pitches, best first (by return vs the S&amp;P 500).</p>
-    <div class="table-scroll">
-      <table>
-        <thead><tr><th>Analyst</th><th class="num">Pitches</th><th class="num">Winners</th><th class="num">Avg return</th><th class="num">Avg vs S&amp;P 500</th></tr></thead>
-        <tbody id="classement-lignes"></tbody>
-      </table>
-    </div>
-  </section>
-
-  <section class="card methode">
-    <h2>Methodology</h2>
+  <details class="card methode">
+    <summary>How the tracker works</summary>
     <ul>
       <li>Every pitch posted on the club's LinkedIn page is added to the tracker, and its prices are then updated automatically several times a day.</li>
       <li>Entry price: the share price stated in the pitch itself. Each pitch is tracked from the last market close before the post, and its benchmark index from that same close.</li>
@@ -242,36 +323,110 @@
       <li>Price data: Yahoo Finance.</li>
     </ul>
     <p><b>Hypothetical performance, for educational purposes only. Not investment advice.</b></p>
-  </section>
+  </details>
 </main>
+
+<dialog id="fiche" aria-labelledby="f-nom">
+  <div class="fiche-tete">
+    <span id="f-avatar"></span>
+    <div style="min-width: 0">
+      <div class="nom" id="f-nom"></div>
+      <div class="sous" id="f-sous"></div>
+    </div>
+    <button class="fermer" type="button" id="f-fermer" aria-label="Close">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+  <div class="fiche-corps">
+    <div class="etiquette">Last price</div>
+    <div class="prix-fiche"><div class="gros" id="f-prix"></div><span id="f-jour"></span></div>
+    <p class="note-fiche" id="f-note" hidden></p>
+
+    <div class="barre-outils">
+      <div class="chips" id="f-vues" role="group" aria-label="Chart view">
+        <button type="button" data-vue="prix" aria-pressed="true">Price</button><button type="button" data-vue="indice" aria-pressed="false">vs S&amp;P 500</button>
+      </div>
+      <div class="compare" id="f-legende"></div>
+    </div>
+    <div class="chart-box"><canvas id="c-detail" aria-label="Chart of the pitch since publication"></canvas></div>
+
+    <div class="progres">
+      <div class="ligne-progres"><span>Price target <b id="f-cible"></b></span><span id="f-cible-n"></span></div>
+      <div class="jauge"><span id="f-cible-j"></span></div>
+    </div>
+    <div class="progres">
+      <div class="ligne-progres"><span>Horizon <b id="f-horizon"></b></span><span id="f-horizon-n"></span></div>
+      <div class="jauge"><span id="f-horizon-j" style="background: var(--bench)"></span></div>
+    </div>
+
+    <div class="faits" id="f-faits"></div>
+
+    <div class="boutons">
+      <a class="bouton" id="f-lien" target="_blank" rel="noopener">Read the pitch on LinkedIn ↗</a>
+      <a class="bouton second" id="f-yahoo" target="_blank" rel="noopener">Yahoo Finance ↗</a>
+    </div>
+  </div>
+</dialog>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
 const fmtPct = v => v == null ? "–" : (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + "%";
 const fmtPrix = (v, dev) => v == null ? "–" : ({ EUR: "€", USD: "$", SGD: "S$", GBP: "£", CHF: "CHF ", HKD: "HK$", JPY: "¥" }[dev] ?? dev + " ") + v.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const fmtDate = s => s ? new Date(s + "T12:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "–";
+const fmtDateCourte = s => new Date(s + "T12:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 const cls = v => v > 0 ? "up" : v < 0 ? "down" : "";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const $ = id => document.getElementById(id);
 const yahoo = ticker => "https://finance.yahoo.com/quote/" + encodeURIComponent(ticker) + "/";
 const JOUR = 864e5;
+const POLICE = "Inter, system-ui, -apple-system, \"Segoe UI\", sans-serif";
 const jours = (a, b) => Math.round((new Date(b + "T12:00:00Z") - new Date(a + "T12:00:00Z")) / JOUR);
 const moyenne = xs => xs.length ? xs.reduce((s, x) => s + x, 0) / xs.length : null;
 const aujourdhui = () => data.mis_a_jour.slice(0, 10);
+const court = p => p.position !== "BUY";
 // Distance left to the price target, from the last price.
 const resteCible = p => p.dernier_prix ? (p.prix_cible / p.dernier_prix - 1) * 100 : null;
 function tempsRestant(p) {
   if (p.statut === "closed") return "Closed";
   const j = jours(aujourdhui(), p.fin_horizon);
-  return j <= 0 ? "Ends today" : j < 45 ? `${j} days` : `${Math.round(j / 30.44)} mo`;
+  return j <= 0 ? "Ends today" : j < 45 ? `${j} days left` : `${Math.round(j / 30.44)} mo left`;
 }
 function annualise(p) {
   const j = jours(p.date_entree, p.dernier_jour);
   return p.perf == null || j < 90 ? null : (Math.pow(1 + p.perf / 100, 365 / j) - 1) * 100;
 }
+// Price change over the last session, as trading apps show it.
+function variationJour(p) {
+  const s = p.serie;
+  return s.length > 1 && s.at(-2).prix ? (s.at(-1).prix / s.at(-2).prix - 1) * 100 : null;
+}
+function alpha(couleur, a) {
+  const h = couleur.replace("#", "");
+  const [r, g, b] = [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16));
+  return `rgba(${r}, ${g}, ${b}, ${a})`;
+}
+// Coloured initials instead of logos: no external image service to depend on.
+function avatar(code, graine, taille = 42) {
+  let h = 0;
+  for (const c of graine) h = (h * 31 + c.charCodeAt(0)) % 360;
+  const police = (code.length > 3 ? 10 : code.length > 2 ? 12 : 14) * taille / 42;
+  return `<span class="avatar" style="--h: ${h}; width: ${taille}px; height: ${taille}px; font-size: ${police}px" aria-hidden="true">${esc(code)}</span>`;
+}
+const avatarPitch = (p, taille) => avatar(p.ticker.split(".")[0].replace(/[^A-Za-z0-9]/g, "").slice(0, 4), p.ticker, taille);
+function sparkline(p) {
+  const v = p.serie.map(s => s.r ?? 0), n = v.length;
+  const L = 110, H = 36, min = Math.min(0, ...v), max = Math.max(0, ...v), e = max - min || 1;
+  const x = i => n > 1 ? i / (n - 1) * (L - 4) + 2 : L / 2, y = r => H - 3 - (r - min) / e * (H - 6);
+  const pts = n > 1 ? v.map((r, i) => `${x(i).toFixed(1)},${y(r).toFixed(1)}`).join(" ") : `2,${y(v[0] ?? 0)} ${L - 2},${y(v[0] ?? 0)}`;
+  const c = (v.at(-1) ?? 0) >= 0 ? "var(--up)" : "var(--down)";
+  return `<svg class="spark" viewBox="0 0 ${L} ${H}" preserveAspectRatio="none" aria-hidden="true">
+    <line x1="0" x2="${L}" y1="${y(0)}" y2="${y(0)}" stroke="var(--line)" stroke-dasharray="3 3"/>
+    <polyline points="${pts}" fill="none" stroke="${c}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>`;
+}
 
-let data, choisi = 0, vue = "prix", tri = { cle: "publie_le", sens: -1 }, graphes = {};
+let data, graphes = {};
+let onglet = "ouverts", filtre = "tous", recherche = "", tri = "recent", periode = 0, vue = "prix", choisi = null;
 
 // Vertical line that follows the cursor, to read a specific date.
 const viseur = {
@@ -280,7 +435,7 @@ const viseur = {
     const a = chart.tooltip?.getActiveElements?.();
     if (!a || !a.length) return;
     const x = a[0].element.x, { top, bottom } = chart.chartArea, ctx = chart.ctx;
-    ctx.save(); ctx.strokeStyle = css("--axis"); ctx.lineWidth = 1;
+    ctx.save(); ctx.strokeStyle = css("--muted"); ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
     ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, bottom); ctx.stroke(); ctx.restore();
   }
 };
@@ -288,28 +443,42 @@ const viseur = {
 function options(formatY) {
   return {
     maintainAspectRatio: false,
-    animation: false,
+    animation: { duration: 350 },
     interaction: { mode: "index", intersect: false },
     plugins: {
       legend: { display: false },
       tooltip: {
         backgroundColor: css("--surface"), titleColor: css("--ink"), bodyColor: css("--ink-2"),
-        borderColor: css("--border"), borderWidth: 1, padding: 10, boxPadding: 4,
+        borderColor: css("--line"), borderWidth: 1, padding: 10, boxPadding: 4, cornerRadius: 10,
+        titleFont: { family: POLICE, weight: "600" }, bodyFont: { family: POLICE },
         callbacks: { title: it => fmtDate(it[0].label), label: it => " " + it.dataset.label + ": " + formatY(it.parsed.y) }
       }
     },
     scales: {
-      x: { grid: { display: false }, border: { color: css("--axis") },
-           ticks: { color: css("--muted"), maxTicksLimit: 6, maxRotation: 0, callback(v) { return fmtDate(this.getLabelForValue(v)); } } },
-      y: { grid: { color: css("--grid") }, border: { display: false },
-           ticks: { color: css("--muted"), callback: formatY, maxTicksLimit: 6 } }
+      x: { grid: { display: false }, border: { display: false },
+           ticks: { color: css("--muted"), font: { family: POLICE, size: 11 }, maxTicksLimit: 5, maxRotation: 0, callback(v) { return fmtDateCourte(this.getLabelForValue(v)); } } },
+      y: { position: "right", grid: { color: css("--line") }, border: { display: false },
+           ticks: { color: css("--muted"), font: { family: POLICE, size: 11 }, callback: formatY, maxTicksLimit: 5 } }
     }
   };
 }
 
-const ligne = (label, values, couleur, extra = {}) => ({
-  label, data: values, borderColor: couleur, backgroundColor: couleur,
-  borderWidth: 2, pointRadius: values.length < 15 ? 4 : 0, pointHoverRadius: 5, tension: 0, ...extra
+// Main line with a soft gradient fill underneath, like trading apps.
+const principale = (label, values, couleur, fill = "origin") => ({
+  label, data: values, borderColor: couleur, borderWidth: 2.5, tension: 0.25,
+  pointRadius: values.length < 3 ? 3 : 0, pointBackgroundColor: couleur,
+  pointHoverRadius: 5, pointHoverBackgroundColor: couleur, pointHoverBorderColor: css("--surface"), pointHoverBorderWidth: 2,
+  fill, backgroundColor: ctx => {
+    const a = ctx.chart.chartArea;
+    if (!a) return "transparent";
+    const g = ctx.chart.ctx.createLinearGradient(0, a.top, 0, a.bottom);
+    g.addColorStop(0, alpha(couleur, 0.22)); g.addColorStop(1, alpha(couleur, 0));
+    return g;
+  }
+});
+const secondaire = (label, values, couleur, extra = {}) => ({
+  label, data: values, borderColor: couleur, backgroundColor: couleur, borderWidth: 1.5, borderDash: [5, 4],
+  tension: 0.25, pointRadius: 0, pointHoverRadius: 4, fill: false, ...extra
 });
 
 function graphe(id, config) {
@@ -318,225 +487,303 @@ function graphe(id, config) {
 }
 
 function dessinerPortefeuille() {
-  const pts = data.portefeuille;
+  const tous = data.portefeuille;
+  if (!tous.length) return;
+  const etendue = jours(tous[0].d, tous.at(-1).d);
+  document.querySelectorAll("#periodes button").forEach(b => {
+    const j = +b.dataset.j;
+    // A period longer than the history would show the same thing as "All".
+    b.disabled = j > 7 && j > etendue + 7;
+    b.setAttribute("aria-pressed", j === periode);
+  });
+  // The period is measured from the last point before its first day.
+  const debut = periode ? new Date(new Date(tous.at(-1).d + "T12:00:00Z") - periode * JOUR).toISOString().slice(0, 10) : tous[0].d;
+  const i0 = Math.max(0, tous.findIndex(p => p.d >= debut) - (periode ? 1 : 0));
+  const pts = tous.slice(i0), base = pts[0];
+  const rebase = (v, b) => v == null || b == null ? null : ((1 + v / 100) / (1 + b / 100) - 1) * 100;
+  const club = pts.map(p => rebase(p.club, base.club)), indice = pts.map(p => rebase(p.indice, base.indice));
+  const dernier = club.at(-1), couleur = css(dernier < 0 ? "--down" : "--up");
+  $("h-club").textContent = fmtPct(dernier); $("h-club").className = "gros " + cls(dernier);
+  $("h-club-2").textContent = fmtPct(dernier);
+  $("h-indice").textContent = fmtPct(indice.at(-1));
+  $("h-pastille").style.setProperty("--c", couleur);
+  $("h-periode").textContent = periode ? `since ${fmtDate(base.d)}` : "since the first pitch";
   graphe("c-portefeuille", {
     data: { labels: pts.map(p => p.d), datasets: [
-      ligne("Club portfolio", pts.map(p => p.club), css("--club")),
-      ligne("S&P 500", pts.map(p => p.indice), css("--indice"))
+      principale("Club portfolio", club, couleur),
+      secondaire("S&P 500", indice, css("--bench"))
     ]},
     options: options(fmtPct)
   });
 }
 
-function dessinerDetail() {
-  const p = data.pitchs[choisi];
-  if (!p || !p.serie.length) { $("detail").hidden = true; return; }
-  $("detail").hidden = false;
-  const court = p.position !== "BUY";
-  $("d-titre").textContent = `${p.entreprise} · ${court ? "Short" : "Buy"}`;
-  $("d-sous-titre").textContent = `${p.ticker} on ${p.bourse} · published ${fmtDate(p.publie_le)} · vs S&P 500: ${fmtPct(p.ecart)}`
-    + (p.ecart_local != null ? ` · vs ${p.indice} (home market): ${fmtPct(p.ecart_local)}` : "");
-  $("d-lien").href = p.lien;
-  $("d-yahoo").href = yahoo(p.ticker);
-  $("d-pitch").textContent = fmtPrix(p.prix_pitch, p.devise);
-  $("d-entree").textContent = fmtPrix(p.dernier_prix, p.devise);
-  $("d-cible").textContent = fmtPrix(p.prix_cible, p.devise);
-  $("d-fin").textContent = fmtDate(p.fin_horizon);
-  $("d-perf").textContent = fmtPct(p.perf); $("d-perf").className = cls(p.perf);
-  const an = annualise(p);
-  $("d-annuel").textContent = an == null ? "after 3 months" : fmtPct(an);
-  $("d-annuel").className = an == null ? "" : cls(an);
-  $("d-reste").textContent = tempsRestant(p);
-  $("d-analyste").textContent = p.analyste || "–";
-
-  const notes = [];
-  if (p.ecart_prix_pitch != null && Math.abs(p.ecart_prix_pitch) > 1)
-    notes.push(`The price in the pitch was ${fmtPct(p.ecart_prix_pitch)} away from the last close before the post (${fmtPrix(p.cloture_reference, p.devise)}).`);
-  if (p.donnees_anciennes) notes.push("Prices could not be refreshed today: these are the last figures available.");
-  else if (p.jours_sans_prix > 0) notes.push(`No new price since ${fmtDate(p.dernier_jour)} (market holiday or data delay).`);
-  if (p.intraday) notes.push("The last price is intraday: the market has not closed yet.");
-  $("d-note").textContent = notes.join(" ");
-  $("d-note").hidden = !notes.length;
-
-  document.querySelectorAll(".bascule button").forEach(b => b.setAttribute("aria-pressed", b.dataset.vue === vue));
-  const labels = p.serie.map(s => s.d), n = labels.length;
-  const indice = court ? "Short S&P 500" : "S&P 500";
-  const legende = vue === "prix"
-    ? [["Share price", "--club"], ["Entry price and price target", "--muted"]]
-    : [[`${p.entreprise} (${court ? "short" : "long"})`, "--club"], [indice, "--indice"]];
-  $("d-legende").innerHTML = legende.map(([t, c]) => `<span style="--c: var(${c})">${esc(t)}</span>`).join("");
-
-  if (vue === "prix") {
-    const repere = { borderWidth: 1, borderDash: [4, 4], pointRadius: 0, pointHoverRadius: 0 };
-    graphe("c-detail", {
-      data: { labels, datasets: [
-        ligne("Share price", p.serie.map(s => s.prix), css("--club")),
-        ligne("Entry price", Array(n).fill(p.prix_entree), css("--muted"), repere),
-        ligne("Price target", Array(n).fill(p.prix_cible), css("--muted"), repere)
-      ]},
-      options: options(v => fmtPrix(v, p.devise))
-    });
-  } else {
-    const sens = court ? -1 : 1;
-    graphe("c-detail", {
-      data: { labels, datasets: [
-        ligne(p.entreprise, p.serie.map(s => s.r), css("--club")),
-        ligne(indice, p.serie.map(s => s.b == null ? null : sens * s.b), css("--indice"))
-      ]},
-      options: options(fmtPct)
-    });
-  }
+function dessinerStats() {
+  const r = data.resume, n = r.nb_pitchs || 0;
+  $("s-gagnants").textContent = `${r.gagnants} / ${n}`;
+  $("s-gagnants-j").style.width = n ? `${r.gagnants / n * 100}%` : "0";
+  $("s-battent").textContent = `${r.battent_indice} / ${n}`;
+  $("s-battent-j").style.width = n ? `${r.battent_indice / n * 100}%` : "0";
+  $("s-moyenne").textContent = fmtPct(r.perf_moyenne); $("s-moyenne").className = "valeur " + cls(r.perf_moyenne);
+  $("s-moyenne-n").textContent = r.ecart_moyen == null ? "" : `${fmtPct(r.ecart_moyen)} vs the S&P 500`;
+  $("s-cibles").textContent = `${r.cibles_atteintes} / ${n}`;
 }
 
-function cleTri(p, cle) {
-  if (cle === "reste") return p.cible_atteinte_le ? -Infinity : resteCible(p);
-  if (cle === "fin_horizon") return p.statut === "closed" ? "0" : p.fin_horizon;
-  return p[cle];
+function dessinerAlertes() {
+  const vieux = data.pitchs.filter(p => !p.donnees_anciennes && p.jours_sans_prix > 0);
+  $("erreurs").innerHTML = (data.erreurs.length
+    ? `<div class="card alerte">Prices unavailable today for: ${data.erreurs.map(esc).join(" · ")}</div>` : "")
+    + (vieux.length ? `<div class="card alerte avis">⚠ No new price yet for ${vieux.map(p =>
+      `${esc(p.entreprise)} (last: ${fmtDate(p.dernier_jour)})`).join(" · ")}, a market holiday or a delay at Yahoo Finance. Its last known price is used meanwhile.</div>` : "");
 }
 
-function dessinerTableau() {
-  document.querySelectorAll("#entetes th").forEach(th => {
-    const b = th.querySelector("button");
-    if (b && b.dataset.cle === tri.cle) th.setAttribute("aria-sort", tri.sens > 0 ? "ascending" : "descending");
-    else th.removeAttribute("aria-sort");
+const CLES = {
+  recent: [p => p.publie_le, -1], "perf-": [p => p.perf, -1], "perf+": [p => p.perf, 1], "ecart-": [p => p.ecart, -1],
+  cible: [p => p.cible_atteinte_le ? -Infinity : Math.abs(resteCible(p) ?? Infinity), 1],
+  fin: [p => p.fin_horizon, 1], nom: [p => p.entreprise.toLowerCase(), 1]
+};
+
+function ligneHTML(p, i) {
+  const drapeau = p.donnees_anciennes ? `<span class="drapeau" title="Prices could not be refreshed today">⚠ not updated</span>`
+    : p.jours_sans_prix > 0 ? `<span class="drapeau" title="No new price since ${esc(fmtDate(p.dernier_jour))} (market holiday or data delay)">⚠ ${esc(fmtDateCourte(p.dernier_jour))}</span>`
+    : p.intraday ? `<span title="The market has not closed yet">· intraday</span>` : "";
+  const jour = variationJour(p);
+  const sous = p.statut === "closed"
+    ? (p.cible_atteinte_le ? `<span class="up">✓ target hit</span>` : `<span>target missed</span>`)
+    : `<span>${tempsRestant(p)}</span>`;
+  return `<li><button type="button" class="ligne" data-i="${i}" aria-label="${esc(p.entreprise)}, ${court(p) ? "sell" : "buy"}, return ${fmtPct(p.perf)}">
+    <span class="titre-ligne">${avatarPitch(p)}<span style="min-width: 0">
+      <span class="nom" style="display: block">${esc(p.entreprise)}</span>
+      <span class="sous"><span class="sens ${court(p) ? "vente" : "achat"}">${court(p) ? "SELL" : "BUY"}</span>${esc(p.ticker)} · ${fmtDateCourte(p.publie_le)} ${drapeau}</span>
+    </span></span>
+    ${sparkline(p)}
+    <span class="droite-num col-prix"><b>${fmtPrix(p.dernier_prix, p.devise)}</b><small class="${cls(jour)}">${jour == null ? "" : fmtPct(jour) + " today"}</small></span>
+    <span class="droite-num col-ecart"><b class="${cls(p.ecart)}">${fmtPct(p.ecart)}</b><small>${sous}</small></span>
+    <span class="droite-num col-perf"><span class="badge ${cls(p.perf) || "plat"}">${fmtPct(p.perf)}</span></span>
+  </button></li>`;
+}
+
+function dessinerListe() {
+  const ouverts = data.pitchs.filter(p => p.statut !== "closed"), clos = data.pitchs.filter(p => p.statut === "closed");
+  const analystes = new Set(data.pitchs.map(p => p.analyste).filter(Boolean));
+  $("nb-ouverts").textContent = ouverts.length; $("nb-clos").textContent = clos.length; $("nb-analystes").textContent = analystes.size;
+  $("o-analystes").hidden = !analystes.size;
+  if (onglet === "analystes" && !analystes.size) onglet = "ouverts";
+  document.querySelectorAll(".onglets button").forEach(b => {
+    b.setAttribute("aria-selected", b.dataset.onglet === onglet);
+    b.tabIndex = b.dataset.onglet === onglet ? 0 : -1;
   });
-  const ordre = data.pitchs.map((p, i) => i).sort((a, b) => {
-    const x = cleTri(data.pitchs[a], tri.cle), y = cleTri(data.pitchs[b], tri.cle);
-    if (x == null || y == null) return x == null ? 1 : -1;  // missing values always last
-    return (x < y ? -1 : x > y ? 1 : 0) * tri.sens;
-  });
-  $("lignes").innerHTML = data.pitchs.length ? ordre.map(i => {
-    const p = data.pitchs[i], reste = resteCible(p);
-    const cible = p.cible_atteinte_le ? `<span class="up">✓ hit on ${fmtDate(p.cible_atteinte_le)}</span>`
-                                      : `${fmtPrix(p.prix_cible, p.devise)}${reste != null ? ` <span class="tick">(${fmtPct(reste)})</span>` : ""}`;
-    const drapeau = p.donnees_anciennes ? ` <span class="flag" title="Prices could not be refreshed today">⚠ not updated</span>`
-      : p.jours_sans_prix > 0 ? ` <span class="flag" title="No new price since ${esc(fmtDate(p.dernier_jour))} (market holiday or data delay)">⚠ ${esc(fmtDate(p.dernier_jour))}</span>`
-      : p.intraday ? ` <span class="tick" title="The market has not closed yet">intraday</span>` : "";
-    return `<tr data-i="${i}" tabindex="0" aria-selected="${i === choisi}" class="${i === choisi ? "sel" : ""}">
-      <td><div class="nom">${esc(p.entreprise)}</div><div class="tick"><a href="${esc(yahoo(p.ticker))}" target="_blank" rel="noopener" title="Open ${esc(p.ticker)} on Yahoo Finance">${esc(p.ticker)} ↗</a></div></td>
-      <td>${fmtDate(p.publie_le)}</td>
-      <td><span class="pill">${p.position === "BUY" ? "▲ BUY" : "▼ SELL"}</span></td>
-      <td class="num">${fmtPrix(p.prix_entree, p.devise)}</td>
-      <td class="num">${fmtPrix(p.dernier_prix, p.devise)}${drapeau}</td>
-      <td class="num ${cls(p.perf)}">${fmtPct(p.perf)}</td>
-      <td class="num ${cls(p.ecart)}">${fmtPct(p.ecart)}</td>
-      <td class="num">${cible}</td>
-      <td class="num">${tempsRestant(p)}</td>
-    </tr>`;
-  }).join("") : `<tr><td colspan="9" class="vide">No pitches yet.</td></tr>`;
+  $("panneau").setAttribute("aria-labelledby", "o-" + onglet);
+
+  const enAnalystes = onglet === "analystes";
+  $("outils").hidden = enAnalystes;
+  if (enAnalystes) { $("entete-liste").hidden = true; dessinerAnalystes(); return; }
+
+  const q = recherche.trim().toLowerCase();
+  const [cle, sens] = CLES[tri];
+  const lignes = data.pitchs.map((p, i) => [p, i])
+    .filter(([p]) => (onglet === "clos") === (p.statut === "closed"))
+    .filter(([p]) => filtre === "tous" || p.position === filtre)
+    .filter(([p]) => !q || (p.entreprise + " " + p.ticker + " " + (p.analyste ?? "")).toLowerCase().includes(q))
+    .sort(([a], [b]) => {
+      const x = cle(a), y = cle(b);
+      if (x == null || y == null) return x == null ? 1 : -1;  // missing values always last
+      return (x < y ? -1 : x > y ? 1 : 0) * sens;
+    });
+
+  dessinerBilan(onglet === "clos" ? clos : []);
+  $("entete-liste").hidden = !lignes.length;
+  $("liste").innerHTML = lignes.length ? lignes.map(([p, i]) => ligneHTML(p, i)).join("")
+    : onglet === "clos" && !clos.length
+      ? `<li class="vide"><b>No closed pitches yet</b>${ouverts.length ? `The first horizon ends on ${fmtDate(ouverts.map(p => p.fin_horizon).sort()[0])}.` : ""}</li>`
+      : `<li class="vide"><b>Nothing found</b>Try another search or filter.</li>`;
 }
 
-function dessinerBilan() {
-  const finis = data.pitchs.filter(p => p.statut === "closed" && p.serie.length);
-  $("bilan").hidden = !finis.length;
-  if (!finis.length) return;
+function dessinerBilan(finis) {
+  finis = finis.filter(p => p.serie.length);
+  if (!finis.length) { $("bilan").innerHTML = ""; return; }
   const tries = [...finis].sort((a, b) => b.perf - a.perf);
-  const touchees = finis.filter(p => p.cible_atteinte_le).length;
-  const chiffre = (label, valeur, c = "") => `<div>${label}<b class="${c}">${valeur}</b></div>`;
   const moy = moyenne(finis.map(p => p.perf)), moyEcart = moyenne(finis.map(p => p.ecart));
-  $("bilan-chiffres").innerHTML =
-    chiffre("Targets hit", `${touchees} / ${finis.length}`) +
-    chiffre("Average return", fmtPct(moy), cls(moy)) +
-    chiffre("Average vs S&amp;P 500", fmtPct(moyEcart), cls(moyEcart)) +
-    chiffre("Best · worst", `${esc(tries[0].ticker)} ${fmtPct(tries[0].perf)} · ${esc(tries.at(-1).ticker)} ${fmtPct(tries.at(-1).perf)}`);
-  $("bilan-lignes").innerHTML = tries.map(p => `<tr>
-    <td><div class="nom">${esc(p.entreprise)}</div><div class="tick">${esc(p.ticker)} · ${fmtDate(p.publie_le)}</div></td>
-    <td><span class="pill">${p.position === "BUY" ? "▲ BUY" : "▼ SELL"}</span></td>
-    <td class="num ${cls(p.perf)}">${fmtPct(p.perf)}</td>
-    <td class="num ${cls(p.ecart)}">${fmtPct(p.ecart)}</td>
-    <td>${p.cible_atteinte_le ? `<span class="up">✓ ${fmtDate(p.cible_atteinte_le)}</span>` : "Missed"}</td>
-  </tr>`).join("");
+  $("bilan").innerHTML = `<div class="bilan">
+    <div>Targets hit<b>${finis.filter(p => p.cible_atteinte_le).length} / ${finis.length}</b></div>
+    <div>Average return<b class="${cls(moy)}">${fmtPct(moy)}</b></div>
+    <div>Average vs S&amp;P 500<b class="${cls(moyEcart)}">${fmtPct(moyEcart)}</b></div>
+    <div>Best · worst<b>${esc(tries[0].ticker)} <span class="${cls(tries[0].perf)}">${fmtPct(tries[0].perf)}</span> · ${esc(tries.at(-1).ticker)} <span class="${cls(tries.at(-1).perf)}">${fmtPct(tries.at(-1).perf)}</span></b></div>
+  </div>`;
 }
 
-function dessinerClassement() {
+function dessinerAnalystes() {
+  $("bilan").innerHTML = "";
   const parAnalyste = {};
   data.pitchs.filter(p => p.analyste && p.serie.length).forEach(p => (parAnalyste[p.analyste] ??= []).push(p));
   const lignes = Object.entries(parAnalyste).map(([nom, ps]) => ({
     nom, n: ps.length, gagnants: ps.filter(p => p.perf > 0).length,
     perf: moyenne(ps.map(p => p.perf)), ecart: moyenne(ps.map(p => p.ecart))
   })).sort((a, b) => b.ecart - a.ecart);
-  $("classement").hidden = !lignes.length;
-  $("classement-lignes").innerHTML = lignes.map(l => `<tr>
-    <td class="nom">${esc(l.nom)}</td><td class="num">${l.n}</td><td class="num">${l.gagnants} / ${l.n}</td>
-    <td class="num ${cls(l.perf)}">${fmtPct(l.perf)}</td><td class="num ${cls(l.ecart)}">${fmtPct(l.ecart)}</td>
-  </tr>`).join("");
+  $("liste").innerHTML = lignes.map((l, rang) => `<li><div class="ligne" style="cursor: default">
+    <span class="titre-ligne">${avatar(l.nom.split(/\s+/).map(m => m[0]).join("").slice(0, 3).toUpperCase(), l.nom)}<span style="min-width: 0">
+      <span class="nom" style="display: block">${rang === 0 && lignes.length > 1 ? "🏆 " : ""}${esc(l.nom)}</span>
+      <span class="sous">${l.n} pitch${l.n === 1 ? "" : "es"} · ${l.gagnants} winner${l.gagnants === 1 ? "" : "s"}</span>
+    </span></span>
+    <span class="spark"></span><span class="col-prix"></span>
+    <span class="droite-num col-ecart"><b class="${cls(l.ecart)}">${fmtPct(l.ecart)}</b><small>avg vs S&amp;P 500</small></span>
+    <span class="droite-num col-perf"><span class="badge ${cls(l.perf) || "plat"}">${fmtPct(l.perf)}</span></span>
+  </div></li>`).join("");
+}
+
+function dessinerFiche() {
+  const p = data.pitchs[choisi];
+  if (!p) return;
+  $("f-avatar").innerHTML = avatarPitch(p, 44);
+  $("f-nom").textContent = p.entreprise;
+  $("f-sous").innerHTML = `<span class="sens ${court(p) ? "vente" : "achat"}">${court(p) ? "SELL" : "BUY"}</span>${esc(p.ticker)} · ${esc(p.bourse)}${p.analyste ? " · by " + esc(p.analyste) : ""}`;
+  $("f-prix").textContent = fmtPrix(p.dernier_prix, p.devise);
+  const jour = variationJour(p);
+  $("f-jour").innerHTML = `<span class="badge ${cls(p.perf) || "plat"}" title="Return since the pitch">${fmtPct(p.perf)}</span>`
+    + (jour == null ? "" : ` <span class="${cls(jour)}" style="font-size: 13px; font-weight: 600">${fmtPct(jour)} today</span>`);
+
+  const notes = [];
+  if (p.donnees_anciennes) notes.push("Prices could not be refreshed today: these are the last figures available.");
+  else if (p.jours_sans_prix > 0) notes.push(`⚠ No new price since ${fmtDate(p.dernier_jour)} (market holiday or data delay).`);
+  if (p.intraday) notes.push("Intraday price: the market has not closed yet.");
+  if (p.ecart_prix_pitch != null && Math.abs(p.ecart_prix_pitch) > 1)
+    notes.push(`The price in the pitch was ${fmtPct(p.ecart_prix_pitch)} away from the last close before the post (${fmtPrix(p.cloture_reference, p.devise)}).`);
+  $("f-note").textContent = notes.join(" ");
+  $("f-note").hidden = !notes.length;
+
+  // Progress from the entry price towards the target (also right for shorts, whose target is below).
+  const progres = p.cible_atteinte_le ? 1 : Math.min(1, Math.max(0, (p.dernier_prix - p.prix_entree) / (p.prix_cible - p.prix_entree)));
+  $("f-cible").textContent = fmtPrix(p.prix_cible, p.devise);
+  $("f-cible-n").innerHTML = p.cible_atteinte_le ? `<span class="up">✓ hit on ${fmtDate(p.cible_atteinte_le)}</span>` : `${fmtPct(resteCible(p))} to go`;
+  $("f-cible-j").style.width = `${progres * 100}%`;
+  const duree = jours(p.date_entree, p.fin_horizon), ecoule = Math.min(duree, jours(p.date_entree, aujourdhui()));
+  $("f-horizon").textContent = `${p.horizon_mois} months`;
+  $("f-horizon-n").textContent = p.statut === "closed" ? `ended ${fmtDate(p.fin_horizon)}` : `${tempsRestant(p)} · ends ${fmtDate(p.fin_horizon)}`;
+  $("f-horizon-j").style.width = `${Math.max(2, ecoule / duree * 100)}%`;
+
+  const an = annualise(p);
+  const fait = (label, valeur, c = "") => `<div>${label}<b class="${c}">${valeur}</b></div>`;
+  $("f-faits").innerHTML =
+    fait("Entry price (from the pitch)", fmtPrix(p.prix_entree, p.devise)) +
+    fait("Published", fmtDate(p.publie_le)) +
+    fait("vs S&amp;P 500", fmtPct(p.ecart), cls(p.ecart)) +
+    (p.ecart_local != null ? fait(`vs ${esc(p.indice)} (home market)`, fmtPct(p.ecart_local), cls(p.ecart_local))
+                           : fait("S&amp;P 500, same dates", fmtPct(p.perf_indice), cls(p.perf_indice))) +
+    fait("Annualised", an == null ? "after 3 months" : fmtPct(an), an == null ? "" : cls(an)) +
+    fait("Analyst", p.analyste ? esc(p.analyste) : "–");
+  $("f-lien").href = p.lien;
+  $("f-yahoo").href = yahoo(p.ticker);
+
+  document.querySelectorAll("#f-vues button").forEach(b => b.setAttribute("aria-pressed", b.dataset.vue === vue));
+  const labels = p.serie.map(s => s.d), n = labels.length;
+  const couleur = css((p.perf ?? 0) < 0 ? "--down" : "--up"), indice = court(p) ? "Short S&P 500" : "S&P 500";
+  if (vue === "prix") {
+    $("f-legende").innerHTML = `<span><i style="--c: ${couleur}"></i>Price</span><span><i class="tiret" style="--c: var(--bench)"></i>Entry</span><span><i class="tiret" style="--c: var(--accent)"></i>Target</span>`;
+    const repere = { borderWidth: 1, pointHoverRadius: 0, tension: 0 };
+    graphe("c-detail", {
+      data: { labels, datasets: [
+        principale("Price", p.serie.map(s => s.prix), couleur, "start"),
+        secondaire("Entry price", Array(n).fill(p.prix_entree), css("--bench"), repere),
+        secondaire("Price target", Array(n).fill(p.prix_cible), css("--accent"), repere)
+      ]},
+      options: options(v => fmtPrix(v, p.devise))
+    });
+  } else {
+    $("f-legende").innerHTML = `<span><i style="--c: ${couleur}"></i>${esc(p.ticker)} (${court(p) ? "short" : "long"})</span><span><i class="tiret" style="--c: var(--bench)"></i>${indice}</span>`;
+    const sens = court(p) ? -1 : 1;
+    graphe("c-detail", {
+      data: { labels, datasets: [
+        principale(p.ticker, p.serie.map(s => s.r), couleur),
+        secondaire(indice, p.serie.map(s => s.b == null ? null : sens * s.b), css("--bench"))
+      ]},
+      options: options(fmtPct)
+    });
+  }
+}
+
+function ouvrirFiche(i, majHash = true) {
+  choisi = i;
+  if (!$("fiche").open) $("fiche").showModal();
+  dessinerFiche();
+  // The ticker in the address makes a pitch easy to share: …/#EQIX opens it directly.
+  if (majHash) history.replaceState(null, "", "#" + encodeURIComponent(data.pitchs[i].ticker));
 }
 
 function afficher() {
-  const r = data.resume;
-  $("maj").textContent = "Last updated: " + new Date(data.mis_a_jour).toLocaleString("en-GB", { dateStyle: "long", timeStyle: "short" });
-  $("t-club").textContent = fmtPct(r.perf_club); $("t-club").className = "value " + cls(r.perf_club);
-  $("t-club-n").textContent = `${r.nb_pitchs} pitch${r.nb_pitchs === 1 ? "" : "es"} · average pitch ${fmtPct(r.perf_moyenne)}`;
-  $("t-indice").textContent = fmtPct(r.perf_indice); $("t-indice").className = "value " + cls(r.perf_indice);
-  const ecart = r.perf_club != null ? r.perf_club - r.perf_indice : null;
-  $("t-indice-n").textContent = ecart == null ? "" : `the club is ${fmtPct(Math.abs(ecart)).replace(/^[+−]/, "")} ${ecart >= 0 ? "ahead" : "behind"}`;
-  $("t-gagnants").textContent = `${r.gagnants} / ${r.nb_pitchs}`;
-  $("t-gagnants-n").textContent = `${r.battent_indice} / ${r.nb_pitchs} beat their index`;
-  $("t-cibles").textContent = `${r.cibles_atteintes} / ${r.nb_pitchs}`;
-
-  $("erreurs").innerHTML = (data.erreurs.length
-    ? `<div class="card alerte">Prices unavailable today for: ${data.erreurs.map(esc).join(" · ")}</div>` : "")
-    + (() => {
-      const vieux = data.pitchs.filter(p => !p.donnees_anciennes && p.jours_sans_prix > 0);
-      return vieux.length ? `<div class="card avis">⚠ No new price yet for ${vieux.map(p =>
-        `${esc(p.entreprise)} (last: ${fmtDate(p.dernier_jour)})`).join(" · ")}, a market holiday or a delay at Yahoo Finance. Its last known price is used meanwhile.</div>` : "";
-    })();
-
-  dessinerTableau();
+  $("maj").textContent = "Updated " + new Date(data.mis_a_jour).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+  dessinerAlertes();
+  dessinerStats();
   dessinerPortefeuille();
-  dessinerDetail();
-  dessinerBilan();
-  dessinerClassement();
+  dessinerListe();
+  if ($("fiche").open) dessinerFiche();
 }
 
-function choisir(tr) {
-  choisi = +tr.dataset.i;
-  document.querySelectorAll("#lignes tr").forEach(t => {
-    t.classList.toggle("sel", t === tr);
-    t.setAttribute("aria-selected", t === tr);
-  });
-  dessinerDetail();
-  $("detail").scrollIntoView({ behavior: "smooth", block: "nearest" });
-}
-
-$("lignes").addEventListener("click", e => {
-  if (e.target.closest("a")) return;  // the Yahoo link opens on its own, without selecting the row
-  const tr = e.target.closest("tr[data-i]");
-  if (tr) choisir(tr);
+// --- Interactions ---
+$("liste").addEventListener("click", e => {
+  const b = e.target.closest("button.ligne");
+  if (b) ouvrirFiche(+b.dataset.i);
 });
-$("lignes").addEventListener("keydown", e => {
-  const tr = e.target.closest?.("tr[data-i]");
-  if (!tr || e.target !== tr) return;
-  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); choisir(tr); }
-  if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-    e.preventDefault();
-    (e.key === "ArrowDown" ? tr.nextElementSibling : tr.previousElementSibling)?.focus();
-  }
+$("f-fermer").addEventListener("click", () => $("fiche").close());
+$("fiche").addEventListener("click", e => { if (e.target === $("fiche")) $("fiche").close(); });  // click on the backdrop
+$("fiche").addEventListener("close", () => {
+  history.replaceState(null, "", location.pathname + location.search);
+  document.querySelector(`button.ligne[data-i="${choisi}"]`)?.focus();
 });
-
-$("entetes").addEventListener("click", e => {
-  const b = e.target.closest("button[data-cle]");
-  if (!b) return;
-  // A second click reverses the order; numbers start with the largest.
-  tri = tri.cle === b.dataset.cle ? { cle: tri.cle, sens: -tri.sens }
-      : { cle: b.dataset.cle, sens: ["entreprise", "position", "reste", "fin_horizon"].includes(b.dataset.cle) ? 1 : -1 };
-  dessinerTableau();
-});
-
-document.querySelector(".bascule").addEventListener("click", e => {
+$("f-vues").addEventListener("click", e => {
   const b = e.target.closest("button[data-vue]");
-  if (!b) return;
-  vue = b.dataset.vue;
-  dessinerDetail();
+  if (b) { vue = b.dataset.vue; dessinerFiche(); }
 });
+$("periodes").addEventListener("click", e => {
+  const b = e.target.closest("button[data-j]");
+  if (b && !b.disabled) { periode = +b.dataset.j; dessinerPortefeuille(); }
+});
+document.querySelector(".onglets").addEventListener("click", e => {
+  const b = e.target.closest("button[data-onglet]");
+  if (b) { onglet = b.dataset.onglet; dessinerListe(); }
+});
+document.querySelector(".onglets").addEventListener("keydown", e => {
+  if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+  const visibles = [...document.querySelectorAll(".onglets button:not([hidden])")];
+  const i = visibles.findIndex(b => b.dataset.onglet === onglet);
+  const suivant = visibles[(i + (e.key === "ArrowRight" ? 1 : visibles.length - 1)) % visibles.length];
+  onglet = suivant.dataset.onglet; dessinerListe(); suivant.focus();
+});
+$("filtres").addEventListener("click", e => {
+  const b = e.target.closest("button[data-f]");
+  if (!b) return;
+  filtre = b.dataset.f;
+  document.querySelectorAll("#filtres button").forEach(x => x.setAttribute("aria-pressed", x === b));
+  dessinerListe();
+});
+$("recherche").addEventListener("input", e => { recherche = e.target.value; dessinerListe(); });
+$("tri").addEventListener("change", e => { tri = e.target.value; dessinerListe(); });
 
+// Theme: follows the system; the button overrides it and the choice is remembered on this device.
+const sombre = () => document.documentElement.dataset.theme
+  ? document.documentElement.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch {}
+$("theme").addEventListener("click", () => {
+  const t = sombre() ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem("theme", t); } catch {}
+  if (data) afficher();
+});
 // Chart colours follow light / dark mode.
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => data && afficher());
 
+// A shared link such as …/#EQIX opens that pitch, on load or when the address changes.
+function ficheDepuisHash() {
+  const i = data.pitchs.findIndex(p => p.ticker === decodeURIComponent(location.hash.slice(1)));
+  if (i >= 0) ouvrirFiche(i, false);
+}
+addEventListener("hashchange", () => data && ficheDepuisHash());
+
 fetch("data.json", { cache: "no-store" })
   .then(r => r.json())
-  .then(d => { data = d; choisi = Math.max(0, d.pitchs.findIndex(p => p.serie.length)); afficher(); })
-  .catch(() => { $("lignes").innerHTML = `<tr><td colspan="9" class="vide">Could not load the data.</td></tr>`; });
+  .then(d => { data = d; afficher(); ficheDepuisHash(); })
+  // The charts are drawn on a canvas: redraw them once Inter has loaded.
+  .then(() => document.fonts?.ready)
+  .then(() => afficher())
+  .catch(() => { $("liste").innerHTML = `<li class="vide"><b>Could not load the data</b>Please try again in a moment.</li>`; });
 </script>
 </body>
 </html>
