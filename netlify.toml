@@ -1,0 +1,9 @@
+# Preview links for proposed changes (pull requests), built by Netlify.
+# The real site stays on GitHub Pages: https://financeclubsg.github.io/
+
+[build]
+  command = "pip install -r requirements.txt && python scripts/update.py"
+  publish = "site"
+
+[build.environment]
+  PYTHON_VERSION = "3.12"
